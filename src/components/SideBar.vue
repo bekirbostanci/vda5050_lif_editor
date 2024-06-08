@@ -16,10 +16,8 @@ import PresentOpen from "./PresentOpen.vue";
       <PresetSelector presets="{presets}" />
       <PresentOpen />
       <PresetSave />
-      <div class="hidden space-x-2 md:flex">
-        <CodeViewer />
-        <PresetShare />
-      </div>
+      <CodeViewer />
+      <PresetShare />
       <PresetActions />
     </div>
   </div>
