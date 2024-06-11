@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -7,13 +7,19 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
+} from "@/components/ui/dialog";
+import { Icon } from "@iconify/vue";
 </script>
 
 <template>
   <Dialog>
     <DialogTrigger as-child>
       <Button variant="secondary">
+        <Icon
+          class="mr-2"
+          icon="ph:code-light"
+          :height="20"
+        />
         View code
       </Button>
     </DialogTrigger>
@@ -73,9 +79,8 @@ import {
         </div>
         <div>
           <p class="text-sm text-muted-foreground">
-            Your API Key can be found here. You should use environment
-            variables or a secret management tool to expose your key to your
-            applications.
+            Your API Key can be found here. You should use environment variables
+            or a secret management tool to expose your key to your applications.
           </p>
         </div>
       </div>
