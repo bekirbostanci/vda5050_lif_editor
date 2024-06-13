@@ -7,12 +7,14 @@ import MetaInformationDialog from "./MetaInformationDialog.vue";
 import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/hover-card";
-import { Layout } from "@/controllers/layout";
-import { Tools } from "@/controllers/tools";
+import { LayoutController } from "@/controllers/layout.controller";
+import { ToolController } from "@/controllers/tool.controller";
+import { SideBarNodeController } from "@/controllers/sideBarNode.controller";
 
 const props = defineProps<{
-  layout: Layout;
-  tools: Tools;
+  layout: LayoutController;
+  tools: ToolController;
+  sideBarNode: SideBarNodeController;
 }>();
 </script>
 
@@ -30,12 +32,12 @@ const props = defineProps<{
     >
       Layout
     </span>
-    <LayoutDialog></LayoutDialog>
-    <LayoutSelect></LayoutSelect>
+    <LayoutDialog :layout="props.layout" :tools="props.tools"></LayoutDialog>
+    <LayoutSelect :layout="props.layout" :tools="props.tools"></LayoutSelect>
 
-    <Separator orientation="horizontal" />
-    <div class="grid gap-2">
-      <HoverCard :open-delay="200">
+    <div class="grid gap-2 space-y-2" v-if="props.tools.selectedLayoutId.value != ''">
+      <Separator orientation="horizontal" />
+      <HoverCard :open-delay="2000">
         <HoverCardTrigger as-child>
           <span
             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -43,10 +45,16 @@ const props = defineProps<{
             Create Item
           </span>
           <div class="ml-auto flex w-full space-x-2">
-            <Button variant="secondary" @click="props.tools.setCreateNodeState();"
+            <Button
+              variant="secondary"
+              @click="props.sideBarNode.cleanNode(); props.tools.setCreateNodeState();"
               >Node</Button
             >
-            <Button variant="secondary" @click="props.tools.setCreateStationState();">Station</Button>
+            <Button
+              variant="secondary"
+              @click="props.tools.setCreateStationState()"
+              >Station</Button
+            >
           </div>
         </HoverCardTrigger>
         <HoverCardContent class="w-[320px] text-sm" side="left">

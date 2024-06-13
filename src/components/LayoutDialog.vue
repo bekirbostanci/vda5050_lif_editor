@@ -6,6 +6,7 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
+  DialogClose,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
@@ -17,12 +18,80 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { Icon } from "@iconify/vue";
+import { LayoutController } from "@/controllers/layout.controller";
+import { Layout } from "@/types/Layout";
+import { ToolController } from "@/controllers/tool.controller";
+
+const props = defineProps({
+  tools: {
+    required: true,
+    type: ToolController,
+  },
+  layout: {
+    type: LayoutController,
+    required: true,
+  },
+});
+let layout: Layout = new Object() as Layout;
+layout = {
+  layoutId: "",
+  layoutName: "",
+  layoutVersion: "",
+  layoutLevelId: "",
+  layoutDescription: "",
+  nodes: [],
+  edges: [],
+  stations: [],
+};
+function loadLayout() {
+  const tempLayout = props.layout.vdaLayouts.find(
+    (layout) => layout.layoutId === props.tools.selectedLayoutId.value
+  );
+  if (tempLayout) {
+    layout = JSON.parse(JSON.stringify(tempLayout));
+  } else {
+    layout = {
+      layoutId: "",
+      layoutName: "",
+      layoutVersion: "",
+      layoutLevelId: "",
+      layoutDescription: "",
+      nodes: [],
+      edges: [],
+      stations: [],
+    };
+  }
+}
+
+function saveLayout() {
+  const layoutIndex = props.layout.vdaLayouts.findIndex(
+    (t_layout) => t_layout.layoutId === layout.layoutId
+  );
+  if (layoutIndex !== -1) {
+    props.layout.vdaLayouts[layoutIndex] = layout;
+  } else {
+    props.layout.vdaLayouts.push(layout);
+  }
+  if (props.layout.vdaLayouts.length == 1) {
+    props.tools.selectedLayoutId.value = layout.layoutId;
+  }
+}
+
+function deleteLayout() {
+  props.layout.vdaLayouts.splice(
+    props.layout.vdaLayouts.findIndex(
+      (t_layout) => t_layout.layoutId === layout.layoutId
+    ),
+    1
+  );
+  props.tools.selectedLayoutId.value = "";
+}
 </script>
 
 <template>
   <Dialog>
     <DialogTrigger as-child>
-      <Button variant="secondary">
+      <Button variant="secondary" @click="loadLayout()">
         <Icon class="mr-2" icon="ph:layout-thin" :height="24" />
         Layout
       </Button>
@@ -38,7 +107,7 @@ import { Icon } from "@iconify/vue";
       </DialogHeader>
       <div class="grid gap-4 py-4">
         <div class="grid gap-2">
-          <HoverCard>
+          <HoverCard :open-delay="2000">
             <HoverCardTrigger>
               <Label for="layoutId">Layout Id</Label>
             </HoverCardTrigger>
@@ -46,10 +115,10 @@ import { Icon } from "@iconify/vue";
               Unique identifier for this layout.
             </HoverCardContent>
           </HoverCard>
-          <Input id="layoutId" auto-focus />
+          <Input id="layoutId" v-model="layout.layoutId" auto-focus />
         </div>
         <div class="grid gap-2">
-          <HoverCard>
+          <HoverCard :open-delay="2000">
             <HoverCardTrigger>
               <Label for="layoutName">Layout Name</Label>
             </HoverCardTrigger>
@@ -57,19 +126,19 @@ import { Icon } from "@iconify/vue";
               Human-readable name of the layout (e.g., for displaying).
             </HoverCardContent>
           </HoverCard>
-          <Input id="layoutName" auto-focus />
+          <Input id="layoutName" v-model="layout.layoutName" auto-focus />
         </div>
         <div class="grid gap-2">
-          <HoverCard>
+          <HoverCard :open-delay="2000">
             <HoverCardTrigger>
               <Label for="layoutVersion">Layout Version</Label>
             </HoverCardTrigger>
             <HoverCardContent> Version of the layout. </HoverCardContent>
           </HoverCard>
-          <Input id="layoutVersion" auto-focus />
+          <Input id="layoutVersion" v-model="layout.layoutVersion" auto-focus />
         </div>
         <div class="grid gap-2">
-          <HoverCard>
+          <HoverCard :open-delay="2000">
             <HoverCardTrigger>
               <Label for="layoutLevelId">Layout Level Id</Label>
             </HoverCardTrigger>
@@ -80,10 +149,15 @@ import { Icon } from "@iconify/vue";
               same faci- lity, or two disconnected areas in the same facility.
             </HoverCardContent>
           </HoverCard>
-          <Input id="layoutLevelId" auto-Level Id />
+          <Input
+            id="layoutLevelId"
+            v-model="layout.layoutLevelId"
+            auto-Level
+            Id
+          />
         </div>
         <div class="grid gap-2">
-          <HoverCard>
+          <HoverCard :open-delay="2000">
             <HoverCardTrigger>
               <Label for="layoutDescription">Layout Description</Label>
             </HoverCardTrigger>
@@ -91,12 +165,18 @@ import { Icon } from "@iconify/vue";
               Brief description of the layout.
             </HoverCardContent>
           </HoverCard>
-          <Input id="layoutDescription" auto-focus />
+          <Input
+            id="layoutDescription"
+            v-model="layout.layoutDescription"
+            auto-focus
+          />
         </div>
       </div>
       <DialogFooter>
-        <Button type="submit"> Save </Button>
-        <Button type="submit"> Delete </Button>
+        <DialogClose as-child>
+          <Button type="submit" @click="saveLayout()"> Save </Button>
+          <Button type="submit" @click="deleteLayout()"> Delete </Button>
+        </DialogClose>
       </DialogFooter>
     </DialogContent>
   </Dialog>

@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import Example from './views/Example.vue';
+import LifEditor from './views/LifEditor.vue';
 </script>
 
 <template>
-<Example></Example>
+<LifEditor></LifEditor>
 </template>
 
 <style scoped>

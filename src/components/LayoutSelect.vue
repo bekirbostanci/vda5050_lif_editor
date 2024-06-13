@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { LayoutController } from "@/controllers/layout.controller";
 import {
   Select,
   SelectContent,
@@ -7,18 +8,28 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { ToolController } from "@/controllers/tool.controller";
+const props = defineProps({
+  layout: {
+    required: true,
+    type: LayoutController
+  },
+  tools: {
+    type: ToolController,
+    required: true
+  }
+})
+props.tools.selectedLayoutId.value = props.layout.vdaLayouts[0].layoutId;
 </script>
 
 <template>
-  <Select>
+  <Select v-model="props.tools.selectedLayoutId.value">
     <SelectTrigger>
-      <SelectValue placeholder="Select Layout" />
+      <SelectValue placeholder="Select Layout"></SelectValue>
     </SelectTrigger>
     <SelectContent>
       <SelectGroup>
-        <SelectItem value="layout_1">Layout 1</SelectItem>
-        <SelectItem value="layout_2">Layout 2</SelectItem>
-        <SelectItem value="layout_3">Layout 3</SelectItem>
+        <SelectItem v-for="layout in props.layout?.vdaLayouts" :value="layout.layoutId">{{layout.layoutName}}</SelectItem>
       </SelectGroup>
     </SelectContent>
   </Select>
