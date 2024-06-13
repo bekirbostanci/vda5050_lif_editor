@@ -20,10 +20,11 @@ const props = defineProps({
   }
 })
 props.tools.selectedLayoutId.value = props.layout.vdaLayouts[0].layoutId;
+props.layout.changeLayout(props.tools.selectedLayoutId.value);
 </script>
 
 <template>
-  <Select v-model="props.tools.selectedLayoutId.value">
+  <Select v-model="props.tools.selectedLayoutId.value"  @update:model-value="props.layout.changeLayout(props.tools.selectedLayoutId.value)">
     <SelectTrigger>
       <SelectValue placeholder="Select Layout"></SelectValue>
     </SelectTrigger>

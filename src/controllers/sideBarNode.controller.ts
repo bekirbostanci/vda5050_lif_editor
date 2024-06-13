@@ -1,7 +1,8 @@
-import { ref, toRaw } from "vue";
+import { Ref, ref, toRaw } from "vue";
 import { LayoutController } from "./layout.controller";
 import { ToolController } from "./tool.controller";
 import { Node } from "@/types/Layout";
+import { ViewEvent } from "v-network-graph";
 
 export class SideBarNodeController {
   public newNode = ref<Node>({
@@ -16,13 +17,46 @@ export class SideBarNodeController {
     vehicleTypeNodeProperties: [],
   });
   public nodeConnections = ref<string[]>([]);
-
+  public createFast: Ref<boolean> = ref<boolean>(true);
+  private lastNodeId: string = "";
   constructor(
     public toolController: ToolController,
-    public layoutController: LayoutController
+    public layoutController: LayoutController,
+    public graph: any
   ) {}
 
-  cleanNode() {
+  createNodeFast(mouseEvent: ViewEvent<MouseEvent>) {
+    if (this.graph.value && this.createFast.value == true) {
+      const point = {
+        x: mouseEvent.event.offsetX,
+        y: mouseEvent.event.offsetY,
+      };
+      const svgPoint = this.graph.value.translateFromDomToSvgCoordinates(point);
+      const newNodeId = Date.now().toString();
+
+      if (this.toolController.selectedNodes.value.length > 0) {
+        this.lastNodeId = this.toolController.selectedNodes.value[0];
+        this.layoutController.createEdge(this.lastNodeId, newNodeId);
+      } else if (this.layoutController.nodes[this.lastNodeId]) {
+        this.layoutController.createEdge(this.lastNodeId, newNodeId);
+      }
+
+      this.layoutController.createNode({
+        nodeId: newNodeId,
+        nodeName: newNodeId,
+        vehicleTypeNodeProperties: [],
+        nodeDescription: "",
+        mapId: "",
+        nodePosition: {
+          x: svgPoint.x,
+          y: svgPoint.y,
+        },
+      });
+      this.lastNodeId = newNodeId;
+    }
+  }
+
+  cleanNodeInputs() {
     this.newNode.value.nodePosition.x = 0;
     this.newNode.value.nodePosition.y = 0;
     this.nodeConnections.value = [];
@@ -40,9 +74,7 @@ export class SideBarNodeController {
   }
 
   updateNode(selectedNode: string) {
-    console.log(selectedNode,toRaw(this.layoutController.nodes[selectedNode]));
-
-    this.layoutController.resetAllDrag();
+    this.layoutController.disableNodesDrag();
     if (selectedNode) {
       this.layoutController.nodes[selectedNode].draggable = true;
     }

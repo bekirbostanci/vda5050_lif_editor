@@ -6,7 +6,7 @@ export class ToolController {
   private createStation = ref<boolean>(false);
   public selectedNodes = ref<string[]>([]);
   public selectedEdges = ref<string[]>([]);
-  public toolState = ref<ToolState>(ToolState.empty);
+  public toolState = ref<ToolState>(ToolState.createNode);
   public selectedLayoutId = ref<string>("");
 
   setResetStates() {

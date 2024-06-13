@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { EventHandlers } from "v-network-graph";
+import { EventHandlers, ViewEvent } from "v-network-graph";
 
 import { Separator } from "./ui/separator";
 import {
@@ -16,26 +16,30 @@ import { LayoutController } from "@/controllers/layout.controller";
 import { ToolController } from "@/controllers/tool.controller";
 import { ToolState } from "@/types/ToolState";
 import { SideBarNodeController } from "@/controllers/sideBarNode.controller";
+import { ref } from "vue";
+import * as vNG from "v-network-graph";
 
+const graph = ref<vNG.Instance>();
 const layoutController = new LayoutController();
 const toolController = new ToolController();
 const sideBarNodeController = new SideBarNodeController(
   toolController,
-  layoutController
+  layoutController,
+  graph
 );
-
 const eventHandlers: EventHandlers = {
-  "view:click": () => {
-    sideBarNodeController.cleanNode();
-    layoutController.resetAllDrag();
+  "view:click": (mouseEvent: ViewEvent<MouseEvent>) => {
+    sideBarNodeController.cleanNodeInputs();
+    layoutController.disableNodesDrag();
+    sideBarNodeController.createNodeFast(mouseEvent);
   },
   "node:select": (nodes) => {
     if (nodes.length > 0) {
       toolController.setSelectNodeTool();
       sideBarNodeController.updateNode(nodes[0]);
     } else {
-      sideBarNodeController.cleanNode();
-      layoutController.resetAllDrag();
+      sideBarNodeController.cleanNodeInputs();
+      layoutController.disableNodesDrag();
     }
   },
   "edge:select": ({ }) => {
@@ -48,14 +52,12 @@ const eventHandlers: EventHandlers = {
   <ResizablePanelGroup id="demo-group-1" direction="horizontal" class="max-w rounded-lg border">
     <ResizablePanel id="demo-panel-1" :max-size="15">
       <SideBar class="p-6" :layout="layoutController" :tools="toolController" :side-bar-node="sideBarNodeController" />
-
     </ResizablePanel>
     <ResizableHandle id="demo-handle-1" />
     <ResizablePanel id="demo-panel-2" :default-size="65">
-
       <div class="flex h-[800px] items-center justify-center">
-        <v-network-graph class="graph" zoom-level="200" :nodes="layoutController.nodes" :edges="layoutController.edges"
-          :layouts="layoutController.layouts" :configs="configs"
+        <v-network-graph ref="graph" class="graph" zoom-level="200" :nodes="layoutController.nodes"
+          :edges="layoutController.edges" :layouts="layoutController.layouts" :configs="configs"
           v-model:selected-nodes="toolController.selectedNodes.value"
           v-model:selected-edges="toolController.selectedEdges.value" :event-handlers="eventHandlers" />
       </div>

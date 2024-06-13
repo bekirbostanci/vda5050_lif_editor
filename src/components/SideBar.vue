@@ -19,7 +19,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div class="hidden flex-col space-y-4 sm:flex md:order-2">
+  <div class="flex-col space-y-4">
     <span
       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
     >
@@ -47,7 +47,7 @@ const props = defineProps<{
           <div class="ml-auto flex w-full space-x-2">
             <Button
               variant="secondary"
-              @click="props.sideBarNode.cleanNode(); props.tools.setCreateNodeState();"
+              @click="props.sideBarNode.cleanNodeInputs(); props.tools.setCreateNodeState();"
               >Node</Button
             >
             <Button
