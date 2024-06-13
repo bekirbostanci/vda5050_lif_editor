@@ -19,7 +19,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div class="flex-col space-y-4">
+  <div class="grid flex-col space-y-4">
     <span
       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
     >
