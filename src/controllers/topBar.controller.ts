@@ -16,7 +16,7 @@ export class TopBarController {
     this.showJson.value = !this.showJson.value;
   }
 
-  public saveLifFile() {
+  public saveLifJsonFile() {
     const jsonData = this.layoutController?.lif;
     const fileName =
       "lif_file_" +

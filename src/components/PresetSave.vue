@@ -11,7 +11,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <Button @click="props.topBarController.convertLifToJson(); props.topBarController.saveLifFile()" variant="secondary">
+  <Button @click="props.topBarController.convertLifToJson(); props.topBarController.saveLifJsonFile()" variant="secondary">
     <Icon class="mr-2" icon="material-symbols-light:save-outline" :height="24" />
     Save
   </Button>
