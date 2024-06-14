@@ -37,18 +37,6 @@ export class LayoutController {
       stations: [],
     };
     this.vdaLayouts.push(layout);
-
-    const layout1: Layout = {
-      layoutId: "entry1",
-      layoutName: "Entry1",
-      layoutVersion: "1.0.0",
-      layoutLevelId: "1",
-      layoutDescription: "",
-      nodes: [],
-      edges: [],
-      stations: [],
-    };
-    this.vdaLayouts.push(layout1);
   }
 
   deleteNode(nodeId: string) {
