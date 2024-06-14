@@ -154,7 +154,7 @@ export class LayoutController {
     );
   }
 
-  prepareLif() {
+  convertToLif() {
     this.changeLayout(this.oldLayoutId);
     this.vdaLayouts.map((layout) => {
       let visLayout = this.visualizationLayouts[layout.layoutId];
