@@ -8,12 +8,12 @@ import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/hover-card";
 import { LayoutController } from "@/controllers/layout.controller";
-import { ToolController } from "@/controllers/tool.controller";
+import { SideBarController } from "@/controllers/sideBar.controller";
 import { SideBarNodeController } from "@/controllers/sideBarNode.controller";
 
 const props = defineProps<{
   layout: LayoutController;
-  tools: ToolController;
+  sideBar: SideBarController;
   sideBarNode: SideBarNodeController;
 }>();
 </script>
@@ -25,17 +25,17 @@ const props = defineProps<{
     >
       Meta Information
     </span>
-    <MetaInformationDialog></MetaInformationDialog>
+    <MetaInformationDialog :layout="props.layout"></MetaInformationDialog>
     <Separator orientation="horizontal" />
     <span
       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
     >
       Layout
     </span>
-    <LayoutDialog :layout="props.layout" :tools="props.tools"></LayoutDialog>
-    <LayoutSelect :layout="props.layout" :tools="props.tools"></LayoutSelect>
+    <LayoutDialog :layout="props.layout" :tools="props.sideBar"></LayoutDialog>
+    <LayoutSelect :layout="props.layout" :tools="props.sideBar"></LayoutSelect>
 
-    <div class="grid gap-2 space-y-2" v-if="props.tools.selectedLayoutId.value != ''">
+    <div class="grid gap-2 space-y-2" v-if="props.sideBar.selectedLayoutId.value != ''">
       <Separator orientation="horizontal" />
       <HoverCard :open-delay="2000">
         <HoverCardTrigger as-child>
@@ -47,12 +47,12 @@ const props = defineProps<{
           <div class="ml-auto flex w-full space-x-2">
             <Button
               variant="secondary"
-              @click="props.sideBarNode.cleanNodeInputs(); props.tools.setCreateNodeState();"
+              @click="props.sideBarNode.cleanNodeInputs(); props.sideBar.setCreateNodeState();"
               >Node</Button
             >
             <Button
               variant="secondary"
-              @click="props.tools.setCreateStationState()"
+              @click="props.sideBar.setCreateStationState()"
               >Station</Button
             >
           </div>

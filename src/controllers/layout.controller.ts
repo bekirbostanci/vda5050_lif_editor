@@ -1,10 +1,21 @@
 import { reactive, toRaw } from "vue";
 import * as vNG from "v-network-graph";
-import { Layout, Node } from "@/types/Layout";
+import { Edge, Layout, Node } from "@/types/Layout";
 import { ExtendedNodes } from "@/types/ExtendedNode";
 import { VisualizationLayouts } from "@/types/VisualizationLayout";
+import { Lif } from "@/types/Lif";
 
 export class LayoutController {
+  public lif = reactive<Lif>({
+    metaInformation: {
+      projectIdentification: "",
+      creator: "",
+      exportTimestamp: "",
+      lifVersion: "1.0.0",
+    },
+    layouts: [],
+  });
+
   public vdaLayouts = reactive<Layout[]>([]);
   public visualizationLayouts = reactive<VisualizationLayouts>({});
   public nodes = reactive<ExtendedNodes>({});
@@ -50,7 +61,6 @@ export class LayoutController {
 
   changeLayout(layoutId: string) {
     if (this.oldLayoutId != "") {
-      console.log("Old layout saved: " + this.oldLayoutId);
       this.visualizationLayouts[this.oldLayoutId] = {
         nodes: JSON.parse(JSON.stringify(this.nodes)),
         edges: JSON.parse(JSON.stringify(this.edges)),
@@ -89,7 +99,6 @@ export class LayoutController {
       );
     }
     this.oldLayoutId = layoutId;
-    console.log(toRaw(this.visualizationLayouts));
   }
 
   createNode(node: Node) {
@@ -126,5 +135,60 @@ export class LayoutController {
 
   createEdge(source: string, target: string) {
     this.edges[source + "_" + target] = { source: source, target: target };
+  }
+
+  saveLayout(layout: Layout) {
+    const layoutIndex = this.vdaLayouts.findIndex(
+      (t_layout) => t_layout.layoutId === layout.layoutId
+    );
+    if (layoutIndex !== -1) {
+      this.vdaLayouts[layoutIndex] = layout;
+    } else {
+      this.vdaLayouts.push(layout);
+    }
+  }
+  deleteLayout(layoutId: string) {
+    this.vdaLayouts.splice(
+      this.vdaLayouts.findIndex((t_layout) => t_layout.layoutId === layoutId),
+      1
+    );
+  }
+
+  prepareLif() {
+    this.changeLayout(this.oldLayoutId);
+    this.vdaLayouts.map((layout) => {
+      let visLayout = this.visualizationLayouts[layout.layoutId];
+      if (visLayout && visLayout.nodes) {
+        layout.nodes = Object.keys(visLayout.nodes).map((item) =>
+          toRaw(visLayout.nodes[item].vda5050)
+        );
+        if (visLayout && visLayout.edges) {
+          layout.edges = Object.keys(visLayout.edges).map((item) =>
+            {
+              const graphEdge = visLayout.edges[item];
+              let edge: Edge = {
+                edgeId: item,
+                edgeName: item,
+                edgeDescription: "",
+                startNodeId: graphEdge.source,
+                endNodeId: graphEdge.target,
+                vehicleTypeEdge: [],
+              };
+              return edge
+             
+            }
+          );
+        }
+      }
+    });
+    // Object.keys(this.visualizationLayouts).map((key) => {
+    //   console.log("key ", key);
+    //   console.log(
+    //     Object.keys(this.visualizationLayouts[key].nodes).map((item) =>
+    //       toRaw(this.visualizationLayouts[key].nodes[item].vda5050)
+    //     )
+    //   );
+    // });
+    this.lif.layouts = this.vdaLayouts;
   }
 }

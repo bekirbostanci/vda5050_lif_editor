@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -17,17 +18,21 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { Icon } from "@iconify/vue";
+import { LayoutController } from "@/controllers/layout.controller";
+const props = defineProps<{
+  layout: LayoutController;
+}>();
+function getFormattedDate(): string {
+  const date = new Date();
+  return date.toISOString();
+}
 </script>
 
 <template>
   <Dialog>
     <DialogTrigger as-child>
       <Button variant="secondary">
-        <Icon
-          class="mr-2"
-          icon="material-symbols-light:save-outline"
-          :height="24"
-        />
+        <Icon class="mr-2" icon="material-symbols-light:save-outline" :height="24" />
         Meta Information
       </Button>
     </DialogTrigger>
@@ -49,7 +54,8 @@ import { Icon } from "@iconify/vue";
               Human-readable name of the project
             </HoverCardContent>
           </HoverCard>
-          <Input id="projectIdentification" auto-focus />
+          <Input id="projectIdentification" v-model="props.layout.lif.metaInformation.projectIdentification"
+            auto-focus />
         </div>
         <div class="grid gap-2">
           <HoverCard>
@@ -60,7 +66,7 @@ import { Icon } from "@iconify/vue";
               Creator of the LIF file (e.g., name of company, or name of person).
             </HoverCardContent>
           </HoverCard>
-          <Input id="creator" auto-focus />
+          <Input id="creator" v-model="props.layout.lif.metaInformation.creator" auto-focus />
         </div>
         <div class="grid gap-2">
           <HoverCard>
@@ -71,11 +77,14 @@ import { Icon } from "@iconify/vue";
               Version of LIF: [Major].[Minor].[Patch] (0.11.0).
             </HoverCardContent>
           </HoverCard>
-          <Input id="lifVersion" auto-focus />
+          <Input id="lifVersion" v-model="props.layout.lif.metaInformation.lifVersion" auto-focus />
         </div>
       </div>
       <DialogFooter>
-        <Button type="submit"> Save </Button>
+        <DialogClose as-child>
+          <Button type="submit" @click="props.layout.lif.metaInformation.exportTimestamp = getFormattedDate()"> Save
+          </Button>
+        </DialogClose>
       </DialogFooter>
     </DialogContent>
   </Dialog>

@@ -1,7 +1,7 @@
 import { ToolState } from "@/types/ToolState";
 import { ref } from "vue";
 
-export class ToolController {
+export class SideBarController {
   private createNode = ref<boolean>(false);
   private createStation = ref<boolean>(false);
   public selectedNodes = ref<string[]>([]);

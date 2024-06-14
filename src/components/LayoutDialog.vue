@@ -20,12 +20,12 @@ import {
 import { Icon } from "@iconify/vue";
 import { LayoutController } from "@/controllers/layout.controller";
 import { Layout } from "@/types/Layout";
-import { ToolController } from "@/controllers/tool.controller";
+import { SideBarController } from "@/controllers/sideBar.controller";
 
 const props = defineProps({
   tools: {
     required: true,
-    type: ToolController,
+    type: SideBarController,
   },
   layout: {
     type: LayoutController,
@@ -64,26 +64,14 @@ function loadLayout() {
 }
 
 function saveLayout() {
-  const layoutIndex = props.layout.vdaLayouts.findIndex(
-    (t_layout) => t_layout.layoutId === layout.layoutId
-  );
-  if (layoutIndex !== -1) {
-    props.layout.vdaLayouts[layoutIndex] = layout;
-  } else {
-    props.layout.vdaLayouts.push(layout);
-  }
+  props.layout.saveLayout(layout);
   if (props.layout.vdaLayouts.length == 1) {
     props.tools.selectedLayoutId.value = layout.layoutId;
   }
 }
 
 function deleteLayout() {
-  props.layout.vdaLayouts.splice(
-    props.layout.vdaLayouts.findIndex(
-      (t_layout) => t_layout.layoutId === layout.layoutId
-    ),
-    1
-  );
+  props.layout.deleteLayout(layout.layoutId);
   props.tools.selectedLayoutId.value = "";
 }
 </script>

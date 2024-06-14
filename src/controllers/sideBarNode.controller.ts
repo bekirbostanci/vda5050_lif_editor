@@ -1,6 +1,6 @@
 import { Ref, ref, toRaw } from "vue";
 import { LayoutController } from "./layout.controller";
-import { ToolController } from "./tool.controller";
+import { SideBarController } from "./sideBar.controller";
 import { Node } from "@/types/Layout";
 import { ViewEvent } from "v-network-graph";
 
@@ -20,7 +20,7 @@ export class SideBarNodeController {
   public createFast: Ref<boolean> = ref<boolean>(true);
   private lastNodeId: string = "";
   constructor(
-    public toolController: ToolController,
+    public toolController: SideBarController,
     public layoutController: LayoutController,
     public graph: any
   ) {}
@@ -45,8 +45,8 @@ export class SideBarNodeController {
         nodeId: newNodeId,
         nodeName: newNodeId,
         vehicleTypeNodeProperties: [],
-        nodeDescription: "",
-        mapId: "",
+        nodeDescription: this.newNode.value.nodeDescription,
+        mapId: this.newNode.value.mapId,
         nodePosition: {
           x: svgPoint.x,
           y: svgPoint.y,

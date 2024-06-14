@@ -39,7 +39,7 @@ export interface Action {
   actionDescription: string;
   requirementType: RequirementType;
   blockingType: BlockingType;
-  actionParameters: [ActionParameter];
+  actionParameters: ActionParameter[];
 }
 
 export type RequirementType = "REQUIRED" | "CONDITIONAL" | "OPTIONAL";
@@ -50,7 +50,7 @@ export interface Edge {
   edgeDescription: string;
   startNodeId: string;
   endNodeId: string;
-  vehicleTypeEdge: [vehicleTypeEdgeProperties];
+  vehicleTypeEdge: vehicleTypeEdgeProperties[];
 }
 export interface vehicleTypeEdgeProperties {
   vehicleTypeId: string;

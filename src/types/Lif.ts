@@ -1,7 +1,7 @@
 import { Layout } from "./Layout";
 import { MetaInformation } from "./MetaInformation";
 
-export interface Lif{
-    metaInformation: MetaInformation;
-    layouts: [Layout];
+export interface Lif {
+  metaInformation: MetaInformation;
+  layouts: Layout[];
 }

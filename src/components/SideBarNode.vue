@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { ToolController } from "@/controllers/tool.controller";
+import { ToolController } from "@/controllers/sideBar.controller";
 import { LayoutController } from "@/controllers/layout.controller";
 
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/hover-card";
@@ -55,7 +55,7 @@ const filteredFrameworks = computed(() =>
   <div class="grid gap-2 mt-2">
     <div class="flex items-center">
       <Label for="nodeId">Node Id</Label>
-      <div class="inline-flex  ml-auto">
+      <div class="inline-flex ml-auto">
         <Label v-if="!props.sideBarNode.createFast.value" class="px-3 text-sm text-muted-foreground" for="fast-create">
           Fast Create</Label>
         <Label v-if="props.sideBarNode.createFast.value" class="px-3 text-sm" for="fast-create"> Fast Create</Label>
@@ -86,7 +86,7 @@ const filteredFrameworks = computed(() =>
       v-model="props.sideBarNode.newNode.value.nodeName" />
   </div>
   <div class="grid gap-2 mt-2">
-    <HoverCard :open-delay="2000">
+    <HoverCard :close-delay="0" :open-delay="2000">
       <HoverCardTrigger>
         <Label for="nodeDescription">Node Description</Label>
       </HoverCardTrigger>
@@ -94,7 +94,8 @@ const filteredFrameworks = computed(() =>
         visualization or diagnostic purposes.
       </HoverCardContent>
     </HoverCard>
-    <Input id="nodeDescription" v-model="props.sideBarNode.newNode.value.nodeDescription" />
+    <Input id="nodeDescription" :disabled="props.sideBarNode.createFast.value"
+      v-model="props.sideBarNode.newNode.value.nodeDescription" />
   </div>
   <div class="ml-auto flex w-full space-x-2">
     <div class="grid gap-2 mt-2" v-if="props.tools.selectedNodes.value.length > 0">
@@ -129,7 +130,7 @@ const filteredFrameworks = computed(() =>
         departure floor and spawn in the related lift node on the map of the
         target floor.</HoverCardContent>
     </HoverCard>
-    <Input id="mapId" />
+    <Input id="mapId" :disabled="props.sideBarNode.createFast.value" v-model="props.sideBarNode.newNode.value.mapId" />
   </div>
 
   <div class="grid gap-2 mt-2">

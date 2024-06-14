@@ -8,14 +8,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { ToolController } from "@/controllers/tool.controller";
+import { SideBarController } from "@/controllers/sideBar.controller";
 const props = defineProps({
   layout: {
     required: true,
     type: LayoutController
   },
   tools: {
-    type: ToolController,
+    type: SideBarController,
     required: true
   }
 })
