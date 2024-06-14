@@ -154,7 +154,7 @@ export class LayoutController {
     );
   }
 
-  convertToLif() {
+  convertLifToJson() {
     this.changeLayout(this.oldLayoutId);
     this.vdaLayouts.map((layout) => {
       let visLayout = this.visualizationLayouts[layout.layoutId];
@@ -181,14 +181,6 @@ export class LayoutController {
         }
       }
     });
-    // Object.keys(this.visualizationLayouts).map((key) => {
-    //   console.log("key ", key);
-    //   console.log(
-    //     Object.keys(this.visualizationLayouts[key].nodes).map((item) =>
-    //       toRaw(this.visualizationLayouts[key].nodes[item].vda5050)
-    //     )
-    //   );
-    // });
     this.lif.layouts = this.vdaLayouts;
   }
 }
