@@ -22,6 +22,8 @@ import { SideBarNodeController } from "@/controllers/sideBarNode.controller";
 import { ref } from "vue";
 import * as vNG from "v-network-graph";
 import { TopBarController } from "@/controllers/topBar.controller";
+import StationBar from "./SideBarStation.vue";
+import SideBarEdge from "./SideBarEdge.vue";
 
 const props = defineProps({
   topBarController: {
@@ -53,8 +55,10 @@ const eventHandlers: EventHandlers = {
       layoutController.disableNodesDrag();
     }
   },
-  "edge:select": ({ }) => {
-    sideBarController.setSelectEdgeTool();
+  "edge:select": (edges) => {
+    if (edges.length > 0) {
+      sideBarController.setSelectEdgeTool();
+    }
   },
 };
 </script>
@@ -97,6 +101,15 @@ const eventHandlers: EventHandlers = {
         <span class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
           Edit Edge
         </span>
+        <Separator class="mt-3 mb-3" orientation="horizontal" />
+        <SideBarEdge :layout="layoutController" :sidebar="sideBarController" :side-bar-node="sideBarNodeController" />
+      </div>
+      <div class="p-6" v-if="sideBarController.toolState.value == ToolState.createStation">
+        <span class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+          Create Station
+        </span>
+        <Separator class="mt-3 mb-3" orientation="horizontal" />
+        <StationBar :layout="layoutController" :sidebar="sideBarController" :side-bar-node="sideBarNodeController" />
       </div>
     </ResizablePanel>
   </ResizablePanelGroup>
