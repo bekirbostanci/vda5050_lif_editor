@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { ToolController } from "@/controllers/sideBar.controller";
+import { SideBarController } from "@/controllers/sideBar.controller";
 import { LayoutController } from "@/controllers/layout.controller";
 
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/hover-card";
@@ -33,7 +33,7 @@ import {
 import { SideBarNodeController } from "@/controllers/sideBarNode.controller";
 
 const props = defineProps<{
-  tools: ToolController;
+  sidebar: SideBarController;
   layout: LayoutController;
   sideBarNode: SideBarNodeController;
 }>();
@@ -98,19 +98,19 @@ const filteredFrameworks = computed(() =>
       v-model="props.sideBarNode.newNode.value.nodeDescription" />
   </div>
   <div class="ml-auto flex w-full space-x-2">
-    <div class="grid gap-2 mt-2" v-if="props.tools.selectedNodes.value.length > 0">
+    <div class="grid gap-2 mt-2" v-if="props.sidebar.selectedNodes.value.length > 0">
       <Label for="nodeX">Node X</Label>
       <Input id="nodeX" type="number" :default-value="0"
-        v-model="props.layout.layouts.nodes[props.tools.selectedNodes.value[0]].x" />
+        v-model="props.layout.layouts.nodes[props.sidebar.selectedNodes.value[0]].x" />
     </div>
     <div class="grid gap-2 mt-2" v-else>
       <Label for="nodeX">Node X</Label>
       <Input id="nodeX" type="number" :default-value="0" v-model="props.sideBarNode.newNode.value.nodePosition.x" />
     </div>
-    <div class="grid gap-2 mt-2" v-if="props.tools.selectedNodes.value.length > 0">
+    <div class="grid gap-2 mt-2" v-if="props.sidebar.selectedNodes.value.length > 0">
       <Label for="nodeY">Node Y</Label>
       <Input id="nodeY" type="number" :default-value="0"
-        v-model="props.layout.layouts.nodes[props.tools.selectedNodes.value[0]].y" />
+        v-model="props.layout.layouts.nodes[props.sidebar.selectedNodes.value[0]].y" />
     </div>
     <div class="grid gap-2 mt-2" v-else>
       <Label for="nodeY">Node Y</Label>

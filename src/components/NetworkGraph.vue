@@ -84,14 +84,14 @@ const eventHandlers: EventHandlers = {
           Create Node
         </span>
         <Separator class="mt-3 mb-3" orientation="horizontal" />
-        <SideBarNode :layout="layoutController" :tools="sideBarController" :side-bar-node="sideBarNodeController" />
+        <SideBarNode :layout="layoutController" :sidebar="sideBarController" :side-bar-node="sideBarNodeController" />
       </div>
       <div class="p-6" v-if="sideBarController.toolState.value == ToolState.selectNode">
         <span class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
           Edit Node
         </span>
         <Separator class="mt-3 mb-3" orientation="horizontal" />
-        <SideBarNode :layout="layoutController" :tools="sideBarController" :side-bar-node="sideBarNodeController" />
+        <SideBarNode :layout="layoutController" :sidebar="sideBarController" :side-bar-node="sideBarNodeController" />
       </div>
       <div class="p-6" v-if="sideBarController.toolState.value == ToolState.selectEdge">
         <span class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
