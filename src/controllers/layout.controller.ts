@@ -156,28 +156,24 @@ export class LayoutController {
 
   convertLifToJson() {
     this.changeLayout(this.oldLayoutId);
-    this.vdaLayouts.map((layout) => {
-      let visLayout = this.visualizationLayouts[layout.layoutId];
-      if (visLayout && visLayout.nodes) {
-        layout.nodes = Object.keys(visLayout.nodes).map((item) =>
-          toRaw(visLayout.nodes[item].vda5050)
+    this.vdaLayouts.forEach((layout) => {
+      const visualizationLayout = this.visualizationLayouts[layout.layoutId];
+      if (visualizationLayout && visualizationLayout.nodes) {
+        layout.nodes = Object.values(visualizationLayout.nodes).map(
+          (node) => toRaw(node.vda5050)
         );
-        if (visLayout && visLayout.edges) {
-          layout.edges = Object.keys(visLayout.edges).map((item) =>
-            {
-              const graphEdge = visLayout.edges[item];
-              let edge: Edge = {
-                edgeId: item,
-                edgeName: item,
-                edgeDescription: "",
-                startNodeId: graphEdge.source,
-                endNodeId: graphEdge.target,
-                vehicleTypeEdge: [],
-              };
-              return edge
-             
-            }
-          );
+        if (visualizationLayout.edges) {
+          layout.edges = Object.keys(visualizationLayout.edges).map((edgeId) => {
+            const { source, target } = visualizationLayout.edges[edgeId];
+            return {
+              edgeId,
+              edgeName: edgeId,
+              edgeDescription: "",
+              startNodeId: source,
+              endNodeId: target,
+              vehicleTypeEdge: [],
+            };
+          });
         }
       }
     });
