@@ -5,15 +5,15 @@ export class TopBarController {
   public showJson = ref<boolean>(false);
   public layoutController: LayoutController | undefined;
   constructor() {}
+  public toggleJson() {
+    this.convertLifToJson();
+    this.showJson.value = !this.showJson.value;
+  }
+
   public convertLifToJson() {
     if (this.layoutController) {
       this.layoutController.convertLifToJson();
     }
-  }
-
-  public toggleJson() {
-    this.convertLifToJson();
-    this.showJson.value = !this.showJson.value;
   }
 
   public saveLifJsonFile() {
