@@ -52,8 +52,12 @@ export class LayoutController {
   }
 
   deleteNode(nodeId: string) {
-    delete this.nodes[nodeId];
-    delete this.layouts.nodes[nodeId];
+    if (nodeId && this.layouts.nodes[nodeId] && this.nodes[nodeId]) {
+      delete this.nodes[nodeId];
+      delete this.layouts.nodes[nodeId];
+    } else {
+      // TODO : add toaster error 
+    }
   }
 
   disableNodesDrag() {

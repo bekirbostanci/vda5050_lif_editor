@@ -187,6 +187,6 @@ const filteredFrameworks = computed(() =>
   </div>
   <div class="ml-auto flex w-full space-x-2 mt-3">
     <Button variant="secondary" @click="props.layout.createNode(props.sideBarNode.newNode.value)">Save</Button>
-    <Button variant="secondary" @click="props.layout.deleteNode(props.sideBarNode.newNode.value.nodeId)">Delete</Button>
+    <Button variant="secondary" @click="props.sidebar.selectedNodes.value=[]; props.layout.deleteNode(props.sideBarNode.newNode.value.nodeId); ">Delete</Button>
   </div>
 </template>
