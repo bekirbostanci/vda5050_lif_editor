@@ -58,12 +58,7 @@ export class TopBarController {
     reader.onload = (event) => {
       if (event.target) {
         const result = event.target.result as string;
-        try {
-          const json = JSON.parse(result);
-          console.log(json);
-        } catch (error) {
-          console.error("Invalid JSON file", error);
-        }
+        this.layoutController?.convertJsonToLif(result);
       }
     };
 

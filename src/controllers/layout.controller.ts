@@ -1,8 +1,11 @@
 import { reactive, toRaw } from "vue";
 import * as vNG from "v-network-graph";
-import { Edge, Layout, Node } from "@/types/Layout";
+import { Layout, Node } from "@/types/Layout";
 import { ExtendedNodes } from "@/types/ExtendedNode";
-import { VisualizationLayouts } from "@/types/VisualizationLayout";
+import {
+  VisualizationLayout,
+  VisualizationLayouts,
+} from "@/types/VisualizationLayout";
 import { Lif } from "@/types/Lif";
 
 export class LayoutController {
@@ -159,24 +162,71 @@ export class LayoutController {
     this.vdaLayouts.forEach((layout) => {
       const visualizationLayout = this.visualizationLayouts[layout.layoutId];
       if (visualizationLayout && visualizationLayout.nodes) {
-        layout.nodes = Object.values(visualizationLayout.nodes).map(
-          (node) => toRaw(node.vda5050)
+        layout.nodes = Object.values(visualizationLayout.nodes).map((node) =>
+          toRaw(node.vda5050)
         );
         if (visualizationLayout.edges) {
-          layout.edges = Object.keys(visualizationLayout.edges).map((edgeId) => {
-            const { source, target } = visualizationLayout.edges[edgeId];
-            return {
-              edgeId,
-              edgeName: edgeId,
-              edgeDescription: "",
-              startNodeId: source,
-              endNodeId: target,
-              vehicleTypeEdge: [],
-            };
-          });
+          layout.edges = Object.keys(visualizationLayout.edges).map(
+            (edgeId) => {
+              const { source, target } = visualizationLayout.edges[edgeId];
+              return {
+                edgeId,
+                edgeName: edgeId,
+                edgeDescription: "",
+                startNodeId: source,
+                endNodeId: target,
+                vehicleTypeEdge: [],
+              };
+            }
+          );
         }
       }
     });
     this.lif.layouts = this.vdaLayouts;
+  }
+  convertJsonToLif(data: string) {
+    let vdaLayouts: Lif;
+    try {
+      vdaLayouts = JSON.parse(data);
+    } catch {
+      return;
+    }
+    // Set lif meta information
+    this.lif.metaInformation = vdaLayouts.metaInformation;
+
+    // Reset old layout
+    this.vdaLayouts = vdaLayouts.layouts;
+    this.oldLayoutId = "";
+
+    // Convert Json to VisualizationLayout
+    this.vdaLayouts.forEach((layout) => {
+      const visualizationLayout: VisualizationLayout = {
+        nodes: {},
+        edges: {},
+        layouts: { nodes: {} },
+      };
+
+      layout.nodes.forEach((node) => {
+        visualizationLayout.nodes[node.nodeId] = {
+          vda5050: node,
+          draggable: false,
+          name: node.nodeName,
+        };
+        visualizationLayout.layouts.nodes[node.nodeId] = {
+          x: node.nodePosition.x,
+          y: node.nodePosition.y,
+        };
+      });
+      layout.edges.forEach((edge) => {
+        visualizationLayout.edges[edge.edgeId] = {
+          source: edge.startNodeId,
+          target: edge.endNodeId,
+        };
+      });
+      this.visualizationLayouts[layout.layoutId] = visualizationLayout;
+    });
+
+    // After open the layout, show the first layout
+    this.changeLayout(this.vdaLayouts[0].layoutId);
   }
 }

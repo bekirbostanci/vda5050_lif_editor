@@ -6,7 +6,6 @@ import { computed, ref, toRaw } from "vue";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import { SideBarController } from "@/controllers/sideBar.controller";
 import { LayoutController } from "@/controllers/layout.controller";
 
