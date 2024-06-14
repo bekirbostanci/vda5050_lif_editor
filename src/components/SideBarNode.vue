@@ -97,7 +97,7 @@ const filteredFrameworks = computed(() =>
     <Input id="nodeDescription" :disabled="props.sideBarNode.createFast.value"
       v-model="props.sideBarNode.newNode.value.nodeDescription" />
   </div>
-  <div class="ml-auto flex w-full space-x-2">
+  <div class="ml-auto flex w-full space-x-2 py-2">
     <div class="grid gap-2 mt-2" v-if="props.sidebar.selectedNodes.value.length > 0">
       <Label for="nodeX">Node X</Label>
       <Input id="nodeX" type="number" :default-value="0"
