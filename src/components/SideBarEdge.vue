@@ -18,55 +18,55 @@ const props = defineProps<{
 
 </script>
 <template>
-    <div class="grid gap-2 mt-2">
-        <HoverCard :open-delay="2000">
-            <HoverCardTrigger>
-                <Label for="edge-id">Edge Id</Label>
-            </HoverCardTrigger>
-            <HoverCardContent>Unique identifier of the node across all layouts contained in this LIF
-                file.
-            </HoverCardContent>
-        </HoverCard>
-        <Input id="edge-id" :disabled="props.sideBarNode.createFast.value"
-            v-model="props.sideBarNode.newNode.value.nodeName" />
-    </div>
-    <div class="grid gap-2 mt-2">
-        <HoverCard :open-delay="2000">
-            <HoverCardTrigger>
-                <Label for="edge-name">Edge Name</Label>
-            </HoverCardTrigger>
-            <HoverCardContent>Unique identifier of the node across all layouts contained in this LIF
-                file.
-            </HoverCardContent>
-        </HoverCard>
-        <Input id="edge-name" :disabled="props.sideBarNode.createFast.value"
-            v-model="props.sideBarNode.newNode.value.nodeName" />
-    </div>
-    <div class="grid gap-2 mt-2">
-        <HoverCard :open-delay="2000">
-            <HoverCardTrigger>
-                <Label for="edge-description">Edge Description</Label>
-            </HoverCardTrigger>
-            <HoverCardContent>Unique identifier of the node across all layouts contained in this LIF
-                file.
-            </HoverCardContent>
-        </HoverCard>
-        <Input id="edge-description" :disabled="props.sideBarNode.createFast.value"
-            v-model="props.sideBarNode.newNode.value.nodeName" />
-    </div>
-    <div class="ml-auto flex w-full space-x-2 py-2">
+    <div v-if="props.sidebar.selectedEdges.value[0]">
         <div class="grid gap-2 mt-2">
-            <Label for="nodeX">Start Node Id</Label>
-            <Input id="nodeX" :default-value="0" />
+            <HoverCard :open-delay="2000">
+                <HoverCardTrigger>
+                    <Label for="edge-id">Edge Id</Label>
+                </HoverCardTrigger>
+                <HoverCardContent>Unique identifier of the node across all layouts contained in this LIF
+                    file.
+                </HoverCardContent>
+            </HoverCard>
+            <Input id="edge-id" :disabled="props.sideBarNode.createFast.value"
+                v-model="props.sidebar.selectedEdges.value[0]" />
         </div>
         <div class="grid gap-2 mt-2">
-            <Label for="nodeY">End Node Id</Label>
-            <Input id="nodeY" :default-value="0" />
+            <HoverCard :open-delay="2000">
+                <HoverCardTrigger>
+                    <Label for="edge-name">Edge Name</Label>
+                </HoverCardTrigger>
+                <HoverCardContent>Unique identifier of the node across all layouts contained in this LIF
+                    file.
+                </HoverCardContent>
+            </HoverCard>
+            <Input id="edge-name" v-model="props.sidebar.selectedEdges.value[0]" />
         </div>
-    </div>
-    <div class="ml-auto flex w-full space-x-2 mt-3">
-        <Button variant="secondary" @click="props.layout.createNode(props.sideBarNode.newNode.value)">Save</Button>
-        <Button variant="secondary"
-            @click="props.layout.deleteNode(props.sideBarNode.newNode.value.nodeId)">Delete</Button>
+        <div class="grid gap-2 mt-2">
+            <HoverCard :open-delay="2000">
+                <HoverCardTrigger>
+                    <Label for="edge-description">Edge Description</Label>
+                </HoverCardTrigger>
+                <HoverCardContent>Unique identifier of the node across all layouts contained in this LIF
+                    file.
+                </HoverCardContent>
+            </HoverCard>
+            <Input id="edge-description"
+                v-model="props.layout.edges[props.sidebar.selectedEdges.value[0]].vda5050.edgeDescription" />
+        </div>
+        <div class="ml-auto flex w-full space-x-2 py-2">
+            <div class="grid gap-2 mt-2">
+                <Label for="nodeX">Start Node Id</Label>
+                <Input id="nodeX" :default-value="props.layout.edges[props.sidebar.selectedEdges.value[0]].source" />
+            </div>
+            <div class="grid gap-2 mt-2">
+                <Label for="nodeY">End Node Id</Label>
+                <Input id="nodeY" :default-value="props.layout.edges[props.sidebar.selectedEdges.value[0]].target" />
+            </div>
+        </div>
+        <div class="ml-auto flex w-full space-x-2 mt-3">
+            <Button variant="secondary"
+                @click="props.layout.deleteEdge(props.sidebar.selectedEdges.value[0])">Delete</Button>
+        </div>
     </div>
 </template>

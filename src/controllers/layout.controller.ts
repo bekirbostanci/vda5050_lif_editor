@@ -1,12 +1,13 @@
 import { reactive, toRaw } from "vue";
 import * as vNG from "v-network-graph";
-import { Layout, Node } from "@/types/Layout";
+import { Layout, Node, Edge as vdaEdge } from "@/types/Layout";
 import { ExtendedNodes } from "@/types/ExtendedNode";
 import {
   VisualizationLayout,
   VisualizationLayouts,
 } from "@/types/VisualizationLayout";
 import { Lif } from "@/types/Lif";
+import { ExtendedEdges } from "@/types/ExtendedEdge";
 
 export class LayoutController {
   public lif = reactive<Lif>({
@@ -23,7 +24,7 @@ export class LayoutController {
   public visualizationLayouts = reactive<VisualizationLayouts>({});
   public nodes = reactive<ExtendedNodes>({});
   public layouts = reactive<vNG.Layouts>({ nodes: {} });
-  public edges = reactive<vNG.Edges>({});
+  public edges = reactive<ExtendedEdges>({});
   private oldLayoutId = "";
   constructor() {
     const layout: Layout = {
@@ -39,12 +40,28 @@ export class LayoutController {
     this.vdaLayouts.push(layout);
   }
 
+  deleteEdge(edgeId: string) {
+    if (edgeId && this.edges[edgeId]) {
+      delete this.edges[edgeId];
+    } else {
+      // TODO : add toaster error
+    }
+  }
+
   deleteNode(nodeId: string) {
     if (nodeId && this.layouts.nodes[nodeId] && this.nodes[nodeId]) {
       delete this.nodes[nodeId];
       delete this.layouts.nodes[nodeId];
+      Object.keys(this.edges).map((edge) => {
+        if (
+          this.edges[edge].source == nodeId ||
+          this.edges[edge].target == nodeId
+        ) {
+          delete this.edges[edge];
+        }
+      });
     } else {
-      // TODO : add toaster error 
+      // TODO : add toaster error
     }
   }
 
@@ -55,6 +72,7 @@ export class LayoutController {
   }
 
   changeLayout(layoutId: string) {
+    // Save old layout information to visualization layout
     if (this.oldLayoutId != "") {
       this.visualizationLayouts[this.oldLayoutId] = {
         nodes: JSON.parse(JSON.stringify(this.nodes)),
@@ -62,6 +80,8 @@ export class LayoutController {
         layouts: JSON.parse(JSON.stringify(this.layouts)),
       };
     }
+
+    // Remove all nodes and edges for new layout
     Object.keys(this.nodes).map((node) => {
       delete this.nodes[node];
     });
@@ -72,6 +92,8 @@ export class LayoutController {
       delete this.layouts.nodes[node];
     });
 
+    // Check if layout exists
+    // If exists, load layout data to vue ref variables
     if (this.visualizationLayouts[layoutId]) {
       Object.keys(this.visualizationLayouts[layoutId].nodes).map((node) => {
         this.nodes[node] = JSON.parse(
@@ -121,7 +143,7 @@ export class LayoutController {
 
   updateEdges(source: string, targets: string[]) {
     Object.keys(this.edges).forEach((key) => {
-      if (this.edges[key].source == source) {
+      if (this.edges[key].vng.source == source) {
         delete this.edges[key];
       }
     });
@@ -132,7 +154,19 @@ export class LayoutController {
   }
 
   createEdge(source: string, target: string) {
-    this.edges[source + "_" + target] = { source: source, target: target };
+    const vdaEdge: vdaEdge = {
+      edgeId: source + "_" + target,
+      edgeName: source + "_" + target,
+      startNodeId: source,
+      endNodeId: target,
+      edgeDescription: "",
+      vehicleTypeEdge: [],
+    };
+    this.edges[source + "_" + target] = {
+      vda5050: vdaEdge,
+      source: source,
+      target: target,
+    };
   }
 
   saveLayout(layout: Layout) {
@@ -163,15 +197,7 @@ export class LayoutController {
         if (visualizationLayout.edges) {
           layout.edges = Object.keys(visualizationLayout.edges).map(
             (edgeId) => {
-              const { source, target } = visualizationLayout.edges[edgeId];
-              return {
-                edgeId,
-                edgeName: edgeId,
-                edgeDescription: "",
-                startNodeId: source,
-                endNodeId: target,
-                vehicleTypeEdge: [],
-              };
+              return visualizationLayout.edges[edgeId].vda5050;
             }
           );
         }

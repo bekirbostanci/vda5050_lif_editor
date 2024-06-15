@@ -1,8 +1,4 @@
-import {
-  ActionParameter,
-  BlockingType,
-  Trajectory,
-} from "vda-5050-lib";
+import { ActionParameter, BlockingType, Trajectory } from "vda-5050-lib";
 
 export interface Layout {
   layoutId: string; // Unique identifier for this layout
@@ -34,6 +30,7 @@ export interface VehicleTypeNodeProperty {
   theta: number;
   actions: [Action];
 }
+
 export interface Action {
   actionType: string;
   actionDescription: string;
