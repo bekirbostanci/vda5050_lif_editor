@@ -5,9 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { SideBarController } from "@/controllers/sideBar.controller";
 import { LayoutController } from "@/controllers/layout.controller";
-
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/hover-card";
-
 import { SideBarNodeController } from "@/controllers/sideBarNode.controller";
 
 const props = defineProps<{
@@ -40,7 +38,7 @@ const props = defineProps<{
                     file.
                 </HoverCardContent>
             </HoverCard>
-            <Input id="edge-name" v-model="props.sidebar.selectedEdges.value[0]" />
+            <Input id="edge-name" v-model="props.layout.edges[props.sidebar.selectedEdges.value[0]].vda5050.edgeName" />
         </div>
         <div class="grid gap-2 mt-2">
             <HoverCard :open-delay="2000">
