@@ -1,16 +1,17 @@
-import { defineConfigs } from "v-network-graph";
+import { reactive } from "vue";
+import { Node } from "v-network-graph";
 
-const configs = defineConfigs({
+export const initialConfigs = {
   node: {
-    draggable: node => node.draggable,
+    draggable: (node: Node) => node.draggable,
     selectable: 1, // up to 2 nodes
     zOrder: {
-      zIndex: (node) => node.zIndex,
+      zIndex: (node: Node) => node.zIndex,
     },
     normal: {
       type: "circle",
       radius: 15,
-      color: (node) => node.color,
+      color: (node: Node) => node.color,
     },
     hover: {
       color: "black",
@@ -33,6 +34,7 @@ const configs = defineConfigs({
     },
     label: {
       fontSize: 15,
+      visible: true,
     },
     selfLoop: {
       radius: 25,
@@ -64,6 +66,7 @@ const configs = defineConfigs({
       },
     },
   },
-});
+};
 
+const configs = reactive(initialConfigs);
 export default configs;

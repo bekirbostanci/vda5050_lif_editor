@@ -62,20 +62,23 @@ const eventHandlers: EventHandlers = {
   },
 };
 </script>
-
 <template>
-  <ResizablePanelGroup id="demo-group-1" direction="horizontal" class="max-w rounded-lg border">
+  <ResizablePanelGroup id="demo-group-1" direction="horizontal" class="rounded-lg border">
     <ResizablePanel id="demo-panel-1" :default-size="15">
       <SideBar class="p-6" :layout="layoutController" :sideBar="sideBarController"
         :side-bar-node="sideBarNodeController" />
     </ResizablePanel>
     <ResizableHandle id="demo-handle-1" />
-    <ResizablePanel id="demo-panel-2" :default-size="65">
-      <div class="flex h-[800px] items-center justify-center" v-if="!props.topBarController.showJson.value">
+    <ResizablePanel id="demo-panel-2" :default-size="60">
+      <div class="graph flex items-center justify-center" v-if="!props.topBarController.showJson.value">
         <v-network-graph ref="graph" class="graph" zoom-level="200" :nodes="layoutController.nodes"
           :edges="layoutController.edges" :layouts="layoutController.layouts" :configs="configs"
           v-model:selected-nodes="sideBarController.selectedNodes.value"
-          v-model:selected-edges="sideBarController.selectedEdges.value" :event-handlers="eventHandlers" />
+          v-model:selected-edges="sideBarController.selectedEdges.value" :event-handlers="eventHandlers">
+          <template #edge-label="{ edge, ...slotProps }" v-if="configs.edge.label.visible">
+            <v-edge-label :text="edge.vda5050.edgeName" align="center" vertical-align="above" v-bind="slotProps" />
+          </template>
+        </v-network-graph>
       </div>
       <div style="overflow-y: scroll; height:800px;" v-if="props.topBarController.showJson.value">
         <vue-json-pretty :data="layoutController.lif" />
@@ -84,7 +87,8 @@ const eventHandlers: EventHandlers = {
     <ResizableHandle id="demo-handle-2" />
     <ResizablePanel v-if="sideBarController.toolState.value != ToolState.empty" id="demo-panel-3" :default-size="20">
       <div class="p-6" v-if="sideBarController.toolState.value == ToolState.createNode">
-        <span class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+        <span @click=""
+          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
           Create Node
         </span>
         <Separator class="mt-3 mb-3" orientation="horizontal" />
@@ -126,7 +130,6 @@ const eventHandlers: EventHandlers = {
 <style>
 .graph {
   width: 100%;
-  height: 800px;
-  border: 1px solid #ecf0f1;
+  height: calc(100svh - 120px);
 }
 </style>
