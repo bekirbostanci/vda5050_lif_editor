@@ -12,7 +12,8 @@ const props = defineProps({
 
 <template>
   <PresetSave />
-  <Button variant="secondary" @click="props.topBarController.toggleJson()">
+  <Button :variant="props.topBarController.showJson.value ? 'default' : 'secondary'"
+    @click="props.topBarController.toggleJson()">
     <Icon class="mr-2" icon="ph:code-light" :height="20" />
     {{ props.topBarController.showJson.value ? "Show Diagram" : "Show Code" }}
   </Button>
