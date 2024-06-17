@@ -41,8 +41,8 @@ const open = ref(false);
 const searchTerm = ref("");
 
 const frameworks = Object.values(toRaw(props.layout.nodes)).map((node) => ({
-  value: node.vda5050.nodeId,
-  label: node.vda5050.nodeId,
+  value: node.vda5050Node.nodeId,
+  label: node.vda5050Node.nodeId,
 }));
 
 const filteredFrameworks = computed(() =>

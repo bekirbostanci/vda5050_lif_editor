@@ -80,13 +80,13 @@ export class SideBarNodeController {
     }
 
     this.newNode.value.mapId =
-      this.layoutController.nodes[selectedNode].vda5050.mapId;
+      this.layoutController.nodes[selectedNode].vda5050Node.mapId;
     this.newNode.value.nodeDescription =
-      this.layoutController.nodes[selectedNode].vda5050.nodeDescription;
+      this.layoutController.nodes[selectedNode].vda5050Node.nodeDescription;
     this.newNode.value.nodeId =
-      this.layoutController.nodes[selectedNode].vda5050.nodeId;
+      this.layoutController.nodes[selectedNode].vda5050Node.nodeId;
     this.newNode.value.nodeName =
-      this.layoutController.nodes[selectedNode].vda5050.nodeName;
+      this.layoutController.nodes[selectedNode].vda5050Node.nodeName;
 
     const test = Object.values(this.layoutController.edges).filter(
       (connection) => connection.source == selectedNode

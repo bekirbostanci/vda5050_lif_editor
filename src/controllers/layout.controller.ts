@@ -123,7 +123,7 @@ export class LayoutController {
       JSON.stringify({
         name: node.nodeName,
         draggable: false,
-        vda5050: node,
+        vda5050Node: node,
       })
     );
     const nodeX = this.layouts.nodes[node.nodeId]
@@ -137,7 +137,7 @@ export class LayoutController {
       y: Math.floor(nodeY * 1000) / 1000,
     };
     // Update node position in vda layout
-    this.nodes[node.nodeId].vda5050.nodePosition =
+    this.nodes[node.nodeId].vda5050Node.nodePosition =
       this.layouts.nodes[node.nodeId];
   }
 
@@ -192,7 +192,7 @@ export class LayoutController {
       const visualizationLayout = this.visualizationLayouts[layout.layoutId];
       if (visualizationLayout && visualizationLayout.nodes) {
         layout.nodes = Object.values(visualizationLayout.nodes).map(
-          (node) => node.vda5050
+          (node) => node.vda5050Node
         );
         if (visualizationLayout.edges) {
           layout.edges = Object.keys(visualizationLayout.edges).map(
@@ -229,7 +229,7 @@ export class LayoutController {
 
       layout.nodes.forEach((node) => {
         visualizationLayout.nodes[node.nodeId] = {
-          vda5050: node,
+          vda5050Node: node,
           draggable: false,
           name: node.nodeName,
         };
