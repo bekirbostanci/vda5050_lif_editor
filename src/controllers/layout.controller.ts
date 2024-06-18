@@ -119,6 +119,8 @@ export class LayoutController {
   }
 
   createNode(node: Node) {
+    if (node.nodeId == "") return;
+
     this.nodes[node.nodeId] = JSON.parse(
       JSON.stringify({
         name: node.nodeName,
@@ -146,6 +148,8 @@ export class LayoutController {
   }
 
   createStation(station: Station) {
+    if(station.stationId == "") return;
+
     this.nodes[station.stationId] = JSON.parse(
       JSON.stringify({
         color: "lightskyblue",
@@ -211,7 +215,16 @@ export class LayoutController {
     if (layoutIndex !== -1) {
       this.vdaLayouts[layoutIndex] = layout;
     } else {
-      this.vdaLayouts.push(layout);
+      this.vdaLayouts.push({
+        layoutId: layout.layoutId,
+        layoutName: layout.layoutName,
+        layoutVersion: layout.layoutVersion,
+        layoutLevelId: layout.layoutLevelId,
+        layoutDescription: layout.layoutDescription,
+        nodes: [],
+        edges: [],
+        stations: [],
+      });
     }
   }
   deleteLayout(layoutId: string) {
