@@ -11,11 +11,13 @@ import { LayoutController } from "@/controllers/layout.controller";
 import { SideBarController } from "@/controllers/sideBar.controller";
 import { SideBarNodeController } from "@/controllers/sideBarNode.controller";
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
+import { SideBarStationController } from "@/controllers/sideBarStation.controller";
 
 const props = defineProps<{
   layout: LayoutController;
   sideBar: SideBarController;
   sideBarNode: SideBarNodeController;
+  sideBarStation: SideBarStationController;
 }>();
 </script>
 
@@ -41,8 +43,9 @@ const props = defineProps<{
           </span>
           <div class="ml-auto flex w-full space-x-2">
             <Button variant="secondary"
-              @click="props.sideBarNode.cleanNodeInputs(); props.sideBar.setCreateNodeState();">Node</Button>
-            <Button variant="secondary" @click="props.sideBar.setCreateStationState()">Station</Button>
+              @click="props.sideBar.selectedNodes.value = []; props.sideBarNode.cleanNodeInputs(); props.sideBar.setCreateNodeState();">Node</Button>
+            <Button variant="secondary"
+              @click="props.sideBar.selectedStations.value = [];  props.sideBarStation.cleanStationInputs(); props.sideBar.setCreateStationState()">Station</Button>
             <Button variant="secondary">Action</Button>
           </div>
         </HoverCardTrigger>

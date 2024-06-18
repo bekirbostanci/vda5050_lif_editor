@@ -77,7 +77,7 @@ export type RotationType = "NONE" | "CCW" | "CW" | "BOTH";
 
 export interface Station {
   stationId: string;
-  interactionNodeIds: [string];
+  interactionNodeIds: string[];
   stationName: string;
   stationDescription: string;
   stationHeight: number;

@@ -1,6 +1,6 @@
 import { reactive, toRaw } from "vue";
 import * as vNG from "v-network-graph";
-import { Layout, Node, Edge as vdaEdge } from "@/types/Layout";
+import { Layout, Node, Station, Edge as vdaEdge } from "@/types/Layout";
 import { ExtendedNodes } from "@/types/ExtendedNode";
 import {
   VisualizationLayout,
@@ -122,6 +122,7 @@ export class LayoutController {
     this.nodes[node.nodeId] = JSON.parse(
       JSON.stringify({
         name: node.nodeName,
+        color: "black",
         draggable: false,
         vda5050Node: node,
       })
@@ -136,14 +137,48 @@ export class LayoutController {
       x: Math.floor(nodeX * 1000) / 1000,
       y: Math.floor(nodeY * 1000) / 1000,
     };
+
     // Update node position in vda layout
-    this.nodes[node.nodeId].vda5050Node.nodePosition =
-      this.layouts.nodes[node.nodeId];
+    this.nodes[node.nodeId].vda5050Node!.nodePosition = {
+      x: this.layouts.nodes[node.nodeId].x,
+      y: this.layouts.nodes[node.nodeId].y,
+    };
+  }
+
+  createStation(station: Station) {
+    this.nodes[station.stationId] = JSON.parse(
+      JSON.stringify({
+        color: "lightskyblue",
+        name: station.stationName,
+        draggable: true,
+        vda5050Station: station,
+      })
+    );
+
+    const nodeX = this.layouts.nodes[station.stationId]
+      ? this.layouts.nodes[station.stationId].x
+      : station.stationPosition.x;
+    const nodeY = this.layouts.nodes[station.stationId]
+      ? this.layouts.nodes[station.stationId].y
+      : station.stationPosition.y;
+
+    this.layouts.nodes[station.stationId] = {
+      x: Math.floor(nodeX * 1000) / 1000,
+      y: Math.floor(nodeY * 1000) / 1000,
+    };
+
+    this.nodes[station.stationId].vda5050Station!.stationPosition = {
+      x: this.layouts.nodes[station.stationId].x,
+      y: this.layouts.nodes[station.stationId].y,
+      theta: station.stationPosition.theta,
+    };
   }
 
   updateEdges(source: string, targets: string[]) {
+    console.log("updateEdges", source, targets);
+    
     Object.keys(this.edges).forEach((key) => {
-      if (this.edges[key].vng.source == source) {
+      if (this.edges[key].source == source) {
         delete this.edges[key];
       }
     });
@@ -163,7 +198,7 @@ export class LayoutController {
       vehicleTypeEdge: [],
     };
     this.edges[source + "_" + target] = {
-      vda5050: vdaEdge,
+      vda5050Edge: vdaEdge,
       source: source,
       target: target,
     };
@@ -191,13 +226,21 @@ export class LayoutController {
     this.vdaLayouts.forEach((layout) => {
       const visualizationLayout = this.visualizationLayouts[layout.layoutId];
       if (visualizationLayout && visualizationLayout.nodes) {
-        layout.nodes = Object.values(visualizationLayout.nodes).map(
-          (node) => node.vda5050Node
-        );
+        layout.nodes = [];
+        layout.stations = [];
+        Object.values(visualizationLayout.nodes).map((node) => {
+          if (node.vda5050Node) {
+            layout.nodes.push(node.vda5050Node);
+          }
+          if (node.vda5050Station) {
+            layout.stations.push(node.vda5050Station);
+          }
+        });
+
         if (visualizationLayout.edges) {
           layout.edges = Object.keys(visualizationLayout.edges).map(
             (edgeId) => {
-              return visualizationLayout.edges[edgeId].vda5050;
+              return visualizationLayout.edges[edgeId].vda5050Edge;
             }
           );
         }
@@ -205,6 +248,7 @@ export class LayoutController {
     });
     this.lif.layouts = this.vdaLayouts;
   }
+
   convertJsonToLif(data: string) {
     let vdaLayouts: Lif;
     try {
@@ -230,18 +274,36 @@ export class LayoutController {
       layout.nodes.forEach((node) => {
         visualizationLayout.nodes[node.nodeId] = {
           vda5050Node: node,
+          vda5050Station: undefined,
           draggable: false,
           name: node.nodeName,
+          color: "black",
+          type: "vda5050Node",
         };
         visualizationLayout.layouts.nodes[node.nodeId] = {
           x: node.nodePosition.x,
           y: node.nodePosition.y,
         };
       });
+      layout.stations.forEach((station) => {
+        visualizationLayout.nodes[station.stationId] = {
+          vda5050Node: undefined,
+          vda5050Station: station,
+          draggable: false,
+          name: station.stationName,
+          color: "lightskyblue",
+          type: "vda5050Station",
+        };
+        visualizationLayout.layouts.nodes[station.stationId] = {
+          x: station.stationPosition.x,
+          y: station.stationPosition.y,
+        };
+      });
       layout.edges.forEach((edge) => {
         visualizationLayout.edges[edge.edgeId] = {
           source: edge.startNodeId,
           target: edge.endNodeId,
+          vda5050Edge: edge
         };
       });
       this.visualizationLayouts[layout.layoutId] = visualizationLayout;
