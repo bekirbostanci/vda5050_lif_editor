@@ -34,10 +34,17 @@ export class SideBarNodeController {
       const svgPoint = this.graph.value.translateFromDomToSvgCoordinates(point);
       const newNodeId = Date.now().toString().slice(-6);
 
-      if (this.toolController.selectedNodes.value.length > 0) {
+      if (
+        this.toolController.selectedNodes.value.length > 0 &&
+        this.layoutController.nodes[this.toolController.selectedNodes.value[0]]
+          .vda5050Node
+      ) {
         this.lastNodeId = this.toolController.selectedNodes.value[0];
         this.layoutController.createEdge(this.lastNodeId, newNodeId);
-      } else if (this.layoutController.nodes[this.lastNodeId]) {
+      } else if (
+        this.layoutController.nodes[this.lastNodeId] &&
+        this.layoutController.nodes[this.lastNodeId].vda5050Node
+      ) {
         this.layoutController.createEdge(this.lastNodeId, newNodeId);
       }
 
@@ -75,18 +82,22 @@ export class SideBarNodeController {
 
   updateNode(selectedNode: string) {
     this.layoutController.disableNodesDrag();
+
+    if (!this.layoutController.nodes[selectedNode].vda5050Node) {
+      return;
+    }
+
     if (selectedNode) {
       this.layoutController.nodes[selectedNode].draggable = true;
     }
-
     this.newNode.value.mapId =
-      this.layoutController.nodes[selectedNode].vda5050.mapId;
+      this.layoutController.nodes[selectedNode].vda5050Node!.mapId;
     this.newNode.value.nodeDescription =
-      this.layoutController.nodes[selectedNode].vda5050.nodeDescription;
+      this.layoutController.nodes[selectedNode].vda5050Node!.nodeDescription;
     this.newNode.value.nodeId =
-      this.layoutController.nodes[selectedNode].vda5050.nodeId;
+      this.layoutController.nodes[selectedNode].vda5050Node!.nodeId;
     this.newNode.value.nodeName =
-      this.layoutController.nodes[selectedNode].vda5050.nodeName;
+      this.layoutController.nodes[selectedNode].vda5050Node!.nodeName;
 
     const test = Object.values(this.layoutController.edges).filter(
       (connection) => connection.source == selectedNode

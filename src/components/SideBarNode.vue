@@ -31,6 +31,7 @@ import {
   TagsInputItemText,
 } from "@/components/ui/tags-input";
 import { SideBarNodeController } from "@/controllers/sideBarNode.controller";
+import { Search } from "@/types/Search";
 
 const props = defineProps<{
   sidebar: SideBarController;
@@ -40,10 +41,12 @@ const props = defineProps<{
 const open = ref(false);
 const searchTerm = ref("");
 
-const frameworks = Object.values(toRaw(props.layout.nodes)).map((node) => ({
-  value: node.vda5050.nodeId,
-  label: node.vda5050.nodeId,
-}));
+const frameworks: Search[] = [];
+Object.values(toRaw(props.layout.nodes)).map((node) => {
+  if (node.vda5050Node) {
+    frameworks.push({ value: node.vda5050Node.nodeId, label: node.vda5050Node.nodeId })
+  }
+});
 
 const filteredFrameworks = computed(() =>
   frameworks.filter(
@@ -187,6 +190,7 @@ const filteredFrameworks = computed(() =>
   </div>
   <div class="ml-auto flex w-full space-x-2 mt-3">
     <Button variant="secondary" @click="props.layout.createNode(props.sideBarNode.newNode.value)">Save</Button>
-    <Button variant="secondary" @click="props.sidebar.selectedNodes.value=[]; props.layout.deleteNode(props.sideBarNode.newNode.value.nodeId); ">Delete</Button>
+    <Button variant="secondary"
+      @click="props.sidebar.selectedNodes.value = []; props.layout.deleteNode(props.sideBarNode.newNode.value.nodeId);">Delete</Button>
   </div>
 </template>

@@ -14,7 +14,7 @@ export const initialConfigs = {
       color: (node: Node) => node.color,
     },
     hover: {
-      color: "black",
+      color: (node: Node) => node.color,
     },
     label: {
       directionAutoAdjustment: true,
@@ -34,7 +34,7 @@ export const initialConfigs = {
     },
     label: {
       fontSize: 15,
-      visible: true,
+      visible: false,
     },
     selfLoop: {
       radius: 25,

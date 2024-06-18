@@ -134,7 +134,7 @@ function deleteLayout() {
               This attribute can be used to explicitly indicate which level or
               floor within a building or buildings a layout represents in a
               situation where there are multiple, such as multiple levels in the
-              same faci- lity, or two disconnected areas in the same facility.
+              same facility, or two disconnected areas in the same facility.
             </HoverCardContent>
           </HoverCard>
           <Input
@@ -161,9 +161,9 @@ function deleteLayout() {
         </div>
       </div>
       <DialogFooter>
-        <DialogClose as-child>
-          <Button type="submit" @click="saveLayout()"> Save </Button>
-          <Button type="submit" @click="deleteLayout()"> Delete </Button>
+        <DialogClose>
+          <Button @click="saveLayout()"> Save </Button>
+          <Button class="ml-2" @click="deleteLayout()"> Delete </Button>
         </DialogClose>
       </DialogFooter>
     </DialogContent>

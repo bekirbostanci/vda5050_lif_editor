@@ -38,7 +38,8 @@ const props = defineProps<{
                     file.
                 </HoverCardContent>
             </HoverCard>
-            <Input id="edge-name" v-model="props.layout.edges[props.sidebar.selectedEdges.value[0]].vda5050.edgeName" />
+            <Input id="edge-name"
+                v-model="props.layout.edges[props.sidebar.selectedEdges.value[0]].vda5050Edge.edgeName" />
         </div>
         <div class="grid gap-2 mt-2">
             <HoverCard :open-delay="2000">
@@ -50,16 +51,18 @@ const props = defineProps<{
                 </HoverCardContent>
             </HoverCard>
             <Input id="edge-description"
-                v-model="props.layout.edges[props.sidebar.selectedEdges.value[0]].vda5050.edgeDescription" />
+                v-model="props.layout.edges[props.sidebar.selectedEdges.value[0]].vda5050Edge.edgeDescription" />
         </div>
         <div class="ml-auto flex w-full space-x-2 py-2">
             <div class="grid gap-2 mt-2">
-                <Label for="nodeX">Start Node Id</Label>
-                <Input id="nodeX" :default-value="props.layout.edges[props.sidebar.selectedEdges.value[0]].source" />
+                <Label for="startNode">Start Node Id</Label>
+                <Input id="startNode" disabled
+                    :default-value="props.layout.edges[props.sidebar.selectedEdges.value[0]].source" />
             </div>
             <div class="grid gap-2 mt-2">
-                <Label for="nodeY">End Node Id</Label>
-                <Input id="nodeY" :default-value="props.layout.edges[props.sidebar.selectedEdges.value[0]].target" />
+                <Label for="endNode">End Node Id</Label>
+                <Input id="endNode" disabled
+                    :default-value="props.layout.edges[props.sidebar.selectedEdges.value[0]].target" />
             </div>
         </div>
         <div class="ml-auto flex w-full space-x-2 mt-3">

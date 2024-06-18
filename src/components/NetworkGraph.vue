@@ -24,6 +24,7 @@ import * as vNG from "v-network-graph";
 import { TopBarController } from "@/controllers/topBar.controller";
 import StationBar from "./SideBarStation.vue";
 import SideBarEdge from "./SideBarEdge.vue";
+import { SideBarStationController } from "@/controllers/sideBarStation.controller";
 
 const props = defineProps({
   topBarController: {
@@ -40,18 +41,29 @@ const sideBarNodeController = new SideBarNodeController(
   layoutController,
   graph
 );
+const sideBarStationController = new SideBarStationController(layoutController);
 props.topBarController.layoutController = layoutController;
 const eventHandlers: EventHandlers = {
   "view:click": (mouseEvent: ViewEvent<MouseEvent>) => {
     layoutController.disableNodesDrag();
-    sideBarNodeController.createNodeFast(mouseEvent);
+    if (sideBarController.toolState.value == ToolState.createNode ||
+      sideBarController.toolState.value == ToolState.selectNode) {
+      sideBarNodeController.createNodeFast(mouseEvent);
+    }
   },
   "node:select": (nodes) => {
     if (nodes.length > 0) {
-      sideBarController.setSelectNodeTool();
-      sideBarNodeController.updateNode(nodes[0]);
+      if (layoutController.nodes[nodes[0]].vda5050Node) {
+        sideBarController.setSelectNodeTool();
+        sideBarNodeController.updateNode(nodes[0]);
+      } else if (layoutController.nodes[nodes[0]].vda5050Station) {
+        sideBarController.setSelectStationTool();
+        sideBarStationController.updateStation(nodes[0]);
+        sideBarController.selectedStations.value[0] = nodes[0];
+      }
     } else {
       sideBarNodeController.cleanNodeInputs();
+      sideBarStationController.cleanStationInputs();
       layoutController.disableNodesDrag();
     }
   },
@@ -63,25 +75,26 @@ const eventHandlers: EventHandlers = {
 };
 </script>
 <template>
-  <ResizablePanelGroup id="demo-group-1" direction="horizontal" class="rounded-lg border">
+  <div class="p-0" v-if="props.topBarController.showJson.value">
+    <vue-json-pretty :data="layoutController.lif" />
+  </div>
+  <ResizablePanelGroup id="demo-group-1" direction="horizontal" class="rounded-lg border" v-else>
     <ResizablePanel id="demo-panel-1" :default-size="15">
       <SideBar class="p-6" :layout="layoutController" :sideBar="sideBarController"
-        :side-bar-node="sideBarNodeController" />
+        :side-bar-node="sideBarNodeController" :side-bar-station="sideBarStationController" />
     </ResizablePanel>
     <ResizableHandle id="demo-handle-1" />
     <ResizablePanel id="demo-panel-2" :default-size="60">
-      <div class="graph flex items-center justify-center" v-if="!props.topBarController.showJson.value">
+      <div class="graph flex items-center justify-center">
         <v-network-graph ref="graph" class="graph" zoom-level="200" :nodes="layoutController.nodes"
           :edges="layoutController.edges" :layouts="layoutController.layouts" :configs="configs"
           v-model:selected-nodes="sideBarController.selectedNodes.value"
           v-model:selected-edges="sideBarController.selectedEdges.value" :event-handlers="eventHandlers">
-          <template #edge-label="{ edge, ...slotProps }" v-if="configs.edge.label.visible">
-            <v-edge-label :text="edge.vda5050.edgeName" align="center" vertical-align="above" v-bind="slotProps" />
+          <template #edge-label="{ edge, ...slotProps }">
+            <v-edge-label v-if="configs.edge.label.visible" :text="edge.vda5050Edge.edgeName" align="center"
+              vertical-align="above" v-bind="slotProps" />
           </template>
         </v-network-graph>
-      </div>
-      <div style="overflow-y: scroll; height:800px;" v-if="props.topBarController.showJson.value">
-        <vue-json-pretty :data="layoutController.lif" />
       </div>
     </ResizablePanel>
     <ResizableHandle id="demo-handle-2" />
@@ -113,7 +126,8 @@ const eventHandlers: EventHandlers = {
           Create Station
         </span>
         <Separator class="mt-3 mb-3" orientation="horizontal" />
-        <StationBar :layout="layoutController" :sidebar="sideBarController" :side-bar-node="sideBarNodeController" />
+        <StationBar :sidebar-station="sideBarStationController" :layout="layoutController" :sidebar="sideBarController"
+          :side-bar-node="sideBarNodeController" />
       </div>
     </ResizablePanel>
   </ResizablePanelGroup>

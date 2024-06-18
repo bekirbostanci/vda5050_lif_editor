@@ -6,6 +6,7 @@ export class SideBarController {
   private createStation = ref<boolean>(false);
   public selectedNodes = ref<string[]>([]);
   public selectedEdges = ref<string[]>([]);
+  public selectedStations = ref<string[]>([]);
   public toolState = ref<ToolState>(ToolState.createNode);
   public selectedLayoutId = ref<string>("");
 
@@ -29,6 +30,10 @@ export class SideBarController {
 
   public setSelectNodeTool() {
     this.toolState.value = ToolState.selectNode;
+  }
+  public setSelectStationTool() {
+    this.setResetStates();
+    this.toolState.value = ToolState.createStation;
   }
 
   public setSelectEdgeTool() {
