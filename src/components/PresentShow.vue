@@ -11,7 +11,6 @@ const props = defineProps({
 </script>
 
 <template>
-  <PresetSave />
   <Button :variant="props.topBarController.showJson.value ? 'default' : 'secondary'"
     @click="props.topBarController.toggleJson()">
     <Icon class="mr-2" icon="ph:code-light" :height="20" />
