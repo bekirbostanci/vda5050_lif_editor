@@ -4,8 +4,8 @@ import { LayoutController } from "./layout.controller";
 
 export class SideBarStationController {
   newStation = ref<Station>({
-    stationId: "t",
-    stationName: "t",
+    stationId: "",
+    stationName: "",
     interactionNodeIds: [],
     stationDescription: "",
     stationHeight: 0,
@@ -19,8 +19,8 @@ export class SideBarStationController {
   constructor(private layoutController: LayoutController) {}
   cleanStationInputs() {
     this.newStation.value = {
-      stationId: "t",
-      stationName: "t",
+      stationId: "",
+      stationName: "",
       interactionNodeIds: [],
       stationDescription: "",
       stationHeight: 0,
