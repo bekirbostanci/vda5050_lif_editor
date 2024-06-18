@@ -33,6 +33,4 @@ const props = defineProps({
   background-color: white;
   z-index: 10;
 }
-
-;
 </style>
