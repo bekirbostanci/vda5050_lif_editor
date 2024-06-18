@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { EventHandlers, ViewEvent } from "v-network-graph";
+import { ref } from "vue";
+import { EventHandlers, ViewEvent, Instance } from "v-network-graph";
 import VueJsonPretty from 'vue-json-pretty';
 import 'vue-json-pretty/lib/styles.css';
-
 
 import { Separator } from "./ui/separator";
 import {
@@ -19,8 +19,6 @@ import { LayoutController } from "@/controllers/layout.controller";
 import { SideBarController } from "@/controllers/sideBar.controller";
 import { ToolState } from "@/types/ToolState";
 import { SideBarNodeController } from "@/controllers/sideBarNode.controller";
-import { ref } from "vue";
-import * as vNG from "v-network-graph";
 import { TopBarController } from "@/controllers/topBar.controller";
 import StationBar from "./SideBarStation.vue";
 import SideBarEdge from "./SideBarEdge.vue";
@@ -33,7 +31,7 @@ const props = defineProps({
   },
 });
 
-const graph = ref<vNG.Instance>();
+const graph = ref<Instance>();
 const layoutController = new LayoutController();
 const sideBarController = new SideBarController();
 const sideBarNodeController = new SideBarNodeController(
@@ -74,6 +72,7 @@ const eventHandlers: EventHandlers = {
   },
 };
 </script>
+
 <template>
   <div class="p-0" v-if="props.topBarController.showJson.value">
     <vue-json-pretty :data="layoutController.lif" />
@@ -131,7 +130,6 @@ const eventHandlers: EventHandlers = {
       </div>
     </ResizablePanel>
   </ResizablePanelGroup>
-
   <div class="grid h-full items-stretch gap-6 md:grid-cols-3">
     <div class="md:order-1">
       <div class="flex h-full flex-col space-y-4">
