@@ -7,11 +7,15 @@ const props = defineProps({
     type: TopBarController,
     required: true,
   },
+  ghost: {
+    type: Boolean,
+    default: false,
+  }
 });
 </script>
 
 <template>
-  <Button :variant="props.topBarController.showJson.value ? 'default' : 'secondary'"
+  <Button :variant="props.ghost ? 'ghost' : 'secondary'"
     @click="props.topBarController.toggleJson()">
     <Icon class="mr-2" icon="ph:code-light" :height="20" />
     {{ props.topBarController.showJson.value ? "Show Diagram" : "Show Code" }}

@@ -136,9 +136,9 @@ const filteredFrameworks = computed(() =>
     <Input id="mapId" :disabled="props.sideBarNode.createFast.value" v-model="props.sideBarNode.newNode.value.mapId" />
   </div>
 
-  <div class="grid gap-2 mt-2">
+  <div class="grid gap-2 mt-4">
     <Label for="mapId">Connected Nodes</Label>
-    <TagsInput class="px-0 gap-0" :model-value="props.sideBarNode.nodeConnections.value" @update:model-value="
+    <TagsInput class="px-0 gap-0 mt-1" :model-value="props.sideBarNode.nodeConnections.value" @update:model-value="
       props.layout.updateEdges(
         props.sideBarNode.newNode.value.nodeId,
         props.sideBarNode.nodeConnections.value
