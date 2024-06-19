@@ -22,6 +22,11 @@ export class SideBarController {
     this.toolState.value = ToolState.createNode;
   }
 
+  setCrudAction(){
+    this.setResetStates();
+    this.toolState.value = ToolState.crudAction;
+  }
+
   setCreateStationState() {
     this.setResetStates();
     this.createStation.value = true;

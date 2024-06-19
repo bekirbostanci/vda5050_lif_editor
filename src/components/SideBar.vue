@@ -43,7 +43,7 @@ const props = defineProps<{
                 @click="props.sideBar.selectedStations.value = []; props.sideBarStation.cleanStationInputs(); props.sideBar.setCreateStationState()">
                 Station
               </TabsTrigger>
-              <TabsTrigger value="create-action">
+              <TabsTrigger value="create-action" @click="props.sideBar.setCrudAction();">
                 Action
               </TabsTrigger>
             </TabsList>

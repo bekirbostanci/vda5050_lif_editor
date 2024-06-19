@@ -20,7 +20,8 @@ import { SideBarController } from "@/controllers/sideBar.controller";
 import { ToolState } from "@/types/ToolState";
 import { SideBarNodeController } from "@/controllers/sideBarNode.controller";
 import { TopBarController } from "@/controllers/topBar.controller";
-import StationBar from "./SideBarStation.vue";
+import SideBarStation from "./SideBarStation.vue";
+import SideBarAction from "./SideBarAction.vue";
 import SideBarEdge from "./SideBarEdge.vue";
 import { SideBarStationController } from "@/controllers/sideBarStation.controller";
 
@@ -83,8 +84,8 @@ function getWindowWidth() {
   <div class="page" v-else>
     <ResizablePanelGroup id="sidebar" class="rounded-lg border"
       :direction="getWindowWidth() < 768 ? 'vertical' : 'horizontal'">
-      <ResizablePanel id="demo-panel-1" :default-size="15">
-        <SideBar class="p-6" :layout="layoutController" :sideBar="sideBarController"
+      <ResizablePanel style="min-width: 280px;" id=" demo-panel-1" :default-size="15">
+        <SideBar class="p-6" :layout=" layoutController" :sideBar="sideBarController"
           :side-bar-node="sideBarNodeController" :side-bar-station="sideBarStationController" />
       </ResizablePanel>
       <ResizableHandle id="handle-1" with-handle />
@@ -102,7 +103,8 @@ function getWindowWidth() {
         </div>
       </ResizablePanel>
       <ResizableHandle id="handle-2" with-handle />
-      <ResizablePanel v-if="sideBarController.toolState.value != ToolState.empty" id="sidebar-extra" :default-size="20">
+      <ResizablePanel style="min-width: 280px;"  v-if="sideBarController.toolState.value != ToolState.empty"
+        id="sidebar-extra" :default-size="20">
         <div class="p-6" v-if="sideBarController.toolState.value == ToolState.createNode">
           <span @click=""
             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
@@ -130,8 +132,15 @@ function getWindowWidth() {
             Create Station
           </span>
           <Separator class="mt-3 mb-3" orientation="horizontal" />
-          <StationBar :sidebar-station="sideBarStationController" :layout="layoutController"
+          <SideBarStation :sidebar-station="sideBarStationController" :layout="layoutController"
             :sidebar="sideBarController" :side-bar-node="sideBarNodeController" />
+        </div>
+        <div class="p-6" v-if="sideBarController.toolState.value == ToolState.crudAction">
+          <span class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+            Action
+          </span>
+          <Separator class="mt-3 mb-3" orientation="horizontal" />
+          <SideBarAction :layout="layoutController"></SideBarAction>
         </div>
       </ResizablePanel>
     </ResizablePanelGroup>

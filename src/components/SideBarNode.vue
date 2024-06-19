@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/tags-input";
 import { SideBarNodeController } from "@/controllers/sideBarNode.controller";
 import { Search } from "@/types/Search";
+import VehicleNodePropertiesDialog from "./VehicleNodePropertiesDialog.vue";
 
 const props = defineProps<{
   sidebar: SideBarController;
@@ -186,6 +187,19 @@ const filteredFrameworks = computed(() =>
           </CommandList>
         </ComboboxPortal>
       </ComboboxRoot>
+    </TagsInput>
+  </div>
+  <div class="grid gap-2 mt-4">
+    <Label for="mapId">Vehicle Node Properties</Label>
+    <TagsInput disabled v-model="props.sideBarNode.newNode.value.vehicleTypeNodeProperties">
+      <TagsInputItem v-for="item in props.sideBarNode.newNode.value.vehicleTypeNodeProperties"
+        :key="item.vehicleTypeId + '-node-properties'"
+        :value="item.vehicleTypeId + (item.actions.length > 0 ? ('->' + item.actions.map((action) => action.actionType).join(',')) : '')">
+        <TagsInputItemText />
+        <TagsInputItemDelete
+          @click="props.sideBarNode.newNode.value.vehicleTypeNodeProperties = props.sideBarNode.newNode.value.vehicleTypeNodeProperties.filter((property) => property !== item)" />
+      </TagsInputItem>
+      <VehicleNodePropertiesDialog :layout="props.layout" :side-bar-node="props.sideBarNode" />
     </TagsInput>
   </div>
   <div class="ml-auto flex w-full space-x-2 mt-3">
