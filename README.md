@@ -7,7 +7,7 @@ The LIF format editor application is an application that you can edit the LIF fi
 ## VDA5050 LIF Format
 This document describes the LIF, its purpose and examples of how to use it. This document does not describe any logical processes that a (third-party) master control system must implement to interpret the data contained in the LIF.
 
-Document reference :  [here](https://vda5050-lif-editor.vercel.app/).
+Document reference :  [here](https://vdma.org/documents/34570/3317035/FuI_Guideline_LIF_GB.pdf/779bc75c-9525-8d13-412e-fff82bc6ab39?t=1710513623026).
 
 ## Live Demo
 Check out the live demo of this project [here](https://vda5050-lif-editor.vercel.app/).
