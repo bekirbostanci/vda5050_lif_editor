@@ -7,16 +7,16 @@ const props = defineProps({
     type: TopBarController,
     required: true,
   },
+  ghost: {
+    type: Boolean,
+    default: false,
+  }
 });
 </script>
 
 <template>
-  <Button variant="secondary" @click="props.topBarController.selectFile()">
-    <Icon
-      class="mr-2"
-      icon="material-symbols-light:file-open-outline"
-      :height="20"
-    />
+  <Button :variant="props.ghost ? 'ghost' : 'secondary'" @click="props.topBarController.selectFile()">
+    <Icon class="mr-2" icon="material-symbols-light:file-open-outline" :height="20" />
     Open
   </Button>
 </template>

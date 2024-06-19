@@ -6,12 +6,16 @@ const props = defineProps({
   topBarController: {
     type: TopBarController,
     required: true,
-  },
+  }, ghost: {
+    type: Boolean,
+    default: false,
+  }
 });
 </script>
 
 <template>
-  <Button @click="props.topBarController.convertLifToJson(); props.topBarController.saveLifJsonFile()" variant="secondary">
+  <Button :variant="props.ghost ? 'ghost' : 'secondary'"
+    @click="props.topBarController.convertLifToJson(); props.topBarController.saveLifJsonFile()" >
     <Icon class="mr-2" icon="material-symbols-light:save-outline" :height="24" />
     Save
   </Button>
