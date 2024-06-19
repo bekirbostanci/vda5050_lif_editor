@@ -1,9 +1,23 @@
-# Vue 3 + TypeScript + Vite
+# VDA5050 LIF Editor 
+The LIF format editor application is an application that you can edit the LIF file for vda5050 compatible robots. With the application you can design the nodes that the robots will move. Nodes can also be connected with the help of edges. Actions can be added on nodes and edges. Stations can also be added to the fiber file with LIF format.
+![](./docs/VDA%20Lif%20Editor.gif'iniz)
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
 
-## Recommended Setup
+## VDA5050 LIF Format
+This document describes the LIF, its purpose and examples of how to use it. This document does not describe any logical processes that a (third-party) master control system must implement to interpret the data contained in the LIF.
 
-- [VS Code](https://code.visualstudio.com/) + [Vue - Official](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (previously Volar) and disable Vetur
+Document reference :  [here](https://vda5050-lif-editor.vercel.app/).
 
-- Use [vue-tsc](https://github.com/vuejs/language-tools/tree/master/packages/tsc) for performing the same type checking from the command line, or for generating d.ts files for SFCs.
+## Live Demo
+Check out the live demo of this project [here](https://vda5050-lif-editor.vercel.app/).
+
+## Install
+Before than run app, please go to folder and install npm packages 
+``` 
+npm install 
+```
+
+## Run 
+```
+npm run dev
+```
