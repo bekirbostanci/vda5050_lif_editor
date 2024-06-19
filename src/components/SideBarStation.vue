@@ -137,9 +137,9 @@ const filteredFrameworks = computed(() =>
             <Input id="station-height" v-model="props.sidebarStation.newStation.value.stationHeight" />
         </div>
 
-        <div class="grid gap-2 mt-2">
-            <Label>Connected Nodes</Label>
-            <TagsInput class="px-0 gap-0" :model-value="props.sidebarStation.nodeConnections.value"
+        <div class="grid gap-2 mt-4">
+            <Label>Interaction Nodes</Label>
+            <TagsInput class="px-0 gap-0 mt-1" :model-value="props.sidebarStation.nodeConnections.value"
                 @update:model-value="props.sidebarStation.newStation.value.interactionNodeIds = props.sidebarStation.nodeConnections.value;">
                 <div class="flex gap-2 flex-wrap items-center px-3">
                     <TagsInputItem v-for="item in props.sidebarStation.nodeConnections.value" :key="item" :value="item">
