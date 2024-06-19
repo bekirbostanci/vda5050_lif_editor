@@ -33,17 +33,17 @@ const props = defineProps<{
           <span class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
             Create Item
           </span>
-          <Tabs default-value="account" class="w-100">
+          <Tabs default-value="create-node" class="w-100">
             <TabsList class="grid grid-cols-3">
-              <TabsTrigger value="node"
+              <TabsTrigger value="create-node"
                 @click="props.sideBar.selectedNodes.value = []; props.sideBarNode.cleanNodeInputs(); props.sideBar.setCreateNodeState();">
                 Node
               </TabsTrigger>
-              <TabsTrigger value="station"
+              <TabsTrigger value="create-station"
                 @click="props.sideBar.selectedStations.value = []; props.sideBarStation.cleanStationInputs(); props.sideBar.setCreateStationState()">
                 Station
               </TabsTrigger>
-              <TabsTrigger value="action">
+              <TabsTrigger value="create-action">
                 Action
               </TabsTrigger>
             </TabsList>
@@ -72,12 +72,10 @@ const props = defineProps<{
     </span>
     <div class="flex">
       <ToggleGroup type="multiple" variant="outline">
-        <ToggleGroupItem value="visible" aria-label="Toggle bold"
-          @click="configs.node.label.visible = !configs.node.label.visible">
+        <ToggleGroupItem value="visible-node-label" @click="configs.node.label.visible = !configs.node.label.visible">
           Node
         </ToggleGroupItem>
-        <ToggleGroupItem value="italic" aria-label="Toggle italic"
-          @click="configs.edge.label.visible = !configs.edge.label.visible">
+        <ToggleGroupItem value="visible-edge-label" @click="configs.edge.label.visible = !configs.edge.label.visible">
           Edge
         </ToggleGroupItem>
       </ToggleGroup>
