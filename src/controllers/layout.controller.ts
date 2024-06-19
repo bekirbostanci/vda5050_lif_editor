@@ -1,6 +1,6 @@
 import { reactive, toRaw } from "vue";
 import * as vNG from "v-network-graph";
-import { Layout, Node, Station, Edge as vdaEdge } from "@/types/Layout";
+import { Action, Layout, Node, Station, Edge as vdaEdge } from "@/types/Layout";
 import { ExtendedNodes } from "@/types/ExtendedNode";
 import {
   VisualizationLayout,
@@ -25,6 +25,7 @@ export class LayoutController {
   public nodes = reactive<ExtendedNodes>({});
   public layouts = reactive<vNG.Layouts>({ nodes: {} });
   public edges = reactive<ExtendedEdges>({});
+  public actions = reactive<Action[]>([]);
   private oldLayoutId = "";
   constructor() {
     const layout: Layout = {
@@ -38,6 +39,18 @@ export class LayoutController {
       stations: [],
     };
     this.vdaLayouts.push(layout);
+
+    let action: Action = {
+      actionType: "test",
+      actionDescription: "test",
+      requirementType: "CONDITIONAL",
+      blockingType: "HARD",
+      actionParameters: [],
+    }
+    for (let i = 0; i < 5; i++) {
+      action.actionType = "action" + i;
+      this.createAction(action);
+    }
   }
 
   deleteEdge(edgeId: string) {
@@ -118,6 +131,19 @@ export class LayoutController {
     this.oldLayoutId = layoutId;
   }
 
+  createAction(action: Action) {
+    if (action.actionType == "") return;
+
+    this.actions.push(JSON.parse(JSON.stringify(action)));
+  }
+
+  deleteAction(action: Action) {
+    const index = this.actions.indexOf(action);
+    if (index > -1) {
+      this.actions.splice(index, 1);
+    }
+  }
+
   createNode(node: Node) {
     if (node.nodeId == "") return;
 
@@ -148,7 +174,7 @@ export class LayoutController {
   }
 
   createStation(station: Station) {
-    if(station.stationId == "") return;
+    if (station.stationId == "") return;
 
     this.nodes[station.stationId] = JSON.parse(
       JSON.stringify({
@@ -180,7 +206,7 @@ export class LayoutController {
 
   updateEdges(source: string, targets: string[]) {
     console.log("updateEdges", source, targets);
-    
+
     Object.keys(this.edges).forEach((key) => {
       if (this.edges[key].source == source) {
         delete this.edges[key];
@@ -316,7 +342,7 @@ export class LayoutController {
         visualizationLayout.edges[edge.edgeId] = {
           source: edge.startNodeId,
           target: edge.endNodeId,
-          vda5050Edge: edge
+          vda5050Edge: edge,
         };
       });
       this.visualizationLayouts[layout.layoutId] = visualizationLayout;

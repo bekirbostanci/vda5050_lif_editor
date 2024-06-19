@@ -1,4 +1,4 @@
-import { ActionParameter, BlockingType, Trajectory } from "vda-5050-lib";
+import { ActionParameter, Trajectory } from "vda-5050-lib";
 
 export interface Layout {
   layoutId: string; // Unique identifier for this layout
@@ -28,7 +28,7 @@ export interface NodePosition {
 export interface VehicleTypeNodeProperty {
   vehicleTypeId: string;
   theta: number;
-  actions: [Action];
+  actions: Action[];
 }
 
 export interface Action {
@@ -40,6 +40,7 @@ export interface Action {
 }
 
 export type RequirementType = "REQUIRED" | "CONDITIONAL" | "OPTIONAL";
+export type BlockingType = "HARD" | "SOFT" | "NONE";
 
 export interface Edge {
   edgeId: string;

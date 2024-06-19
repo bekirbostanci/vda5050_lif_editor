@@ -5,4 +5,5 @@ export enum ToolState {
   selectNode,
   selectEdge,
   selectStation,
+  crudAction,
 }
