@@ -48,14 +48,25 @@ const newAction = ref<Action>({
     actionParameters: [],
 });
 
+function clearAction() {
+    newAction.value = {
+        actionType: "",
+        actionDescription: "",
+        requirementType: selectedRequirementType.value,
+        blockingType: selectedBlockingType.value,
+        actionParameters: [],
+    };
+    selectedAction.value = "";
+}
+
 </script>
 <template>
     <Popover v-model:open="open" v-if="props.layout.actions.length > 0">
         <PopoverTrigger as-child>
             <Button variant="outline" role="combobox" :aria-expanded="open" class="w-full justify-between">
                 {{ selectedAction
-                ? selectedAction
-                : "Select action..." }}
+                    ? selectedAction
+                    : "Select action..." }}
             </Button>
         </PopoverTrigger>
         <PopoverContent class="w-full p-0">
@@ -96,7 +107,7 @@ const newAction = ref<Action>({
         <Label class="mb-2">Action Requirement</Label>
         <RadioGroup :model-value="selectedRequirementType">
             <div class="flex items-center space-x-2" v-for="option in requirementOptions" :key="option">
-                <RadioGroupItem :id="option+'requirement'" :value="option" v-model="selectedRequirementType" />
+                <RadioGroupItem :id="option + 'requirement'" :value="option" v-model="selectedRequirementType" />
                 <Label :for="option + 'requirement'">{{ option }}</Label>
             </div>
         </RadioGroup>
@@ -112,6 +123,6 @@ const newAction = ref<Action>({
     </div>
     <div class="ml-auto flex w-full space-x-2 mt-3">
         <Button variant="secondary" @click="props.layout.createAction(newAction)">Save</Button>
-        <Button variant="secondary">Delete</Button>
+        <Button variant="secondary" @click="props.layout.deleteAction(newAction); clearAction();">Delete</Button>
     </div>
 </template>
