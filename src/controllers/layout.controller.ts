@@ -39,18 +39,6 @@ export class LayoutController {
       stations: [],
     };
     this.vdaLayouts.push(layout);
-
-    let action: Action = {
-      actionType: "test",
-      actionDescription: "test",
-      requirementType: "CONDITIONAL",
-      blockingType: "HARD",
-      actionParameters: [],
-    }
-    for (let i = 0; i < 5; i++) {
-      action.actionType = "action" + i;
-      this.createAction(action);
-    }
   }
 
   deleteEdge(edgeId: string) {
