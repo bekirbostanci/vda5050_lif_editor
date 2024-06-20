@@ -187,7 +187,7 @@ export class LayoutController {
 
     this.nodes[station.stationId].vda5050Station!.stationPosition = {
       x: this.layouts.nodes[station.stationId].x,
-      y: this.layouts.nodes[station.stationId].y,
+      y: -this.layouts.nodes[station.stationId].y,
       theta: station.stationPosition.theta,
     };
   }
