@@ -25,6 +25,26 @@ export class SideBarNodeController {
     public graph: any
   ) {}
 
+  updateNodeYFromInput(nodeY: any) {
+    // Revert y coordinate when update node coordinate from input
+    if (this.layoutController.layouts.nodes[this.newNode.value.nodeId]) {
+      this.layoutController.layouts.nodes[this.newNode.value.nodeId].y =
+        parseFloat(nodeY) * -1;
+    }
+    this.updateNodeY(nodeY);
+  }
+  
+  updateNodeY(nodeY: any) {
+    // Revert y coordinate when node position changed
+    if (this.layoutController.nodes[this.newNode.value.nodeId]) {
+      this.layoutController.nodes[
+        this.newNode.value.nodeId
+      ].vda5050Node!.nodePosition.y = nodeY * -1;
+    }
+
+    this.newNode.value.nodePosition.y = nodeY * -1;
+  }
+
   createNodeFast(mouseEvent: ViewEvent<MouseEvent>) {
     if (this.graph.value && this.createFast.value == true) {
       const point = {

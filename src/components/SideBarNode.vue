@@ -113,12 +113,12 @@ const filteredFrameworks = computed(() =>
     </div>
     <div class="grid gap-2 mt-2" v-if="props.sidebar.selectedNodes.value.length > 0">
       <Label for="nodeY">Node Y</Label>
-      <Input id="nodeY" type="number" :default-value="0"
-        v-model="props.layout.layouts.nodes[props.sidebar.selectedNodes.value[0]].y" />
+      <Input id="nodeY" :default-value="0" type="number" @update:model-value="props.sideBarNode.updateNodeYFromInput($event)"
+        v-model="props.layout.nodes[props.sidebar.selectedNodes.value[0]].vda5050Node!.nodePosition.y" />
     </div>
     <div class="grid gap-2 mt-2" v-else>
       <Label for="nodeY">Node Y</Label>
-      <Input id="nodeY" type="number" :default-value="0" v-model="props.sideBarNode.newNode.value.nodePosition.y" />
+      <Input id="nodeY" type="number" :default-value="0" @update:model-value="props.sideBarNode.updateNodeYFromInput($event)" />
     </div>
   </div>
   <div class="grid gap-2 mt-2">
