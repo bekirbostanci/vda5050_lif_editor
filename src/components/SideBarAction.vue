@@ -65,8 +65,8 @@ function clearAction() {
         <PopoverTrigger as-child>
             <Button variant="outline" role="combobox" :aria-expanded="open" class="w-full justify-between">
                 {{ selectedAction
-                    ? selectedAction
-                    : "Select action..." }}
+                ? selectedAction
+                : "Select action..." }}
             </Button>
         </PopoverTrigger>
         <PopoverContent class="w-full p-0">
@@ -122,7 +122,7 @@ function clearAction() {
         </RadioGroup>
     </div>
     <div class="ml-auto flex w-full space-x-2 mt-3">
-        <Button variant="secondary" @click="props.layout.createAction(newAction)">Save</Button>
+        <Button variant="secondary" @click="props.layout.createAction(newAction); clearAction();">Save</Button>
         <Button variant="secondary" @click="props.layout.deleteAction(newAction); clearAction();">Delete</Button>
     </div>
 </template>
