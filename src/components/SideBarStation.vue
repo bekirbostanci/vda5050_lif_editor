@@ -107,11 +107,12 @@ const filteredFrameworks = computed(() =>
             <div class="grid gap-2 mt-2" v-if="props.sidebar.selectedStations.value.length > 0">
                 <Label for="station-y">Station Y</Label>
                 <Input id="station-y" type="number" :default-value="0"
-                    v-model="props.layout.layouts.nodes[props.sidebar.selectedStations.value[0]].y" />
+                    @update:model-value="props.sidebarStation.updateStationYFromInput($event)"
+                    v-model="props.layout.nodes[props.sidebar.selectedStations.value[0]].vda5050Station!.stationPosition.y" />
             </div>
             <div class="grid gap-2 mt-2" v-else>
                 <Label for="station-y">Station Y</Label>
-                <Input id="station-y" type="number" v-model="props.sidebarStation.newStation.value.stationPosition.y"
+                <Input id="station-y" type="number"  @update:model-value="props.sidebarStation.updateStationYFromInput($event)"
                     :default-value="0" />
             </div>
             <div class="grid gap-2 mt-2">

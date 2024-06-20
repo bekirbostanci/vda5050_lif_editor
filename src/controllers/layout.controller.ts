@@ -157,7 +157,7 @@ export class LayoutController {
     // Update node position in vda layout
     this.nodes[node.nodeId].vda5050Node!.nodePosition = {
       x: this.layouts.nodes[node.nodeId].x,
-      y: this.layouts.nodes[node.nodeId].y,
+      y: -this.layouts.nodes[node.nodeId].y,
     };
   }
 
@@ -187,7 +187,7 @@ export class LayoutController {
 
     this.nodes[station.stationId].vda5050Station!.stationPosition = {
       x: this.layouts.nodes[station.stationId].x,
-      y: this.layouts.nodes[station.stationId].y,
+      y: -this.layouts.nodes[station.stationId].y,
       theta: station.stationPosition.theta,
     };
   }
@@ -309,7 +309,7 @@ export class LayoutController {
         };
         visualizationLayout.layouts.nodes[node.nodeId] = {
           x: node.nodePosition.x,
-          y: node.nodePosition.y,
+          y: -node.nodePosition.y,
         };
       });
       layout.stations.forEach((station) => {
@@ -323,7 +323,7 @@ export class LayoutController {
         };
         visualizationLayout.layouts.nodes[station.stationId] = {
           x: station.stationPosition.x,
-          y: station.stationPosition.y,
+          y: -station.stationPosition.y,
         };
       });
       layout.edges.forEach((edge) => {

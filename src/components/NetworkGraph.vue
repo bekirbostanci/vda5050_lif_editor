@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { EventHandlers, ViewEvent, Instance } from "v-network-graph";
 import VueJsonPretty from 'vue-json-pretty';
 import 'vue-json-pretty/lib/styles.css';
@@ -75,6 +75,16 @@ const eventHandlers: EventHandlers = {
 function getWindowWidth() {
   return window.innerWidth;
 }
+
+watch(layoutController.layouts.nodes, () => {
+  if (layoutController.layouts.nodes[sideBarNodeController.newNode.value.nodeId]) {
+    sideBarNodeController.updateNodeY(layoutController.layouts.nodes[sideBarNodeController.newNode.value.nodeId].y);
+  }
+  if (layoutController.layouts.nodes[sideBarStationController.newStation.value.stationId]) {
+    sideBarStationController.updateStationY(layoutController.layouts.nodes[sideBarStationController.newStation.value.stationId].y);
+  }
+});
+
 </script>
 
 <template>
@@ -85,7 +95,7 @@ function getWindowWidth() {
     <ResizablePanelGroup id="sidebar" class="rounded-lg border"
       :direction="getWindowWidth() < 768 ? 'vertical' : 'horizontal'">
       <ResizablePanel style="min-width: 280px;" id=" demo-panel-1" :default-size="15">
-        <SideBar class="p-6" :layout=" layoutController" :sideBar="sideBarController"
+        <SideBar class="p-6" :layout="layoutController" :sideBar="sideBarController"
           :side-bar-node="sideBarNodeController" :side-bar-station="sideBarStationController" />
       </ResizablePanel>
       <ResizableHandle id="handle-1" with-handle />
@@ -103,7 +113,7 @@ function getWindowWidth() {
         </div>
       </ResizablePanel>
       <ResizableHandle id="handle-2" with-handle />
-      <ResizablePanel style="min-width: 280px;"  v-if="sideBarController.toolState.value != ToolState.empty"
+      <ResizablePanel style="min-width: 280px;" v-if="sideBarController.toolState.value != ToolState.empty"
         id="sidebar-extra" :default-size="20">
         <div class="p-6" v-if="sideBarController.toolState.value == ToolState.createNode">
           <span @click=""
