@@ -298,41 +298,56 @@ export class LayoutController {
         layouts: { nodes: {} },
       };
 
-      layout.nodes.forEach((node) => {
-        visualizationLayout.nodes[node.nodeId] = {
-          vda5050Node: node,
-          vda5050Station: undefined,
-          draggable: false,
-          name: node.nodeName,
-          color: "black",
-          type: "vda5050Node",
-        };
-        visualizationLayout.layouts.nodes[node.nodeId] = {
-          x: node.nodePosition.x,
-          y: -node.nodePosition.y,
-        };
-      });
-      layout.stations.forEach((station) => {
-        visualizationLayout.nodes[station.stationId] = {
-          vda5050Node: undefined,
-          vda5050Station: station,
-          draggable: false,
-          name: station.stationName,
-          color: "lightskyblue",
-          type: "vda5050Station",
-        };
-        visualizationLayout.layouts.nodes[station.stationId] = {
-          x: station.stationPosition.x,
-          y: -station.stationPosition.y,
-        };
-      });
-      layout.edges.forEach((edge) => {
-        visualizationLayout.edges[edge.edgeId] = {
-          source: edge.startNodeId,
-          target: edge.endNodeId,
-          vda5050Edge: edge,
-        };
-      });
+      if (layout.nodes) {
+        layout.nodes.forEach((node) => {
+          visualizationLayout.nodes[node.nodeId] = {
+            vda5050Node: node,
+            vda5050Station: undefined,
+            draggable: false,
+            name: node.nodeName,
+            color: "black",
+            type: "vda5050Node",
+          };
+          visualizationLayout.layouts.nodes[node.nodeId] = {
+            x: node.nodePosition.x,
+            y: -node.nodePosition.y,
+          };
+        });
+      } else {
+        layout.nodes = [];
+      }
+
+      if (layout.stations) {
+        layout.stations.forEach((station) => {
+          visualizationLayout.nodes[station.stationId] = {
+            vda5050Node: undefined,
+            vda5050Station: station,
+            draggable: false,
+            name: station.stationName,
+            color: "lightskyblue",
+            type: "vda5050Station",
+          };
+          visualizationLayout.layouts.nodes[station.stationId] = {
+            x: station.stationPosition.x,
+            y: -station.stationPosition.y,
+          };
+        });
+      } else {
+        layout.stations = [];
+      }
+
+      if (layout.edges) {
+        layout.edges.forEach((edge) => {
+          visualizationLayout.edges[edge.edgeId] = {
+            source: edge.startNodeId,
+            target: edge.endNodeId,
+            vda5050Edge: edge,
+          };
+        });
+      } else {
+        layout.edges = [];
+      }
+
       this.visualizationLayouts[layout.layoutId] = visualizationLayout;
     });
 
