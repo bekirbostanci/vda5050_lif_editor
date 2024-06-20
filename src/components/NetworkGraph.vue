@@ -79,6 +79,8 @@ function getWindowWidth() {
 watch(layoutController.layouts.nodes, () => {
   if (layoutController.layouts.nodes[sideBarNodeController.newNode.value.nodeId]) {
     sideBarNodeController.updateNodeY(layoutController.layouts.nodes[sideBarNodeController.newNode.value.nodeId].y);
+  } else if (layoutController.layouts.nodes[sideBarStationController.newStation.value.stationId]) {
+    sideBarStationController.updateStationY(layoutController.layouts.nodes[sideBarStationController.newStation.value.stationId].y);
   }
 });
 

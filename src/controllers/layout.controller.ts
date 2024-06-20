@@ -323,7 +323,7 @@ export class LayoutController {
         };
         visualizationLayout.layouts.nodes[station.stationId] = {
           x: station.stationPosition.x,
-          y: station.stationPosition.y,
+          y: -station.stationPosition.y,
         };
       });
       layout.edges.forEach((edge) => {

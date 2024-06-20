@@ -32,6 +32,26 @@ export class SideBarStationController {
     };
   }
 
+  updateStationYFromInput(stationY: any) {
+    // Revert y coordinate when update station coordinate from input
+    if (this.layoutController.layouts.nodes[this.newStation.value.stationId]) {
+      this.layoutController.layouts.nodes[this.newStation.value.stationId].y =
+        parseFloat(stationY) * -1;
+    }
+    this.updateStationY(stationY);
+  }
+
+  updateStationY(stationY: any) {
+    // Revert y coordinate when station position changed
+    if (this.layoutController.nodes[this.newStation.value.stationId]) {
+      this.layoutController.nodes[
+        this.newStation.value.stationId
+      ].vda5050Station!.stationPosition.y = stationY * -1;
+    }
+
+    this.newStation.value.stationPosition.y = stationY * -1;
+  }
+
   updateStation(selectedStation: string) {
     if (
       !this.layoutController.nodes ||
