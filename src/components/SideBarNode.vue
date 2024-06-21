@@ -63,9 +63,9 @@ const filteredFrameworks = computed(() =>
     <div class="flex items-center">
       <Label for="nodeId">Node Id</Label>
       <div class="inline-flex ml-auto">
-        <Label v-if="!props.sideBarNode.createFast.value" class="px-3 text-sm text-muted-foreground" for="fast-create">
+        <Label :class="props.sideBarNode.createFast.value ? 'px-3 text-sm' : 'px-3 text-sm text-muted-foreground'"
+          for="fast-create">
           Fast Create</Label>
-        <Label v-if="props.sideBarNode.createFast.value" class="px-3 text-sm" for="fast-create"> Fast Create</Label>
         <Switch id="fast-create" v-model:checked="props.sideBarNode.createFast.value" />
       </div>
     </div>
@@ -102,23 +102,21 @@ const filteredFrameworks = computed(() =>
       v-model="props.sideBarNode.newNode.value.nodeDescription" />
   </div>
   <div class="ml-auto flex w-full space-x-2 py-2">
-    <div class="grid gap-2 mt-2" v-if="props.sidebar.selectedNodes.value.length > 0">
+    <div class="grid gap-2 mt-2">
       <Label for="nodeX">Node X</Label>
       <Input id="nodeX" type="number" :default-value="0"
-        v-model="props.layout.layouts.nodes[props.sidebar.selectedNodes.value[0]].x" />
+        v-model="props.layout.layouts.nodes[props.sidebar.selectedNodes.value[0]].x"
+        v-if="props.sidebar.selectedNodes.value.length > 0" />
+      <Input id="nodeX" type="number" :default-value="0" v-model="props.sideBarNode.newNode.value.nodePosition.x" v-else />
     </div>
-    <div class="grid gap-2 mt-2" v-else>
-      <Label for="nodeX">Node X</Label>
-      <Input id="nodeX" type="number" :default-value="0" v-model="props.sideBarNode.newNode.value.nodePosition.x" />
-    </div>
-    <div class="grid gap-2 mt-2" v-if="props.sidebar.selectedNodes.value.length > 0">
+    <div class="grid gap-2 mt-2">
       <Label for="nodeY">Node Y</Label>
-      <Input id="nodeY" :default-value="0" type="number" @update:model-value="props.sideBarNode.updateNodeYFromInput($event)"
-        v-model="props.layout.nodes[props.sidebar.selectedNodes.value[0]].vda5050Node!.nodePosition.y" />
-    </div>
-    <div class="grid gap-2 mt-2" v-else>
-      <Label for="nodeY">Node Y</Label>
-      <Input id="nodeY" type="number" :default-value="0" @update:model-value="props.sideBarNode.updateNodeYFromInput($event)" />
+      <Input id="nodeY" :default-value="0" type="number"
+        @update:model-value="props.sideBarNode.updateNodeYFromInput($event)"
+        v-model="props.layout.nodes[props.sidebar.selectedNodes.value[0]].vda5050Node!.nodePosition.y"
+        v-if="props.sidebar.selectedNodes.value.length > 0" />
+      <Input id="nodeY" type="number" :default-value="0"
+        @update:model-value="props.sideBarNode.updateNodeYFromInput($event)" v-else />
     </div>
   </div>
   <div class="grid gap-2 mt-2">
