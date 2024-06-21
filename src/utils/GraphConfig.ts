@@ -40,7 +40,7 @@ export const initialConfigs = {
       radius: 25,
     },
     hover: {
-      color: "black",
+      color: "orange",
     },
     marker: {
       target: {
