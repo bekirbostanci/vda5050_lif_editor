@@ -94,9 +94,6 @@ const filteredFrameworks = computed(() =>
       <HoverCardTrigger>
         <Label for="nodeDescription">Node Description</Label>
       </HoverCardTrigger>
-      <HoverCardContent>Brief description of the node. This should only ever be for
-        visualization or diagnostic purposes.
-      </HoverCardContent>
     </HoverCard>
     <Input id="nodeDescription" :disabled="props.sideBarNode.createFast.value"
       v-model="props.sideBarNode.newNode.value.nodeDescription" />
