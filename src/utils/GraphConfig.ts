@@ -1,5 +1,5 @@
 import { reactive } from "vue";
-import { Node } from "v-network-graph";
+import { Edge, Node } from "v-network-graph";
 
 export const initialConfigs = {
   node: {
@@ -27,7 +27,7 @@ export const initialConfigs = {
     gap: 12,
     normal: {
       width: 3,
-      color: "gray",
+      color: (edge: Edge) => edge.color,
       dasharray: "20 16",
       animate: true,
       animationSpeed: 20,
