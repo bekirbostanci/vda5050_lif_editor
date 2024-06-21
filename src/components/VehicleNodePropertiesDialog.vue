@@ -115,9 +115,8 @@ const vehicleTypeNodeProperties: Ref<VehicleTypeNodeProperty> = ref<VehicleTypeN
             </div>
             <DialogFooter>
                 <DialogClose as-child>
-                    <Button type="submit" variant="secondary"
-                        :disabled="vehicleTypeNodeProperties.vehicleTypeId === ''"
-                        @click="props.sideBarNode.newNode.value.vehicleTypeNodeProperties.push(vehicleTypeNodeProperties)">Add</Button>
+                    <Button type="submit" variant="secondary" :disabled="vehicleTypeNodeProperties.vehicleTypeId === ''"
+                        @click="props.sideBarNode.newNode.value.vehicleTypeNodeProperties.push(vehicleTypeNodeProperties); props.layout.createNode(props.sideBarNode.newNode.value);">Add</Button>
                 </DialogClose>
             </DialogFooter>
         </DialogContent>
