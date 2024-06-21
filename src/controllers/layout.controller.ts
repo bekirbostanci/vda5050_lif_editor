@@ -127,9 +127,12 @@ export class LayoutController {
   }
 
   deleteAction(action: Action) {
-    const index = this.actions.indexOf(action);
+    const index = this.actions.findIndex((a) => a.actionType === action.actionType);
     if (index > -1) {
       this.actions.splice(index, 1);
+    }
+    else{
+      showToast("Error", "Action does not delete because not found");
     }
   }
 

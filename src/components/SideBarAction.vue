@@ -33,18 +33,13 @@ const open = ref(false)
 const selectedAction = ref<string>("");
 
 const requirementOptions = ["REQUIRED", "CONDITIONAL", "OPTIONAL"] as RequirementType[];
-const selectedRequirementType = ref<RequirementType>('REQUIRED');
-
-
-// BlockingType options
 const blockingOptions = Object.values(BlockingType);
-const selectedBlockingType = ref<BlockingType>(BlockingType.Hard);
 
 const newAction = ref<Action>({
     actionType: "",
     actionDescription: "",
-    requirementType: selectedRequirementType.value,
-    blockingType: selectedBlockingType.value,
+    requirementType: "REQUIRED",
+    blockingType: "HARD",
     actionParameters: [],
 });
 
@@ -52,13 +47,12 @@ function clearAction() {
     newAction.value = {
         actionType: "",
         actionDescription: "",
-        requirementType: selectedRequirementType.value,
-        blockingType: selectedBlockingType.value,
+        requirementType: "REQUIRED",
+        blockingType: "HARD",
         actionParameters: [],
     };
     selectedAction.value = "";
 }
-
 </script>
 <template>
     <Popover v-model:open="open" v-if="props.layout.actions.length > 0">
@@ -82,7 +76,7 @@ function clearAction() {
 
                                     const foundAction = props.layout.actions.find(action => action.actionType == ev.detail.value);
                                     if (foundAction) {
-                                        newAction = toRaw(foundAction);
+                                        newAction = JSON.parse(JSON.stringify(foundAction));
                                     }
                                 }
                                 open = false
@@ -105,18 +99,18 @@ function clearAction() {
     </div>
     <div class="grid gap-2 mt-6">
         <Label class="mb-2">Action Requirement</Label>
-        <RadioGroup :model-value="selectedRequirementType">
+        <RadioGroup v-model="newAction.requirementType">
             <div class="flex items-center space-x-2" v-for="option in requirementOptions" :key="option">
-                <RadioGroupItem :id="option + 'requirement'" :value="option" v-model="selectedRequirementType" />
+                <RadioGroupItem :id="option + 'requirement'" :value="option" v-model="newAction.requirementType" />
                 <Label :for="option + 'requirement'">{{ option }}</Label>
             </div>
         </RadioGroup>
     </div>
     <div class="grid gap-2 mt-6">
         <Label class="mb-2">Blocking Type</Label>
-        <RadioGroup v-model="selectedBlockingType">
+        <RadioGroup v-model="newAction.blockingType">
             <div class="flex items-center space-x-2" v-for="option in blockingOptions" :key="option">
-                <RadioGroupItem :id="option + 'blocking-type'" :value="option" v-model="selectedBlockingType" />
+                <RadioGroupItem :id="option + 'blocking-type'" :value="option" v-model="newAction.blockingType" />
                 <Label :for="option + 'blocking-type'">{{ option }}</Label>
             </div>
         </RadioGroup>
