@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, toRaw } from 'vue';
+import { ref } from 'vue';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
@@ -59,8 +59,8 @@ function clearAction() {
         <PopoverTrigger as-child>
             <Button variant="outline" role="combobox" :aria-expanded="open" class="w-full justify-between">
                 {{ selectedAction
-                ? selectedAction
-                : "Select action..." }}
+                    ? selectedAction
+                    : "Select action..." }}
             </Button>
         </PopoverTrigger>
         <PopoverContent class="w-full p-0">
