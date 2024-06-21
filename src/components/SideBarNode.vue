@@ -43,10 +43,13 @@ const open = ref(false);
 const searchTerm = ref("");
 
 const frameworks: Search[] = [];
-Object.values(toRaw(props.layout.nodes)).map((node) => {
-  if (node.vda5050Node) {
-    frameworks.push({ value: node.vda5050Node.nodeId, label: node.vda5050Node.nodeId })
-  }
+
+Object.values(toRaw(props.layout.visualizationLayouts)).map((layout) => {
+  Object.values(toRaw(layout.nodes)).map((node) => {
+    if (node.vda5050Node) {
+      frameworks.push({ value: node.vda5050Node.nodeId, label: node.vda5050Node.nodeId })
+    }
+  });
 });
 
 const filteredFrameworks = computed(() =>
