@@ -28,7 +28,7 @@ export interface NodePosition {
 export interface VehicleTypeNodeProperty {
   vehicleTypeId: string;
   theta: number;
-  actions: Action[];
+  actions?: Action[];
 }
 
 export interface Action {
@@ -62,7 +62,7 @@ export interface vehicleTypeEdgeProperties {
   minHeight: number;
   maxHeight: number;
   loadRestriction: LoadRestriction;
-  actions: [Action];
+  actions?: Action[];
   trajectory: Trajectory;
   reentryAllowed: boolean;
 }

@@ -8,7 +8,8 @@ import {
 } from "@/types/VisualizationLayout";
 import { Lif } from "@/types/Lif";
 import { ExtendedEdges } from "@/types/ExtendedEdge";
-
+import { showToast } from "@/utils/General";
+import { COLORS } from "@/utils/Colors";
 export class LayoutController {
   public lif = reactive<Lif>({
     metaInformation: {
@@ -133,12 +134,18 @@ export class LayoutController {
   }
 
   createNode(node: Node) {
-    if (node.nodeId == "") return;
+    if (node.nodeId == "") {
+      showToast("Error", "Node ID cannot be empty");
+      return;
+    }
 
     this.nodes[node.nodeId] = JSON.parse(
       JSON.stringify({
         name: node.nodeName,
-        color: "black",
+        color:
+          node.vehicleTypeNodeProperties.length > 0
+            ? COLORS.completeNode
+            : COLORS.incompleteNode,
         draggable: false,
         vda5050Node: node,
       })
@@ -162,11 +169,18 @@ export class LayoutController {
   }
 
   createStation(station: Station) {
-    if (station.stationId == "") return;
+    if (station.stationId == "") {
+      showToast("Error", "Station Id cannot be empty");
+      return;
+    }
+    if (station.interactionNodeIds.length == 0) {
+      showToast("Error", "Interaction nodes cannot be empty");
+      return;
+    }
 
     this.nodes[station.stationId] = JSON.parse(
       JSON.stringify({
-        color: "lightskyblue",
+        color: COLORS.completeStation,
         name: station.stationName,
         draggable: true,
         vda5050Station: station,
@@ -219,6 +233,7 @@ export class LayoutController {
       vda5050Edge: vdaEdge,
       source: source,
       target: target,
+      color: COLORS.incompleteEdge,
     };
   }
 
@@ -305,7 +320,11 @@ export class LayoutController {
             vda5050Station: undefined,
             draggable: false,
             name: node.nodeName,
-            color: "black",
+            color:
+              node.vehicleTypeNodeProperties.length > 0
+                ? COLORS.completeNode
+                : COLORS.incompleteNode,
+
             type: "vda5050Node",
           };
           visualizationLayout.layouts.nodes[node.nodeId] = {
@@ -324,7 +343,7 @@ export class LayoutController {
             vda5050Station: station,
             draggable: false,
             name: station.stationName,
-            color: "lightskyblue",
+            color: station.interactionNodeIds.length > 0 ? COLORS.completeStation : COLORS.incompleteStation,
             type: "vda5050Station",
           };
           visualizationLayout.layouts.nodes[station.stationId] = {
@@ -341,6 +360,7 @@ export class LayoutController {
           visualizationLayout.edges[edge.edgeId] = {
             source: edge.startNodeId,
             target: edge.endNodeId,
+            color: edge.vehicleTypeEdge.length > 0 ? COLORS.completeEdge : COLORS.incompleteEdge,
             vda5050Edge: edge,
           };
         });

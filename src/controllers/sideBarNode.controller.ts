@@ -118,11 +118,14 @@ export class SideBarNodeController {
       this.layoutController.nodes[selectedNode].vda5050Node!.nodeId;
     this.newNode.value.nodeName =
       this.layoutController.nodes[selectedNode].vda5050Node!.nodeName;
-
-    const test = Object.values(this.layoutController.edges).filter(
+    this.newNode.value.vehicleTypeNodeProperties = this.layoutController.nodes[
+      selectedNode
+    ].vda5050Node!.vehicleTypeNodeProperties;
+    
+    const nodeEdges = Object.values(this.layoutController.edges).filter(
       (connection) => connection.source == selectedNode
     );
-    this.nodeConnections.value = Object.values(toRaw(test)).map(
+    this.nodeConnections.value = Object.values(toRaw(nodeEdges)).map(
       (node) => node.target
     );
   }

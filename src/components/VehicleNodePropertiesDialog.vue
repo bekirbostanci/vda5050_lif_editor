@@ -88,14 +88,15 @@ const vehicleTypeNodeProperties: Ref<VehicleTypeNodeProperty> = ref<VehicleTypeN
                         <TagsInputItem v-for="item in vehicleTypeNodeProperties.actions"
                             :key="item.actionType + '-vehicle-node-properties-action'" :value="item.actionType">
                             <TagsInputItemText />
-                            <TagsInputItemDelete @click="vehicleTypeNodeProperties.actions = vehicleTypeNodeProperties.actions.filter(action => action.actionType !== item.actionType)" />
+                            <TagsInputItemDelete
+                                @click="vehicleTypeNodeProperties.actions = vehicleTypeNodeProperties.actions?.filter(action => action.actionType !== item.actionType)" />
                         </TagsInputItem>
                         <TagsInputInput placeholder="Actions..." />
                     </TagsInput>
                     <Select @update:model-value="{
                         const action = props.layout.actions.find(action => action.actionType === $event);
-                        if (action && !vehicleTypeNodeProperties.actions.find(item => item.actionType === action.actionType)) {
-                            vehicleTypeNodeProperties.actions.push(action);
+                        if (action && !vehicleTypeNodeProperties.actions?.find(item => item.actionType === action.actionType)) {
+                            vehicleTypeNodeProperties.actions?.push(action);
                         }
                     }">
                         <SelectTrigger>
@@ -114,8 +115,8 @@ const vehicleTypeNodeProperties: Ref<VehicleTypeNodeProperty> = ref<VehicleTypeN
             </div>
             <DialogFooter>
                 <DialogClose as-child>
-                    <Button type="submit"
-                        @click="props.sideBarNode.newNode.value.vehicleTypeNodeProperties.push(vehicleTypeNodeProperties)">Save</Button>
+                    <Button type="submit" variant="secondary" :disabled="vehicleTypeNodeProperties.vehicleTypeId === ''"
+                        @click="props.sideBarNode.newNode.value.vehicleTypeNodeProperties.push(vehicleTypeNodeProperties); props.layout.createNode(props.sideBarNode.newNode.value);">Add</Button>
                 </DialogClose>
             </DialogFooter>
         </DialogContent>

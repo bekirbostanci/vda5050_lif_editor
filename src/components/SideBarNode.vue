@@ -94,9 +94,6 @@ const filteredFrameworks = computed(() =>
       <HoverCardTrigger>
         <Label for="nodeDescription">Node Description</Label>
       </HoverCardTrigger>
-      <HoverCardContent>Brief description of the node. This should only ever be for
-        visualization or diagnostic purposes.
-      </HoverCardContent>
     </HoverCard>
     <Input id="nodeDescription" :disabled="props.sideBarNode.createFast.value"
       v-model="props.sideBarNode.newNode.value.nodeDescription" />
@@ -194,7 +191,7 @@ const filteredFrameworks = computed(() =>
     <TagsInput disabled v-model="props.sideBarNode.newNode.value.vehicleTypeNodeProperties">
       <TagsInputItem v-for="item in props.sideBarNode.newNode.value.vehicleTypeNodeProperties"
         :key="item.vehicleTypeId + '-node-properties'"
-        :value="item.vehicleTypeId + (item.actions.length > 0 ? ('->' + item.actions.map((action) => action.actionType).join(',')) : '')">
+        :value="item.vehicleTypeId + (item.actions && item.actions.length > 0 ? ('->' + item.actions.map((action) => action.actionType).join(',')) : '')">
         <TagsInputItemText />
         <TagsInputItemDelete
           @click="props.sideBarNode.newNode.value.vehicleTypeNodeProperties = props.sideBarNode.newNode.value.vehicleTypeNodeProperties.filter((property) => property !== item)" />

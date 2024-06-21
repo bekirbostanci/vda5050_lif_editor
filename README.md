@@ -30,3 +30,16 @@ npm install
 ```
 npm run dev
 ```
+
+## TODO
+- [ ] Node
+    - [x] Nodes create
+    - [x] Nodes edit
+    - [ ] Node connection another layout
+- [ ] Edge
+    - [x] Edges create
+    - [ ] Edges edit
+    - [ ] vehicleTypeEdgeProperties
+- [ ] Station
+    - [x] Station create 
+    - [x] Station edit 
