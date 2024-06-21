@@ -135,7 +135,7 @@ const filteredFrameworks = computed(() =>
                     departure floor and spawn in the related lift node on the map of the
                     target floor.</HoverCardContent>
             </HoverCard>
-            <Input id="station-height" v-model="props.sidebarStation.newStation.value.stationHeight" />
+            <Input id="station-height" v-model="props.sidebarStation.newStation.value.stationHeight" default-value="0" type="number"/>
         </div>
 
         <div class="grid gap-2 mt-4">
@@ -188,7 +188,7 @@ const filteredFrameworks = computed(() =>
         <div class="ml-auto flex w-full space-x-2 mt-3">
             <Button variant="secondary"
                 @click="props.layout.createStation(props.sidebarStation.newStation.value)">Save</Button>
-            <Button variant="secondary"
+            <Button variant="secondary" :disabled="!props.sidebarStation.newStation.value.stationId"
                 @click="props.sidebar.selectedStations.value = []; props.layout.deleteNode(props.sidebarStation.newStation.value.stationId)">Delete</Button>
         </div>
     </div>
