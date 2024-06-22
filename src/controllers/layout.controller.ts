@@ -42,6 +42,14 @@ export class LayoutController {
     this.vdaLayouts.push(layout);
   }
 
+  public isVda5050Node(nodeId: string) {
+    return !!this.nodes[nodeId].vda5050Node;
+  }
+
+  public isVda5050Station(nodeId: string) {
+    return !!this.nodes[nodeId].vda5050Station;
+  }
+
   deleteEdge(edgeId: string) {
     if (edgeId && this.edges[edgeId]) {
       delete this.edges[edgeId];
@@ -127,11 +135,12 @@ export class LayoutController {
   }
 
   deleteAction(action: Action) {
-    const index = this.actions.findIndex((a) => a.actionType === action.actionType);
+    const index = this.actions.findIndex(
+      (a) => a.actionType === action.actionType
+    );
     if (index > -1) {
       this.actions.splice(index, 1);
-    }
-    else{
+    } else {
       showToast("Error", "Action does not delete because not found");
     }
   }
@@ -346,7 +355,10 @@ export class LayoutController {
             vda5050Station: station,
             draggable: false,
             name: station.stationName,
-            color: station.interactionNodeIds.length > 0 ? COLORS.completeStation : COLORS.incompleteStation,
+            color:
+              station.interactionNodeIds.length > 0
+                ? COLORS.completeStation
+                : COLORS.incompleteStation,
             type: "vda5050Station",
           };
           visualizationLayout.layouts.nodes[station.stationId] = {
@@ -363,7 +375,10 @@ export class LayoutController {
           visualizationLayout.edges[edge.edgeId] = {
             source: edge.startNodeId,
             target: edge.endNodeId,
-            color: edge.vehicleTypeEdge.length > 0 ? COLORS.completeEdge : COLORS.incompleteEdge,
+            color:
+              edge.vehicleTypeEdge.length > 0
+                ? COLORS.completeEdge
+                : COLORS.incompleteEdge,
             vda5050Edge: edge,
           };
         });

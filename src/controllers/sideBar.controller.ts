@@ -44,4 +44,10 @@ export class SideBarController {
   public setSelectEdgeTool() {
     this.toolState.value = ToolState.selectEdge;
   }
+  public isCreateOrSelectNodeTool() {
+  return (
+    this.toolState.value == ToolState.createNode ||
+    this.toolState.value == ToolState.selectNode
+  );
+}
 }

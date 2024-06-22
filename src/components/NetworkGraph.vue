@@ -42,36 +42,49 @@ const sideBarNodeController = new SideBarNodeController(
 );
 const sideBarStationController = new SideBarStationController(layoutController);
 props.topBarController.layoutController = layoutController;
+
 const eventHandlers: EventHandlers = {
   "view:click": (mouseEvent: ViewEvent<MouseEvent>) => {
-    layoutController.disableNodesDrag();
-    if (sideBarController.toolState.value == ToolState.createNode ||
-      sideBarController.toolState.value == ToolState.selectNode) {
-      sideBarNodeController.createNodeFast(mouseEvent);
-    }
+    handleViewClick(mouseEvent);
   },
   "node:select": (nodes) => {
-    if (nodes.length > 0) {
-      if (layoutController.nodes[nodes[0]].vda5050Node) {
-        sideBarController.setSelectNodeTool();
-        sideBarNodeController.updateNode(nodes[0]);
-      } else if (layoutController.nodes[nodes[0]].vda5050Station) {
-        sideBarController.setSelectStationTool();
-        sideBarStationController.updateStation(nodes[0]);
-        sideBarController.selectedStations.value[0] = nodes[0];
-      }
-    } else {
-      sideBarNodeController.cleanNodeInputs();
-      sideBarStationController.cleanStationInputs();
-      layoutController.disableNodesDrag();
-    }
+    handleNodeSelect(nodes);
   },
   "edge:select": (edges) => {
-    if (edges.length > 0) {
-      sideBarController.setSelectEdgeTool();
-    }
+    handleEdgeSelect(edges);
   },
 };
+
+function handleViewClick(mouseEvent: ViewEvent<MouseEvent>) {
+  layoutController.disableNodesDrag();
+  if (sideBarController.isCreateOrSelectNodeTool()) {
+    sideBarNodeController.createNodeFast(mouseEvent);
+  }
+}
+
+function handleNodeSelect(nodes: string[]) {
+  if (nodes.length > 0) {
+    if (layoutController.isVda5050Node(nodes[0])) {
+      sideBarController.setSelectNodeTool();
+      sideBarNodeController.updateNode(nodes[0]);
+    } else if (layoutController.isVda5050Station(nodes[0])) {
+      sideBarController.setSelectStationTool();
+      sideBarStationController.updateStation(nodes[0]);
+      sideBarController.selectedStations.value[0] = nodes[0];
+    }
+  } else {
+    sideBarNodeController.cleanNodeInputs();
+    sideBarStationController.cleanStationInputs();
+    layoutController.disableNodesDrag();
+  }
+}
+
+function handleEdgeSelect(edges: string[]) {
+  if (edges.length > 0) {
+    sideBarController.setSelectEdgeTool();
+  }
+}
+
 function getWindowWidth() {
   return window.innerWidth;
 }
