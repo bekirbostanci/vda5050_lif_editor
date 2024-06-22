@@ -1,4 +1,4 @@
-import { ToolState } from "@/types/ToolState";
+import { ToolState } from "@/types/toolState";
 import { ref } from "vue";
 
 export class SideBarController {

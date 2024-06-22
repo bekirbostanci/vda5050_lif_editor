@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/hover-card";
 import { Icon } from "@iconify/vue";
 import { LayoutController } from "@/controllers/layout.controller";
-import { Layout } from "@/types/Layout";
+import { Layout } from "@/types/layout";
 import { SideBarController } from "@/controllers/sideBar.controller";
 
 const props = defineProps({

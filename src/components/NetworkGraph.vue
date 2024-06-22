@@ -13,11 +13,11 @@ import {
 
 import SideBar from "./SideBar.vue";
 import SideBarNode from "./SideBarNode.vue";
-import configs from "@/utils/GraphConfig";
+import configs from "@/utils/graphConfig";
 
 import { LayoutController } from "@/controllers/layout.controller";
 import { SideBarController } from "@/controllers/sideBar.controller";
-import { ToolState } from "@/types/ToolState";
+import { ToolState } from "@/types/toolState";
 import { SideBarNodeController } from "@/controllers/sideBarNode.controller";
 import { TopBarController } from "@/controllers/topBar.controller";
 import SideBarStation from "./SideBarStation.vue";

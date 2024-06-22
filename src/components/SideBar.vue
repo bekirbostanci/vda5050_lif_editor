@@ -3,7 +3,7 @@
 import LayoutDialog from "./LayoutDialog.vue";
 import LayoutSelect from "./LayoutSelect.vue";
 import MetaInformationDialog from "./MetaInformationDialog.vue";
-import configs from "@/utils/GraphConfig";
+import configs from "@/utils/graphConfig";
 import { Separator } from "./ui/separator";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/hover-card";
 import { LayoutController } from "@/controllers/layout.controller";

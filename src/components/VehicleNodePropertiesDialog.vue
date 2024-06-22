@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/tags-input";
 import { LayoutController } from "@/controllers/layout.controller";
 import { SideBarNodeController } from "@/controllers/sideBarNode.controller";
-import { VehicleTypeNodeProperty } from "@/types/Layout";
+import { VehicleTypeNodeProperty } from "@/types/layout";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 

@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { Action, RequirementType } from "@/types/Layout";
+import { Action, RequirementType } from "@/types/layout";
 import { BlockingType } from 'vda-5050-lib/common/vda-5050-types';
 
 import { Button } from '@/components/ui/button'

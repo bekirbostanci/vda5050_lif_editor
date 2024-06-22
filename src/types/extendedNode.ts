@@ -1,4 +1,4 @@
-import { Node, Station } from "./Layout";
+import { Node, Station } from "./layout";
 import { Node as vngNode } from "v-network-graph";
 
 export type NodeType = "vda5050Node" | "vda5050Station";

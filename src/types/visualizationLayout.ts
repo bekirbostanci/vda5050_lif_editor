@@ -1,5 +1,5 @@
 import * as vNG from "v-network-graph";
-import { ExtendedNodes } from "@/types/ExtendedNode";
+import { ExtendedNodes } from "@/types/extendedNode";
 export interface VisualizationLayout {
   nodes: ExtendedNodes;
   edges: vNG.Edges;

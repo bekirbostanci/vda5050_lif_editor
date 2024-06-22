@@ -1,15 +1,15 @@
 import { reactive, toRaw } from "vue";
 import * as vNG from "v-network-graph";
-import { Action, Layout, Node, Station, Edge as vdaEdge } from "@/types/Layout";
-import { ExtendedNodes } from "@/types/ExtendedNode";
+import { Action, Layout, Node, Station, Edge as vdaEdge } from "@/types/layout";
+import { ExtendedNodes } from "@/types/extendedNode";
 import {
   VisualizationLayout,
   VisualizationLayouts,
-} from "@/types/VisualizationLayout";
-import { Lif } from "@/types/Lif";
-import { ExtendedEdges } from "@/types/ExtendedEdge";
-import { showToast } from "@/utils/General";
-import { COLORS } from "@/utils/Colors";
+} from "@/types/visualizationLayout";
+import { Lif } from "@/types/lif";
+import { ExtendedEdges } from "@/types/extendedEdge";
+import { showToast } from "@/utils/general";
+import { COLORS } from "@/utils/colors";
 export class LayoutController {
   public lif = reactive<Lif>({
     metaInformation: {

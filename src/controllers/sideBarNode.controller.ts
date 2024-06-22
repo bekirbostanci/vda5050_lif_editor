@@ -1,7 +1,7 @@
 import { Ref, ref, toRaw } from "vue";
 import { LayoutController } from "./layout.controller";
 import { SideBarController } from "./sideBar.controller";
-import { Node } from "@/types/Layout";
+import { Node } from "@/types/layout";
 import { ViewEvent } from "v-network-graph";
 
 export class SideBarNodeController {

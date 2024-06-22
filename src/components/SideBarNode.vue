@@ -31,7 +31,7 @@ import {
   TagsInputItemText,
 } from "@/components/ui/tags-input";
 import { SideBarNodeController } from "@/controllers/sideBarNode.controller";
-import { Search } from "@/types/Search";
+import { Search } from "@/types/search";
 import VehicleNodePropertiesDialog from "./VehicleNodePropertiesDialog.vue";
 
 const props = defineProps<{

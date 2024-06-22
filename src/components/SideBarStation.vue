@@ -30,7 +30,7 @@ import {
     TagsInputItemText,
 } from "@/components/ui/tags-input";
 import { SideBarNodeController } from "@/controllers/sideBarNode.controller";
-import { Search } from "@/types/Search";
+import { Search } from "@/types/search";
 import { SideBarStationController } from "@/controllers/sideBarStation.controller";
 
 const props = defineProps<{

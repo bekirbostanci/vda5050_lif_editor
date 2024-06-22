@@ -1,4 +1,4 @@
-import { Station } from "@/types/Layout";
+import { Station } from "@/types/layout";
 import { ref } from "vue";
 import { LayoutController } from "./layout.controller";
 
