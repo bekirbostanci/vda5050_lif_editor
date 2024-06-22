@@ -35,7 +35,7 @@ npm run dev
 - [ ] Node
     - [x] Nodes create
     - [x] Nodes edit
-    - [ ] Node connection another layout
+    - [x] Node connection another layout
 - [ ] Edge
     - [x] Edges create
     - [ ] Edges edit
@@ -43,3 +43,5 @@ npm run dev
 - [ ] Station
     - [x] Station create 
     - [x] Station edit 
+- [ ] Action
+    - [ ] Define actionParameters
