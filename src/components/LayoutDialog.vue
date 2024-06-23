@@ -33,36 +33,31 @@ const props = defineProps({
   },
 });
 let layout: Layout = new Object() as Layout;
-layout = {
-  layoutId: "",
-  layoutName: "",
-  layoutVersion: "",
-  layoutLevelId: "",
-  layoutDescription: "",
-  nodes: [],
-  edges: [],
-  stations: [],
-};
+createEmptyLayout();
+
 function loadLayout() {
-  const tempLayout = props.layout.vdaLayouts.find(
+  const selectedLayout = props.layout.vdaLayouts.find(
     (layout) => layout.layoutId === props.tools.selectedLayoutId.value
   );
-  if (tempLayout) {
-    layout = JSON.parse(JSON.stringify(tempLayout));
+  if (selectedLayout) {
+    layout = JSON.parse(JSON.stringify(selectedLayout));
   } else {
-    layout = {
-      layoutId: "",
-      layoutName: "",
-      layoutVersion: "",
-      layoutLevelId: "",
-      layoutDescription: "",
-      nodes: [],
-      edges: [],
-      stations: [],
-    };
+    createEmptyLayout();
   }
 }
 
+function createEmptyLayout() {
+  layout = {
+    layoutId: "",
+    layoutName: "",
+    layoutVersion: "",
+    layoutLevelId: "",
+    layoutDescription: "",
+    nodes: [],
+    edges: [],
+    stations: [],
+  };
+}
 function saveLayout() {
   props.layout.saveLayout(layout);
   if (props.layout.vdaLayouts.length == 1) {
