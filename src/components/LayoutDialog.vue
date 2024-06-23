@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import { Icon } from "@iconify/vue";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Dialog,
   DialogContent,
@@ -10,17 +13,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { Icon } from "@iconify/vue";
 import { LayoutController } from "@/controllers/layout.controller";
-import { Layout } from "@/types/layout";
 import { SideBarController } from "@/controllers/sideBar.controller";
+import { Layout } from "@/types/layout";
 
 const props = defineProps({
   tools: {
