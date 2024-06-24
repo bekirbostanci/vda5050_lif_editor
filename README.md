@@ -32,7 +32,7 @@ npm run dev
 ```
 
 ## TODO
-- [ ] Node
+- [x] Node
     - [x] Nodes create
     - [x] Nodes edit
     - [x] Node connection another layout
@@ -40,8 +40,10 @@ npm run dev
     - [x] Edges create
     - [ ] Edges edit
     - [ ] vehicleTypeEdgeProperties
-- [ ] Station
+- [x] Station
     - [x] Station create 
     - [x] Station edit 
-- [ ] Action
-    - [ ] Define actionParameters
+- [x] Action
+    - [x] Action create
+    - [x] Action edit
+    - [x] Define actionParameters
