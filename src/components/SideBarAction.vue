@@ -20,6 +20,14 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from '@/components/ui/popover'
+import {
+    TagsInput,
+    TagsInputInput,
+    TagsInputItem,
+    TagsInputItemDelete,
+    TagsInputItemText
+} from '@/components/ui/tags-input'
+
 import { LayoutController } from '@/controllers/layout.controller';
 
 
@@ -34,6 +42,9 @@ const selectedAction = ref<string>("");
 
 const requirementOptions = ["REQUIRED", "CONDITIONAL", "OPTIONAL"] as RequirementType[];
 const blockingOptions = Object.values(BlockingType);
+
+const actionParameterKey = ref("");
+const actionParameterValue = ref("");
 
 const newAction = ref<Action>({
     actionType: "",
@@ -96,6 +107,32 @@ function clearAction() {
     <div class="grid gap-2 mt-4">
         <Label for="action-description">Action Description</Label>
         <Input id="action-description" v-model="newAction.actionDescription" />
+    </div>
+    <div class="grid gap-2 mt-4">
+        <Label for="action-type">Action Parameters</Label>
+        <TagsInput v-model="newAction.actionParameters" disabled>
+            <TagsInputItem v-for="item in Object.values(newAction.actionParameters)" :key="item.key"
+                :value="item.key + ' : ' + item.value">
+                <TagsInputItemText />
+                <TagsInputItemDelete
+                    @click="newAction.actionParameters = newAction.actionParameters.filter((parameter) => parameter !== item)" />
+            </TagsInputItem>
+            <TagsInputInput />
+        </TagsInput>
+    </div>
+    <div class="ml-auto flex w-full space-x-2 py-2">
+        <div class="grid gap-2 mt-2">
+            <Label for="action-parameter-key">Key</Label>
+            <Input id="action-parameter-key" v-model="actionParameterKey" />
+        </div>
+        <div class="grid gap-2 mt-2">
+            <Label for="action-parameter-value">Value</Label>
+            <Input id="action-parameter-value" v-model="actionParameterValue" />
+        </div>
+        <div class="grid gap-2 mt-7">
+            <Button variant="secondary"
+                @click="newAction.actionParameters.push({ key: actionParameterKey, value: actionParameterValue }); actionParameterKey = ''; actionParameterValue = '';">Add</Button>
+        </div>
     </div>
     <div class="grid gap-2 mt-6">
         <Label class="mb-2">Action Requirement</Label>
