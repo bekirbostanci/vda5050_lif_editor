@@ -48,9 +48,9 @@ export interface Edge {
   edgeDescription: string;
   startNodeId: string;
   endNodeId: string;
-  vehicleTypeEdge: vehicleTypeEdgeProperties[];
+  vehicleTypeEdgeProperties: VehicleTypeEdgeProperties[];
 }
-export interface vehicleTypeEdgeProperties {
+export interface VehicleTypeEdgeProperties {
   vehicleTypeId: string;
   vehicleOrientation: number;
   orientationType: OrientationType;

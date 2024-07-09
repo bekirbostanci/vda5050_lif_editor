@@ -239,7 +239,7 @@ export class LayoutController {
       startNodeId: source,
       endNodeId: target,
       edgeDescription: "",
-      vehicleTypeEdge: [],
+      vehicleTypeEdgeProperties: [],
     };
     this.edges[source + "_" + target] = {
       vda5050Edge: vdaEdge,
@@ -376,7 +376,7 @@ export class LayoutController {
             source: edge.startNodeId,
             target: edge.endNodeId,
             color:
-              edge.vehicleTypeEdge.length > 0
+              edge.vehicleTypeEdgeProperties.length > 0
                 ? COLORS.completeEdge
                 : COLORS.incompleteEdge,
             vda5050Edge: edge,
