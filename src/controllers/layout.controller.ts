@@ -295,6 +295,7 @@ export class LayoutController {
         backgroundImage: layout.backgroundImage
       });
     }
+    this.changeLayout(layout.layoutId);
     if (layout.backgroundImage?.image) {
       this.backgroundImage.value = layout.backgroundImage;
     }

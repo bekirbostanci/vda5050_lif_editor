@@ -67,9 +67,7 @@ function createEmptyLayout() {
 }
 function saveLayout() {
   props.layout.saveLayout(layout);
-  if (props.layout.vdaLayouts.length == 1) {
-    props.tools.selectedLayoutId.value = layout.layoutId;
-  }
+  props.tools.selectedLayoutId.value = layout.layoutId;
 }
 
 function deleteLayout() {
@@ -103,10 +101,16 @@ function handleImageUpload(event: Event) {
 <template>
   <Dialog>
     <DialogTrigger as-child>
-      <Button variant="secondary" @click="loadLayout()">
-        <Icon class="mr-2" icon="ph:layout-thin" :height="24" />
-        Layout
-      </Button>
+      <div class="grid grid-cols-2 gap-2 w-full">
+        <Button variant="secondary" @click="createEmptyLayout()" class="w-full">
+          <Icon class="mr-2" icon="ph:plus-circle-thin" :height="24" />
+          Create
+        </Button>
+        <Button variant="secondary" @click="loadLayout()" class="w-full">
+          <Icon class="mr-2" icon="ph:layout-thin" :height="24" />
+          Edit
+        </Button>
+      </div>
     </DialogTrigger>
     <DialogContent class="sm:max-w-[475px]">
       <DialogHeader>
