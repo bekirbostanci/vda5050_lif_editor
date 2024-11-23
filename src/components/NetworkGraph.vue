@@ -128,7 +128,7 @@ function onLoadImage() {
     <vue-json-pretty :data="layoutController.lif" />
   </div>
   <div class="page" v-else>
-    <ResizablePanelGroup id="sidebar" class="rounded-lg border"
+    <ResizablePanelGroup id="sidebar" 
       :direction="getWindowWidth() < 768 ? 'vertical' : 'horizontal'">
       <ResizablePanel style="min-width: 280px;" id=" demo-panel-1" :default-size="15">
         <SideBar class="p-6" :layout="layoutController" :sideBar="sideBarController"
@@ -217,7 +217,7 @@ function onLoadImage() {
 
 @media (min-width: 768px) {
   .page {
-    height: calc(100svh - 120px);
+    height: calc(100svh - 40px);
   }
 }
 </style>

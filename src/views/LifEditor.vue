@@ -9,7 +9,7 @@ const topBarController = new TopBarController();
 <template>
   <div class="h-full flex-col md:flex">
     <TopBar :top-bar-controller="topBarController"></TopBar>
-    <div class="ml-4 mr-4 h-full py-6 flex-1">
+    <div class="h-full flex-1">
       <NetworkGraph :top-bar-controller="topBarController"></NetworkGraph>
     </div>
   </div>

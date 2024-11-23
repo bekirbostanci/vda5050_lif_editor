@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import PresentOpen from "./PresentOpen.vue";
-import PresentShow from "./PresentShow.vue";
-import PresentSave from "./PresetSave.vue"
-import PresentActions from "./PresetActions.vue"
-import { Separator } from "../components/ui/separator";
+import {
+  Menubar,
+  MenubarMenu,
+  MenubarTrigger,
+} from '@/components/ui/menubar'
 
 import { TopBarController } from "@/controllers/topBar.controller";
 const props = defineProps({
@@ -12,24 +12,30 @@ const props = defineProps({
     required: true,
   },
 });
+const openHelp = () => {
+  window.open('https://github.com/bekirbostanci/vda5050_lif_editor', '_blank')
+}
 </script>
 
 <template>
-  <div id="top-bar" class="sticky top-0 ">
-    <div class="p-4 flex w-full">
-      <h2 class="text-lg font-semibold" style="width: 200px">VDA LIF Editor</h2>
-      <div class="hide-on-mobile ml-auto flex w-full space-x-2 justify-end">
-        <PresentOpen :top-bar-controller="props.topBarController" />
-        <PresentSave :top-bar-controller="props.topBarController" />
-        <PresentShow :top-bar-controller="props.topBarController" />
-      </div>
-      <div class="hide-on-desktop ml-auto flex w-full space-x-2 justify-end">
-        <PresentActions :top-bar-controller="props.topBarController" />
-      </div>
-
+   <Menubar>
+    <div class="flex items-center">
+      <img src="/public/vda.svg" alt="logo" class="w-7 h-7" />
     </div>
-    <Separator></Separator>
-  </div>
+    <MenubarMenu>
+      <MenubarTrigger @click="props.topBarController.selectFile()">Open</MenubarTrigger>
+    </MenubarMenu>
+    <MenubarMenu>
+      <MenubarTrigger @click="props.topBarController.convertLifToJson(); props.topBarController.saveLifJsonFile()">Save</MenubarTrigger>
+    </MenubarMenu>
+    <MenubarMenu>
+      <MenubarTrigger @click="props.topBarController.toggleJson()">Show</MenubarTrigger>
+    </MenubarMenu>
+    <MenubarMenu>
+      <MenubarTrigger @click="openHelp">Help</MenubarTrigger>
+    </MenubarMenu>
+  </Menubar>
+ 
 </template>
 <style scoped>
 #top-bar {
