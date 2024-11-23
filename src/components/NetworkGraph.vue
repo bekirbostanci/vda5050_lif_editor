@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import { EventHandlers, ViewEvent, Instance } from "v-network-graph";
 import VueJsonPretty from 'vue-json-pretty';
 import 'vue-json-pretty/lib/styles.css';
@@ -98,6 +98,29 @@ watch(layoutController.layouts.nodes, () => {
   }
 });
 
+// additional layers definition
+const layers = {
+  map: "base",
+}
+
+const selectedLayout = computed(() => 
+  layoutController.vdaLayouts.find(
+    (layout) => layout.layoutId === sideBarController.selectedLayoutId.value
+  )
+);
+
+const backgroundImage = computed(() => selectedLayout.value?.backgroundImage);
+
+const backgroundDimensions = computed(() => ({
+  x: selectedLayout.value?.backgroundX || 0,
+  y: selectedLayout.value?.backgroundY || 0,
+  width: selectedLayout.value?.backgroundWidth || 10,
+  height: selectedLayout.value?.backgroundHeight || 10
+}));
+
+function onLoadImage() {
+  graph.value?.fitToContents();
+}
 </script>
 
 <template>
@@ -116,8 +139,18 @@ watch(layoutController.layouts.nodes, () => {
         <div class="graph flex items-center justify-center">
           <v-network-graph ref="graph" class="graph" zoom-level="200" :nodes="layoutController.nodes"
             :edges="layoutController.edges" :layouts="layoutController.layouts" :configs="configs"
-            v-model:selected-nodes="sideBarController.selectedNodes.value"
+            v-model:selected-nodes="sideBarController.selectedNodes.value" :layers="layers"
             v-model:selected-edges="sideBarController.selectedEdges.value" :event-handlers="eventHandlers">
+            <template #map>
+              <image 
+                :href="backgroundImage" 
+                :x="backgroundDimensions.x" 
+                :y="backgroundDimensions.y" 
+                :width="backgroundDimensions.width + 'px'"
+                :height="backgroundDimensions.height + 'px'"
+                @load="onLoadImage"
+              />
+            </template>
             <template #edge-label="{ edge, ...slotProps }">
               <v-edge-label v-if="configs.edge.label.visible" :text="edge.vda5050Edge.edgeName" align="center"
                 vertical-align="above" v-bind="slotProps" />

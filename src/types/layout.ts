@@ -9,6 +9,11 @@ export interface Layout {
   nodes: Node[]; // Collection of all nodes in the layout
   edges: Edge[]; // Collection of all edges in the layout
   stations: Station[]; // Collection of all stations in the layout
+  backgroundImage?: string;
+  backgroundX?: number;
+  backgroundY?: number;
+  backgroundWidth?: number;
+  backgroundHeight?: number;
 }
 
 export interface Node {
