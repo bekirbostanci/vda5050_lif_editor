@@ -56,6 +56,10 @@ function createEmptyLayout() {
     nodes: [],
     edges: [],
     stations: [],
+    backgroundX: 0,
+    backgroundY: 0,
+    backgroundWidth: 10,
+    backgroundHeight: 10,
   };
 }
 function saveLayout() {
@@ -68,6 +72,22 @@ function saveLayout() {
 function deleteLayout() {
   props.layout.deleteLayout(layout.layoutId);
   props.tools.selectedLayoutId.value = "";
+}
+
+function handleImageUpload(event: Event) {
+  const input = event.target as HTMLInputElement;
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+    const reader = new FileReader();
+    
+    reader.onload = (e) => {
+      if (e.target?.result) {
+        layout.backgroundImage = e.target.result as string;
+      }
+    };
+    
+    reader.readAsDataURL(file);
+  }
 }
 </script>
 
@@ -153,6 +173,92 @@ function deleteLayout() {
             v-model="layout.layoutDescription"
             auto-focus
           />
+        </div>
+        <div class="grid gap-2">
+          <HoverCard :open-delay="2000">
+            <HoverCardTrigger>
+              <Label for="backgroundImage">Background Image</Label>
+            </HoverCardTrigger>
+            <HoverCardContent>
+              Select an image file to use as the background for the network graph.
+            </HoverCardContent>
+          </HoverCard>
+          <Input
+            id="backgroundImage"
+            type="file"
+            accept="image/*"
+            @change="handleImageUpload"
+            auto-focus
+          />
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="grid gap-2">
+            <HoverCard :open-delay="2000">
+              <HoverCardTrigger>
+                <Label for="backgroundX">Background X Position</Label>
+              </HoverCardTrigger>
+              <HoverCardContent>
+                X coordinate of the background image position
+              </HoverCardContent>
+            </HoverCard>
+            <Input
+              id="backgroundX"
+              type="number"
+              v-model="layout.backgroundX"
+              auto-focus
+            />
+          </div>
+          
+          <div class="grid gap-2">
+            <HoverCard :open-delay="2000">
+              <HoverCardTrigger>
+                <Label for="backgroundY">Background Y Position</Label>
+              </HoverCardTrigger>
+              <HoverCardContent>
+                Y coordinate of the background image position
+              </HoverCardContent>
+            </HoverCard>
+            <Input
+              id="backgroundY"
+              type="number"
+              v-model="layout.backgroundY"
+              auto-focus
+            />
+          </div>
+          
+          <div class="grid gap-2">
+            <HoverCard :open-delay="2000">
+              <HoverCardTrigger>
+                <Label for="backgroundWidth">Background Width</Label>
+              </HoverCardTrigger>
+              <HoverCardContent>
+                Width of the background image in pixels
+              </HoverCardContent>
+            </HoverCard>
+            <Input
+              id="backgroundWidth"
+              type="number"
+              v-model="layout.backgroundWidth"
+              auto-focus
+            />
+          </div>
+          
+          <div class="grid gap-2">
+            <HoverCard :open-delay="2000">
+              <HoverCardTrigger>
+                <Label for="backgroundHeight">Background Height</Label>
+              </HoverCardTrigger>
+              <HoverCardContent>
+                Height of the background image in pixels
+              </HoverCardContent>
+            </HoverCard>
+            <Input
+              id="backgroundHeight"
+              type="number"
+              v-model="layout.backgroundHeight"
+              auto-focus
+            />
+          </div>
         </div>
       </div>
       <DialogFooter>
