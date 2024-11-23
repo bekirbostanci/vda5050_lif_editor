@@ -56,10 +56,13 @@ function createEmptyLayout() {
     nodes: [],
     edges: [],
     stations: [],
-    backgroundX: 0,
-    backgroundY: 0,
-    backgroundWidth: 10,
-    backgroundHeight: 10,
+    backgroundImage: {
+      image: "",
+      x: 0,
+      y: 0,
+      width: 10,
+      height: 10
+    }
   };
 }
 function saveLayout() {
@@ -82,7 +85,13 @@ function handleImageUpload(event: Event) {
     
     reader.onload = (e) => {
       if (e.target?.result) {
-        layout.backgroundImage = e.target.result as string;
+        layout.backgroundImage = {
+          image: e.target.result as string,
+          x: layout.backgroundImage?.x || 0,
+          y: layout.backgroundImage?.y || 0,
+          width: layout.backgroundImage?.width || 10,
+          height: layout.backgroundImage?.height || 10
+        };
       }
     };
     
@@ -191,7 +200,7 @@ function handleImageUpload(event: Event) {
             auto-focus
           />
         </div>
-        <div class="grid grid-cols-2 gap-4">
+        <div class="grid grid-cols-2 gap-4" v-if="layout.backgroundImage">
           <div class="grid gap-2">
             <HoverCard :open-delay="2000">
               <HoverCardTrigger>
@@ -204,7 +213,7 @@ function handleImageUpload(event: Event) {
             <Input
               id="backgroundX"
               type="number"
-              v-model="layout.backgroundX"
+              v-model="layout.backgroundImage.x"
               auto-focus
             />
           </div>
@@ -221,7 +230,7 @@ function handleImageUpload(event: Event) {
             <Input
               id="backgroundY"
               type="number"
-              v-model="layout.backgroundY"
+              v-model="layout.backgroundImage.y"
               auto-focus
             />
           </div>
@@ -238,7 +247,7 @@ function handleImageUpload(event: Event) {
             <Input
               id="backgroundWidth"
               type="number"
-              v-model="layout.backgroundWidth"
+              v-model="layout.backgroundImage.width"
               auto-focus
             />
           </div>
@@ -255,7 +264,7 @@ function handleImageUpload(event: Event) {
             <Input
               id="backgroundHeight"
               type="number"
-              v-model="layout.backgroundHeight"
+              v-model="layout.backgroundImage.height"
               auto-focus
             />
           </div>

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import {
   Menubar,
+  MenubarContent,
+  MenubarItem,
   MenubarMenu,
   MenubarTrigger,
 } from '@/components/ui/menubar'
@@ -26,7 +28,11 @@ const openHelp = () => {
       <MenubarTrigger @click="props.topBarController.selectFile()">Open</MenubarTrigger>
     </MenubarMenu>
     <MenubarMenu>
-      <MenubarTrigger @click="props.topBarController.convertLifToJson(); props.topBarController.saveLifJsonFile()">Save</MenubarTrigger>
+      <MenubarTrigger >Save</MenubarTrigger>
+      <MenubarContent>
+        <MenubarItem @click="props.topBarController.convertLifToJson(); props.topBarController.saveLifJsonFile(true)">Save with Background</MenubarItem>
+        <MenubarItem @click="props.topBarController.convertLifToJson(); props.topBarController.saveLifJsonFile(false)">Save without Background</MenubarItem>
+      </MenubarContent>
     </MenubarMenu>
     <MenubarMenu>
       <MenubarTrigger @click="props.topBarController.toggleJson()">{{ props.topBarController.showJson.value ? 'Map' : 'Code' }}</MenubarTrigger>

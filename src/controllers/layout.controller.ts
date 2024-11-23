@@ -1,6 +1,7 @@
 import { reactive, toRaw } from "vue";
 import * as vNG from "v-network-graph";
 import { Action, Layout, Node, Station, Edge as vdaEdge } from "@/types/layout";
+import { BackgroundImage } from "@/types/visualizationLayout";
 import { ExtendedNodes } from "@/types/extendedNode";
 import {
   VisualizationLayout,
@@ -27,6 +28,13 @@ export class LayoutController {
   public layouts = reactive<vNG.Layouts>({ nodes: {} });
   public edges = reactive<ExtendedEdges>({});
   public actions = reactive<Action[]>([]);
+  public backgroundImage = reactive<BackgroundImage>({
+    image: "",
+    x: 0,
+    y: 0,
+    width: 10,
+    height: 10
+  });
   private oldLayoutId = "";
   constructor() {
     const layout: Layout = {
@@ -38,6 +46,13 @@ export class LayoutController {
       nodes: [],
       edges: [],
       stations: [],
+      backgroundImage: {
+        image: "",
+        x: 0,
+        y: 0,
+        width: 10,
+        height: 10
+      }
     };
     this.vdaLayouts.push(layout);
   }
@@ -324,7 +339,9 @@ export class LayoutController {
         edges: {},
         layouts: { nodes: {} },
       };
-
+      if (layout.backgroundImage) {
+        this.backgroundImage = layout.backgroundImage;
+      }
       if (layout.nodes) {
         layout.nodes.forEach((node) => {
           visualizationLayout.nodes[node.nodeId] = {
