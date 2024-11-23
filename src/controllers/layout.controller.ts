@@ -306,7 +306,7 @@ export class LayoutController {
     );
   }
 
-  convertLifToJson() {
+  convertLifToJson(includeBackground: boolean) {
     this.changeLayout(this.oldLayoutId);
     this.vdaLayouts.forEach((layout) => {
       const visualizationLayout = this.visualizationLayouts[layout.layoutId];
@@ -330,11 +330,16 @@ export class LayoutController {
           );
         }
       }
-      if (visualizationLayout.backgroundImage) {
-        layout.backgroundImage = visualizationLayout.backgroundImage;
-      }
     });
-    this.lif.layouts = this.vdaLayouts;
+  
+    this.lif.layouts = JSON.parse(JSON.stringify(this.vdaLayouts));
+
+    // Dont include background image if not requested
+    if (!includeBackground) {
+      this.lif.layouts.map((layout) => {
+        delete layout.backgroundImage;
+      });
+    }
   }
 
   convertJsonToLif(data: string) {

@@ -30,8 +30,8 @@ const openHelp = () => {
     <MenubarMenu>
       <MenubarTrigger >Save</MenubarTrigger>
       <MenubarContent>
-        <MenubarItem @click="props.topBarController.convertLifToJson(); props.topBarController.saveLifJsonFile(true)">Save with Background</MenubarItem>
-        <MenubarItem @click="props.topBarController.convertLifToJson(); props.topBarController.saveLifJsonFile(false)">Save without Background</MenubarItem>
+        <MenubarItem @click="props.topBarController.saveLifJsonFile(true)">Save with Background</MenubarItem>
+        <MenubarItem @click="props.topBarController.saveLifJsonFile(false)">Save without Background</MenubarItem>
       </MenubarContent>
     </MenubarMenu>
     <MenubarMenu>

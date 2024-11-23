@@ -6,23 +6,17 @@ export class TopBarController {
   public layoutController: LayoutController | undefined;
   constructor() {}
   public toggleJson() {
-    this.convertLifToJson();
+    if (this.layoutController) {
+      this.layoutController.convertLifToJson(false);
+    }
     this.showJson.value = !this.showJson.value;
   }
 
-  public convertLifToJson() {
+  public saveLifJsonFile(includeBackground: boolean) {
     if (this.layoutController) {
-      this.layoutController.convertLifToJson();
+      this.layoutController.convertLifToJson(includeBackground);
     }
-  }
-
-  public saveLifJsonFile(background: boolean = true) {
     let jsonData = this.layoutController?.lif;
-    if (!background) {
-      jsonData?.layouts.map((layout) => {
-        delete layout.backgroundImage;
-      });
-    }
     const fileName =
       "lif_file_" +
       this.layoutController?.lif.metaInformation.projectIdentification +
