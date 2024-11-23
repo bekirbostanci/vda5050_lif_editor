@@ -2,6 +2,7 @@
 The LIF format editor application is an application that you can edit the LIF file for vda5050 compatible robots. With the application you can design the nodes that the robots will move. Nodes can also be connected with the help of edges. Actions can be added on nodes and edges. Stations can also be added to the fiber file with LIF format.
 
 ![vda](./docs/VDA%20Lif%20Editor.gif)
+![map_image](./docs/Map%20Image.png)
 
 ## Live Demo
 Check out the live demo of this project [here](https://vda5050-lif-editor.vercel.app/).
