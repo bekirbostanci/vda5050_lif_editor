@@ -33,7 +33,7 @@ const props = defineProps({
 });
 
 const graph = ref<Instance>();
-const layoutController = new LayoutController();
+const layoutController = new LayoutController(graph);
 const sideBarController = new SideBarController();
 const sideBarNodeController = new SideBarNodeController(
   sideBarController,
@@ -102,10 +102,7 @@ watch(layoutController.layouts.nodes, () => {
 const layers = {
   map: "base",
 }
-
-function onLoadImage() {
-  graph.value?.fitToContents();
-}
+ 
 </script>
 
 <template>
@@ -133,7 +130,6 @@ function onLoadImage() {
                 :y="layoutController.backgroundImage.value.y" 
                 :width="layoutController.backgroundImage.value.width + 'px'"
                 :height="layoutController.backgroundImage.value.height + 'px'"
-                @load="onLoadImage"
               />
             </template>
             <template #edge-label="{ edge, ...slotProps }">

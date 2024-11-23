@@ -11,6 +11,7 @@ import { Lif } from "@/types/lif";
 import { ExtendedEdges } from "@/types/extendedEdge";
 import { showToast } from "@/utils/general";
 import { COLORS } from "@/utils/colors";
+import { Instance } from "v-network-graph";
 export class LayoutController {
   public lif = reactive<Lif>({
     metaInformation: {
@@ -36,7 +37,9 @@ export class LayoutController {
     height: 10
   });
   private oldLayoutId = "";
-  constructor() {
+  private graph: any;
+  constructor(graph: any) {
+    this.graph = graph;
     const layout: Layout = {
       layoutId: "entry",
       layoutName: "Entry",
@@ -151,8 +154,8 @@ export class LayoutController {
         JSON.stringify(this.visualizationLayouts[layoutId].backgroundImage)
       );
     }
-    console.log(this.backgroundImage);
     this.oldLayoutId = layoutId;
+    this.graph.value?.fitToContents();
   }
 
   createAction(action: Action) {
@@ -246,8 +249,6 @@ export class LayoutController {
   }
 
   updateEdges(source: string, targets: string[]) {
-    console.log("updateEdges", source, targets);
-
     Object.keys(this.edges).forEach((key) => {
       if (this.edges[key].source == source) {
         delete this.edges[key];
