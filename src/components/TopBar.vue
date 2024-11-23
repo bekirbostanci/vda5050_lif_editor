@@ -20,7 +20,7 @@ const openHelp = () => {
 <template>
    <Menubar>
     <div class="flex items-center">
-      <img src="/public/vda.svg" alt="logo" class="w-7 h-7" />
+      <img src="/vda.svg" alt="logo" class="w-7 h-7" />
     </div>
     <MenubarMenu>
       <MenubarTrigger @click="props.topBarController.selectFile()">Open</MenubarTrigger>
