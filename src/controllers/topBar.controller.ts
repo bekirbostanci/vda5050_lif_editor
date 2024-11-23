@@ -17,7 +17,12 @@ export class TopBarController {
   }
 
   public saveLifJsonFile(background: boolean = true) {
-    const jsonData = this.layoutController?.lif;
+    let jsonData = this.layoutController?.lif;
+    if (!background) {
+      jsonData?.layouts.map((layout) => {
+        delete layout.backgroundImage;
+      });
+    }
     const fileName =
       "lif_file_" +
       this.layoutController?.lif.metaInformation.projectIdentification +
