@@ -103,14 +103,6 @@ const layers = {
   map: "base",
 }
 
-const selectedLayout = computed(() => 
-  layoutController.vdaLayouts.find(
-    (layout) => layout.layoutId === sideBarController.selectedLayoutId.value
-  )
-);
-
-const backgroundImage = computed(() => selectedLayout.value?.backgroundImage);
-
 function onLoadImage() {
   graph.value?.fitToContents();
 }
@@ -134,13 +126,13 @@ function onLoadImage() {
             :edges="layoutController.edges" :layouts="layoutController.layouts" :configs="configs"
             v-model:selected-nodes="sideBarController.selectedNodes.value" :layers="layers"
             v-model:selected-edges="sideBarController.selectedEdges.value" :event-handlers="eventHandlers">
-            <template #map v-if="backgroundImage">
+            <template #map v-if="layoutController.backgroundImage.value.image ">
               <image 
-                :href="layoutController.backgroundImage.image" 
-                :x="layoutController.backgroundImage.x" 
-                :y="layoutController.backgroundImage.y" 
-                :width="layoutController.backgroundImage.width + 'px'"
-                :height="layoutController.backgroundImage.height + 'px'"
+                :href="layoutController.backgroundImage.value.image" 
+                :x="layoutController.backgroundImage.value.x" 
+                :y="layoutController.backgroundImage.value.y" 
+                :width="layoutController.backgroundImage.value.width + 'px'"
+                :height="layoutController.backgroundImage.value.height + 'px'"
                 @load="onLoadImage"
               />
             </template>

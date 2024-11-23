@@ -1,4 +1,4 @@
-import { reactive, toRaw } from "vue";
+import { reactive, ref, toRaw } from "vue";
 import * as vNG from "v-network-graph";
 import { Action, Layout, Node, Station, Edge as vdaEdge } from "@/types/layout";
 import { BackgroundImage } from "@/types/visualizationLayout";
@@ -28,7 +28,7 @@ export class LayoutController {
   public layouts = reactive<vNG.Layouts>({ nodes: {} });
   public edges = reactive<ExtendedEdges>({});
   public actions = reactive<Action[]>([]);
-  public backgroundImage = reactive<BackgroundImage>({
+  public backgroundImage = ref<BackgroundImage>({
     image: "",
     x: 0,
     y: 0,
@@ -103,6 +103,7 @@ export class LayoutController {
         nodes: JSON.parse(JSON.stringify(this.nodes)),
         edges: JSON.parse(JSON.stringify(this.edges)),
         layouts: JSON.parse(JSON.stringify(this.layouts)),
+        backgroundImage: JSON.parse(JSON.stringify(this.backgroundImage.value))
       };
     }
 
@@ -116,6 +117,13 @@ export class LayoutController {
     Object.keys(this.layouts.nodes).map((node) => {
       delete this.layouts.nodes[node];
     });
+    this.backgroundImage.value = {
+      image: "",
+      x: 0,
+      y: 0,
+      width: 10,
+      height: 10
+    };
 
     // Check if layout exists
     // If exists, load layout data to vue ref variables
@@ -139,7 +147,11 @@ export class LayoutController {
           );
         }
       );
+      this.backgroundImage.value = JSON.parse(
+        JSON.stringify(this.visualizationLayouts[layoutId].backgroundImage)
+      );
     }
+    console.log(this.backgroundImage);
     this.oldLayoutId = layoutId;
   }
 
@@ -280,7 +292,11 @@ export class LayoutController {
         nodes: [],
         edges: [],
         stations: [],
+        backgroundImage: layout.backgroundImage
       });
+    }
+    if (layout.backgroundImage?.image) {
+      this.backgroundImage.value = layout.backgroundImage;
     }
   }
   deleteLayout(layoutId: string) {
@@ -314,6 +330,9 @@ export class LayoutController {
           );
         }
       }
+      if (visualizationLayout.backgroundImage) {
+        layout.backgroundImage = visualizationLayout.backgroundImage;
+      }
     });
     this.lif.layouts = this.vdaLayouts;
   }
@@ -339,9 +358,6 @@ export class LayoutController {
         edges: {},
         layouts: { nodes: {} },
       };
-      if (layout.backgroundImage) {
-        this.backgroundImage = layout.backgroundImage;
-      }
       if (layout.nodes) {
         layout.nodes.forEach((node) => {
           visualizationLayout.nodes[node.nodeId] = {
@@ -402,7 +418,10 @@ export class LayoutController {
       } else {
         layout.edges = [];
       }
-
+      
+      if (layout.backgroundImage) {
+        visualizationLayout.backgroundImage = layout.backgroundImage;
+      }
       this.visualizationLayouts[layout.layoutId] = visualizationLayout;
     });
 
