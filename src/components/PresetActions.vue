@@ -9,10 +9,6 @@ import {
 import { TextAlignJustifyIcon } from '@radix-icons/vue'
 import { TopBarController } from '@/controllers/topBar.controller';
 import { Button } from '@/components/ui/button';
-import PresentOpen from "./PresentOpen.vue";
-import PresentShow from "./PresentShow.vue";
-import PresentSave from "./PresetSave.vue"
-
 const open = ref(false)
 
 const props = defineProps({
