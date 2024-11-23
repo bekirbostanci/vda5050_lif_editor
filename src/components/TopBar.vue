@@ -29,7 +29,7 @@ const openHelp = () => {
       <MenubarTrigger @click="props.topBarController.convertLifToJson(); props.topBarController.saveLifJsonFile()">Save</MenubarTrigger>
     </MenubarMenu>
     <MenubarMenu>
-      <MenubarTrigger @click="props.topBarController.toggleJson()">Show</MenubarTrigger>
+      <MenubarTrigger @click="props.topBarController.toggleJson()">{{ props.topBarController.showJson.value ? 'Map' : 'Code' }}</MenubarTrigger>
     </MenubarMenu>
     <MenubarMenu>
       <MenubarTrigger @click="openHelp">Help</MenubarTrigger>
