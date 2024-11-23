@@ -49,9 +49,6 @@ const props = defineProps<{
             </TabsList>
           </Tabs>
         </HoverCardTrigger>
-        <HoverCardContent class="w-[320px] text-sm" side="left">
-          Use to add a new node or station to the layout
-        </HoverCardContent>
       </HoverCard>
     </div>
     <Separator orientation="horizontal" />
