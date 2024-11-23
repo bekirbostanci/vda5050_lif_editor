@@ -11,7 +11,6 @@ import { Lif } from "@/types/lif";
 import { ExtendedEdges } from "@/types/extendedEdge";
 import { showToast } from "@/utils/general";
 import { COLORS } from "@/utils/colors";
-import { Instance } from "v-network-graph";
 export class LayoutController {
   public lif = reactive<Lif>({
     metaInformation: {
