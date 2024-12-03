@@ -24,7 +24,8 @@
     "vee-validate": "^4.13.1",
     "vue": "^3.4.21",
     "vue-json-pretty": "^2.4.0",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "js-yaml": "4.1.0"
   },
   "devDependencies": {
     "@types/node": "^20.14.2",
