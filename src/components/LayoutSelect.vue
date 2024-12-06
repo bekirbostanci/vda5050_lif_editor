@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { LayoutController } from "@/controllers/layout.controller";
+import {LayoutController} from '@/controllers/layout.controller';
 import {
   Select,
   SelectContent,
@@ -7,30 +7,39 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./ui/select";
-import { SideBarController } from "@/controllers/sideBar.controller";
+} from './ui/select';
+import {SideBarController} from '@/controllers/sideBar.controller';
 const props = defineProps({
   layout: {
     required: true,
-    type: LayoutController
+    type: LayoutController,
   },
   tools: {
     type: SideBarController,
-    required: true
-  }
-})
+    required: true,
+  },
+});
 props.tools.selectedLayoutId.value = props.layout.vdaLayouts[0].layoutId;
 props.layout.changeLayout(props.tools.selectedLayoutId.value);
 </script>
 
 <template>
-  <Select v-model="props.tools.selectedLayoutId.value"  @update:model-value="props.layout.changeLayout(props.tools.selectedLayoutId.value)">
+  <Select
+    v-model="props.tools.selectedLayoutId.value"
+    @update:model-value="
+      props.layout.changeLayout(props.tools.selectedLayoutId.value)
+    "
+  >
     <SelectTrigger>
       <SelectValue placeholder="Select Layout"></SelectValue>
     </SelectTrigger>
     <SelectContent>
       <SelectGroup>
-        <SelectItem v-for="layout in props.layout?.vdaLayouts" :value="layout.layoutId">{{layout.layoutName}}</SelectItem>
+        <SelectItem
+          v-for="layout in props.layout?.vdaLayouts"
+          :value="layout.layoutId"
+          >{{ layout.layoutName }}</SelectItem
+        >
       </SelectGroup>
     </SelectContent>
   </Select>

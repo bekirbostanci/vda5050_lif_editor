@@ -1,5 +1,5 @@
-import { reactive } from "vue";
-import { Edge, Node } from "v-network-graph";
+import {reactive} from 'vue';
+import {Edge, Node} from 'v-network-graph';
 
 export const initialConfigs = {
   node: {
@@ -9,7 +9,7 @@ export const initialConfigs = {
       zIndex: (node: Node) => node.zIndex,
     },
     normal: {
-      type: "circle",
+      type: 'circle',
       radius: 15,
       color: (node: Node) => node.color,
     },
@@ -28,7 +28,7 @@ export const initialConfigs = {
     normal: {
       width: 3,
       color: (edge: Edge) => edge.color,
-      dasharray: "20 16",
+      dasharray: '20 16',
       animate: true,
       animationSpeed: 20,
     },
@@ -40,16 +40,16 @@ export const initialConfigs = {
       radius: 25,
     },
     hover: {
-      color: "orange",
+      color: 'orange',
     },
     marker: {
       target: {
-        type: "angle",
+        type: 'angle',
         width: 4,
         height: 4,
         margin: -1,
         offset: 0,
-        units: "strokeWidth",
+        units: 'strokeWidth',
         color: null,
       },
     },
@@ -61,7 +61,7 @@ export const initialConfigs = {
       interval: 1,
       thickIncrements: 4,
       line: {
-        color: "#e0e0e0",
+        color: '#e0e0e0',
         dasharray: 1,
       },
     },

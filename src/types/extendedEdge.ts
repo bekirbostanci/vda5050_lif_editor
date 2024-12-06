@@ -1,7 +1,7 @@
-import { Edge as vngEdge } from "v-network-graph";
-import {  Edge as vdaEdge } from "./layout";
+import {Edge as vngEdge} from 'v-network-graph';
+import {Edge as vdaEdge} from './layout';
 
-export interface ExtendedEdge extends vngEdge{
+export interface ExtendedEdge extends vngEdge {
   vda5050Edge: vdaEdge;
 }
 

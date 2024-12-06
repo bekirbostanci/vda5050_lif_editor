@@ -1,6 +1,6 @@
-import { useToast } from "@/components/ui/toast/use-toast";
+import {useToast} from '@/components/ui/toast/use-toast';
 
-const { toast } = useToast();
+const {toast} = useToast();
 
 export function showToast(title: string, description: string) {
   toast({

@@ -1,5 +1,5 @@
-import { ToolState } from "@/types/toolState";
-import { ref } from "vue";
+import {ToolState} from '@/types/toolState';
+import {ref} from 'vue';
 
 export class SideBarController {
   private createNode = ref<boolean>(false);
@@ -8,7 +8,7 @@ export class SideBarController {
   public selectedEdges = ref<string[]>([]);
   public selectedStations = ref<string[]>([]);
   public toolState = ref<ToolState>(ToolState.createNode);
-  public selectedLayoutId = ref<string>("");
+  public selectedLayoutId = ref<string>('');
 
   setResetStates() {
     this.createNode.value = false;
@@ -22,7 +22,7 @@ export class SideBarController {
     this.toolState.value = ToolState.createNode;
   }
 
-  setCrudAction(){
+  setCrudAction() {
     this.setResetStates();
     this.toolState.value = ToolState.crudAction;
   }
@@ -45,9 +45,9 @@ export class SideBarController {
     this.toolState.value = ToolState.selectEdge;
   }
   public isCreateOrSelectNodeTool() {
-  return (
-    this.toolState.value == ToolState.createNode ||
-    this.toolState.value == ToolState.selectNode
-  );
-}
+    return (
+      this.toolState.value == ToolState.createNode ||
+      this.toolState.value == ToolState.selectNode
+    );
+  }
 }
