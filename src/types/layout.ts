@@ -1,5 +1,5 @@
-import { ActionParameter, Trajectory } from "vda-5050-lib";
-import { BackgroundImage } from "@/types/visualizationLayout";
+import {ActionParameter, Trajectory} from 'vda-5050-lib';
+import {BackgroundImage} from '@/types/visualizationLayout';
 
 export interface Layout {
   layoutId: string; // Unique identifier for this layout
@@ -41,8 +41,8 @@ export interface Action {
   actionParameters: ActionParameter[];
 }
 
-export type RequirementType = "REQUIRED" | "CONDITIONAL" | "OPTIONAL";
-export type BlockingType = "HARD" | "SOFT" | "NONE";
+export type RequirementType = 'REQUIRED' | 'CONDITIONAL' | 'OPTIONAL';
+export type BlockingType = 'HARD' | 'SOFT' | 'NONE';
 
 export interface Edge {
   edgeId: string;
@@ -75,8 +75,8 @@ export interface LoadRestriction {
   loadSetNames: [string];
 }
 
-export type OrientationType = "GLOBAL" | "TANGENTIAL";
-export type RotationType = "NONE" | "CCW" | "CW" | "BOTH";
+export type OrientationType = 'GLOBAL' | 'TANGENTIAL';
+export type RotationType = 'NONE' | 'CCW' | 'CW' | 'BOTH';
 
 export interface Station {
   stationId: string;

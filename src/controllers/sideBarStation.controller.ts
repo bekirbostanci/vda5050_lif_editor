@@ -1,13 +1,13 @@
-import { Station } from "@/types/layout";
-import { ref } from "vue";
-import { LayoutController } from "./layout.controller";
+import {Station} from '@/types/layout';
+import {ref} from 'vue';
+import {LayoutController} from './layout.controller';
 
 export class SideBarStationController {
   newStation = ref<Station>({
-    stationId: "",
-    stationName: "",
+    stationId: '',
+    stationName: '',
     interactionNodeIds: [],
-    stationDescription: "",
+    stationDescription: '',
     stationHeight: 0,
     stationPosition: {
       x: 0,
@@ -19,10 +19,10 @@ export class SideBarStationController {
   constructor(private layoutController: LayoutController) {}
   cleanStationInputs() {
     this.newStation.value = {
-      stationId: "",
-      stationName: "",
+      stationId: '',
+      stationName: '',
       interactionNodeIds: [],
-      stationDescription: "",
+      stationDescription: '',
       stationHeight: 0,
       stationPosition: {
         x: 0,

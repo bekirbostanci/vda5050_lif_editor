@@ -1,5 +1,5 @@
-import { ref } from "vue";
-import { LayoutController } from "./layout.controller";
+import {ref} from 'vue';
+import {LayoutController} from './layout.controller';
 
 export class TopBarController {
   public showJson = ref<boolean>(false);
@@ -18,18 +18,18 @@ export class TopBarController {
     }
     let jsonData = this.layoutController?.lif;
     const fileName =
-      "lif_file_" +
+      'lif_file_' +
       this.layoutController?.lif.metaInformation.projectIdentification +
-      ".json";
-    
+      '.json';
+
     const jsonContent = JSON.stringify(jsonData, null, 2);
 
     const blob = new Blob([jsonContent], {
-      type: "application/json",
+      type: 'application/json',
     });
     const url = URL.createObjectURL(blob);
 
-    const a = document.createElement("a");
+    const a = document.createElement('a');
     a.href = url;
     a.download = fileName;
     a.click();
@@ -38,11 +38,11 @@ export class TopBarController {
   }
 
   selectFile() {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = "application/json";
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'application/json';
 
-    input.addEventListener("change", (event) => {
+    input.addEventListener('change', event => {
       const target = event.target as HTMLInputElement;
       if (target && target.files) {
         const file = target.files[0];
@@ -55,15 +55,15 @@ export class TopBarController {
 
   readFile(file: File) {
     const reader = new FileReader();
-    reader.onload = (event) => {
+    reader.onload = event => {
       if (event.target) {
         const result = event.target.result as string;
         this.layoutController?.convertJsonToLif(result);
       }
     };
 
-    reader.onerror = (event) => {
-      console.error("Error reading file", event);
+    reader.onerror = event => {
+      console.error('Error reading file', event);
     };
 
     reader.readAsText(file);

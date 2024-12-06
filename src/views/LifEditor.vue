@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { TopBarController } from "@/controllers/topBar.controller";
-import NetworkGraph from "../components/NetworkGraph.vue";
+import {TopBarController} from '@/controllers/topBar.controller';
+import NetworkGraph from '../components/NetworkGraph.vue';
 
-import TopBar from "@/components/TopBar.vue";
+import TopBar from '@/components/TopBar.vue';
 const topBarController = new TopBarController();
 </script>
 

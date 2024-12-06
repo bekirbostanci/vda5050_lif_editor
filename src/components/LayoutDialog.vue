@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { Icon } from "@iconify/vue";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import {Icon} from '@iconify/vue';
+import {Button} from '@/components/ui/button';
+import {Input} from '@/components/ui/input';
+import {Label} from '@/components/ui/label';
 import {
   Dialog,
   DialogContent,
@@ -12,15 +12,15 @@ import {
   DialogClose,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from "@/components/ui/hover-card";
-import { LayoutController } from "@/controllers/layout.controller";
-import { SideBarController } from "@/controllers/sideBar.controller";
-import { Layout } from "@/types/layout";
+} from '@/components/ui/hover-card';
+import {LayoutController} from '@/controllers/layout.controller';
+import {SideBarController} from '@/controllers/sideBar.controller';
+import {Layout} from '@/types/layout';
 
 const props = defineProps({
   tools: {
@@ -37,7 +37,7 @@ createEmptyLayout();
 
 function loadLayout() {
   const selectedLayout = props.layout.vdaLayouts.find(
-    (layout) => layout.layoutId === props.tools.selectedLayoutId.value
+    layout => layout.layoutId === props.tools.selectedLayoutId.value,
   );
   if (selectedLayout) {
     layout = JSON.parse(JSON.stringify(selectedLayout));
@@ -48,21 +48,21 @@ function loadLayout() {
 
 function createEmptyLayout() {
   layout = {
-    layoutId: "",
-    layoutName: "",
-    layoutVersion: "",
-    layoutLevelId: "",
-    layoutDescription: "",
+    layoutId: '',
+    layoutName: '',
+    layoutVersion: '',
+    layoutLevelId: '',
+    layoutDescription: '',
     nodes: [],
     edges: [],
     stations: [],
     backgroundImage: {
-      image: "",
+      image: '',
       x: 0,
       y: 0,
       width: 10,
-      height: 10
-    }
+      height: 10,
+    },
   };
 }
 function saveLayout() {
@@ -72,7 +72,7 @@ function saveLayout() {
 
 function deleteLayout() {
   props.layout.deleteLayout(layout.layoutId);
-  props.tools.selectedLayoutId.value = "";
+  props.tools.selectedLayoutId.value = '';
 }
 
 function handleImageUpload(event: Event) {
@@ -80,19 +80,19 @@ function handleImageUpload(event: Event) {
   if (input.files && input.files[0]) {
     const file = input.files[0];
     const reader = new FileReader();
-    
-    reader.onload = (e) => {
+
+    reader.onload = e => {
       if (e.target?.result) {
         layout.backgroundImage = {
           image: e.target.result as string,
           x: layout.backgroundImage?.x || 0,
           y: layout.backgroundImage?.y || 0,
           width: layout.backgroundImage?.width || 10,
-          height: layout.backgroundImage?.height || 10
+          height: layout.backgroundImage?.height || 10,
         };
       }
     };
-    
+
     reader.readAsDataURL(file);
   }
 }
@@ -193,7 +193,8 @@ function handleImageUpload(event: Event) {
               <Label for="backgroundImage">Background Image</Label>
             </HoverCardTrigger>
             <HoverCardContent>
-              Select an image file to use as the background for the network graph.
+              Select an image file to use as the background for the network
+              graph.
             </HoverCardContent>
           </HoverCard>
           <Input
@@ -221,7 +222,7 @@ function handleImageUpload(event: Event) {
               auto-focus
             />
           </div>
-          
+
           <div class="grid gap-2">
             <HoverCard :open-delay="2000">
               <HoverCardTrigger>
@@ -238,7 +239,7 @@ function handleImageUpload(event: Event) {
               auto-focus
             />
           </div>
-          
+
           <div class="grid gap-2">
             <HoverCard :open-delay="2000">
               <HoverCardTrigger>
@@ -255,7 +256,7 @@ function handleImageUpload(event: Event) {
               auto-focus
             />
           </div>
-          
+
           <div class="grid gap-2">
             <HoverCard :open-delay="2000">
               <HoverCardTrigger>
