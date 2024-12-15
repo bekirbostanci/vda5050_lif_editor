@@ -99,6 +99,11 @@ function handleImageUpload(event: Event) {
             height: layout.backgroundImage?.height || imageHeight,
             natural_width: imageWidth,
             natural_height: imageHeight
+          };          
+          // update metadata from input if one was loaded before the map
+          const metadata_input = document.querySelector("#mapMetadata");
+          if (metadata_input) {
+            metadata_input.dispatchEvent(new Event('change'));     
           };
         };
         map_image.src = e.target.result as string;
@@ -121,7 +126,6 @@ function handleMetadataUpload(event: Event) {
 
 function load_map_metadata(metadata_file: File) {
   if (!layout.backgroundImage.image) {
-    console.error("Cannot load map metadata, background image is not set.");
     return
   }
   if (metadata_file) {
@@ -292,7 +296,8 @@ function update_inputs_from_layout() {
             </HoverCardTrigger>
             <HoverCardContent>
               Select a YAML file to load map metadata. The file should contain
-              'origin' and 'resolution' fields.
+              'origin' and 'resolution' fields. You must load a map first or
+              the loaded metadata will be ignored.
             </HoverCardContent>
           </HoverCard>
           <Input
