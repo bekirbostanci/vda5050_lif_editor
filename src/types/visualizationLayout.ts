@@ -13,5 +13,7 @@ export interface BackgroundImage {
   y: number;
   width: number;
   height: number;
+  natural_width: number;
+  natural_height: number;
 }
 export type VisualizationLayouts = Record<string, VisualizationLayout>;
