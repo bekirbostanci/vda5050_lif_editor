@@ -143,9 +143,38 @@ function load_map_metadata(metadata_file: File) {
       } catch (error) {
         console.error("Error parsing YAML map metadata file:", error);
       }
+      update_inputs_from_layout();
     };
     reader.readAsText(metadata_file);
   };
+}
+
+function update_inputs_from_layout() {
+  if (!layout.backgroundImage) {
+    console.log("update_inputs_from_layout(): Layout has no backgroundImage field");
+    return;
+  }
+  // update inputs
+  const x_input = document.querySelector("#backgroundX");
+  const y_input = document.querySelector("#backgroundY");
+  const width_input = document.querySelector("#backgroundWidth");
+  const height_input = document.querySelector("#backgroundHeight");
+  
+  if (!x_input || !y_input || !width_input || !height_input) {
+    console.log("update_inputs_from_layout(): Not all input not found");
+    return;
+  }
+  x_input.value = layout.backgroundImage.x;
+  x_input.dispatchEvent(new Event('input'));
+
+  y_input.value = layout.backgroundImage.y;
+  y_input.dispatchEvent(new Event('input'));
+
+  width_input.value = layout.backgroundImage.width;
+  width_input.dispatchEvent(new Event('input'));
+
+  height_input.value = layout.backgroundImage.height;
+  height_input.dispatchEvent(new Event('input'));
 }
 </script>
 
