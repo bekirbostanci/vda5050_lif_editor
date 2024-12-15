@@ -220,6 +220,24 @@ function handleImageUpload(event: Event) {
             auto-focus
           />
         </div>
+        <div class="grid gap-2" v-if="layout.backgroundImage">
+          <HoverCard :open-delay="2000">
+            <HoverCardTrigger>
+              <Label for="mapMetadata">Map metadata</Label>
+            </HoverCardTrigger>
+            <HoverCardContent>
+              Select a YAML file to load map metadata. The file should contain
+              'origin' and 'resolution' fields.
+            </HoverCardContent>
+          </HoverCard>
+          <Input
+            id="mapMetadata"
+            type="file"
+            accept=".yaml,.yml"
+            @change="handleMetadataUpload"
+            auto-focus
+          />
+        </div>
         <div class="grid grid-cols-2 gap-4" v-if="layout.backgroundImage">
           <div class="grid gap-2">
             <HoverCard :open-delay="2000">
