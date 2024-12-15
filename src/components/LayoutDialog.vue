@@ -110,7 +110,7 @@ function handleImageUpload(event: Event) {
         map_image.src = e.target.result as string;
 
         // TODO: if there is a metadata file in the same folder, it should be loaded it here
-        // load_map_metadata(metadata_file);
+        // loadMapMetadata(metadata_file);
       }
     };
     reader.readAsDataURL(file);
@@ -121,11 +121,11 @@ function handleMetadataUpload(event: Event) {
   const input = event.target as HTMLInputElement;
   if (input.files && input.files[0]) {
     const metadata_file = input.files[0];
-    load_map_metadata(metadata_file);
+    loadMapMetadata(metadata_file);
   };
 }
 
-function load_map_metadata(metadata_file: File) {
+function loadMapMetadata(metadata_file: File) {
   if (!layout.backgroundImage.image) {
     return
   }
@@ -148,15 +148,15 @@ function load_map_metadata(metadata_file: File) {
       } catch (error) {
         console.error("Error parsing YAML map metadata file:", error);
       }
-      update_inputs_from_layout();
+      updateInputsFromLayout();
     };
     reader.readAsText(metadata_file);
   };
 }
 
-function update_inputs_from_layout() {
+function updateInputsFromLayout() {
   if (!layout.backgroundImage) {
-    console.log("update_inputs_from_layout(): Layout has no backgroundImage field");
+    console.log("updateInputsFromLayout(): Layout has no backgroundImage field");
     return;
   }
   // update inputs
@@ -166,7 +166,7 @@ function update_inputs_from_layout() {
   const height_input = document.querySelector("#backgroundHeight");
   
   if (!x_input || !y_input || !width_input || !height_input) {
-    console.log("update_inputs_from_layout(): Not all input not found");
+    console.log("updateInputsFromLayout(): Not all input not found");
     return;
   }
   x_input.value = layout.backgroundImage.x;
