@@ -1,15 +1,15 @@
-import { Ref, ref, toRaw } from "vue";
-import { LayoutController } from "./layout.controller";
-import { SideBarController } from "./sideBar.controller";
-import { Node } from "@/types/layout";
-import { ViewEvent } from "v-network-graph";
+import {Ref, ref, toRaw} from 'vue';
+import {LayoutController} from './layout.controller';
+import {SideBarController} from './sideBar.controller';
+import {Node} from '@/types/layout';
+import {ViewEvent} from 'v-network-graph';
 
 export class SideBarNodeController {
   public newNode = ref<Node>({
-    mapId: "",
-    nodeDescription: "",
-    nodeId: "",
-    nodeName: "",
+    mapId: '',
+    nodeDescription: '',
+    nodeId: '',
+    nodeName: '',
     nodePosition: {
       x: 0,
       y: 0,
@@ -18,11 +18,11 @@ export class SideBarNodeController {
   });
   public nodeConnections = ref<string[]>([]);
   public createFast: Ref<boolean> = ref<boolean>(true);
-  private lastNodeId: string = "";
+  private lastNodeId: string = '';
   constructor(
     public toolController: SideBarController,
     public layoutController: LayoutController,
-    public graph: any
+    public graph: any,
   ) {}
 
   updateNodeYFromInput(nodeY: any) {
@@ -33,7 +33,7 @@ export class SideBarNodeController {
     }
     this.updateNodeY(nodeY);
   }
-  
+
   updateNodeY(nodeY: any) {
     // Revert y coordinate when node position changed
     if (this.layoutController.nodes[this.newNode.value.nodeId]) {
@@ -88,10 +88,10 @@ export class SideBarNodeController {
     this.newNode.value.nodePosition.y = 0;
     this.nodeConnections.value = [];
     this.newNode.value = {
-      mapId: "",
-      nodeDescription: "",
-      nodeId: "",
-      nodeName: "",
+      mapId: '',
+      nodeDescription: '',
+      nodeId: '',
+      nodeName: '',
       nodePosition: {
         x: 0,
         y: 0,
@@ -118,15 +118,16 @@ export class SideBarNodeController {
       this.layoutController.nodes[selectedNode].vda5050Node!.nodeId;
     this.newNode.value.nodeName =
       this.layoutController.nodes[selectedNode].vda5050Node!.nodeName;
-    this.newNode.value.vehicleTypeNodeProperties = this.layoutController.nodes[
-      selectedNode
-    ].vda5050Node!.vehicleTypeNodeProperties;
-    
+    this.newNode.value.vehicleTypeNodeProperties =
+      this.layoutController.nodes[
+        selectedNode
+      ].vda5050Node!.vehicleTypeNodeProperties;
+
     const nodeEdges = Object.values(this.layoutController.edges).filter(
-      (connection) => connection.source == selectedNode
+      connection => connection.source == selectedNode,
     );
     this.nodeConnections.value = Object.values(toRaw(nodeEdges)).map(
-      (node) => node.target
+      node => node.target,
     );
   }
 }
