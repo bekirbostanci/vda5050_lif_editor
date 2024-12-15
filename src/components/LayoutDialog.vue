@@ -57,12 +57,14 @@ function createEmptyLayout() {
     edges: [],
     stations: [],
     backgroundImage: {
-      image: '',
+      image: "",
+      natural_width: 0,
+      natural_height: 0,
       x: 0,
       y: 0,
       width: 10,
       height: 10,
-    },
+    }
   };
 }
 function saveLayout() {
@@ -83,13 +85,26 @@ function handleImageUpload(event: Event) {
 
     reader.onload = e => {
       if (e.target?.result) {
+        // get real width and height
+        const map_image = new Image();
+        map_image.onload = async () => {
+          const imageWidth = map_image.naturalWidth;
+          const imageHeight = map_image.naturalHeight;
+          
+          // populate layout
         layout.backgroundImage = {
-          image: e.target.result as string,
+            image: map_image.src,
           x: layout.backgroundImage?.x || 0,
           y: layout.backgroundImage?.y || 0,
-          width: layout.backgroundImage?.width || 10,
-          height: layout.backgroundImage?.height || 10,
-        };
+            width: layout.backgroundImage?.width || imageWidth,
+            height: layout.backgroundImage?.height || imageHeight,
+            natural_width: imageWidth,
+            natural_height: imageHeight
+          };      
+          console.log("map natural width (px): ", layout.backgroundImage.natural_width);
+          console.log("map natural height (px): ", layout.backgroundImage.natural_height);   
+        };   
+        map_image.src = e.target.result as string;
       }
     };
 
