@@ -35,7 +35,7 @@ export class LayoutController {
     width: 10,
     height: 10,
     natural_width: 10,
-    natural_height: 10
+    natural_height: 10,
   });
   private oldLayoutId = '';
   private graph: any;
@@ -57,7 +57,7 @@ export class LayoutController {
         width: 10,
         height: 10,
         natural_width: 10,
-        natural_height: 10
+        natural_height: 10,
       },
     };
     this.vdaLayouts.push(layout);
@@ -130,7 +130,7 @@ export class LayoutController {
       width: 10,
       height: 10,
       natural_width: 10,
-      natural_height: 10
+      natural_height: 10,
     };
 
     // Check if layout exists

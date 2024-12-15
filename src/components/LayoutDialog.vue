@@ -59,14 +59,14 @@ function createEmptyLayout() {
     edges: [],
     stations: [],
     backgroundImage: {
-      image: "",
+      image: '',
       natural_width: 0,
       natural_height: 0,
       x: 0,
       y: 0,
       width: 10,
       height: 10,
-    }
+    },
   };
 }
 function saveLayout() {
@@ -85,7 +85,7 @@ function handleImageUpload(event: Event) {
     const file = input.files[0];
     const reader = new FileReader();
 
-    reader.onload = (e) => {
+    reader.onload = e => {
       if (e.target?.result) {
         const map_image = new Image();
         map_image.onload = async () => {
@@ -100,13 +100,13 @@ function handleImageUpload(event: Event) {
             width: layout.backgroundImage?.width || imageWidth,
             height: layout.backgroundImage?.height || imageHeight,
             natural_width: imageWidth,
-            natural_height: imageHeight
-          };          
-          // update metadata from input if one was loaded before the map
-          const metadata_input = document.querySelector("#mapMetadata");
-          if (metadata_input) {
-            metadata_input.dispatchEvent(new Event('change'));     
+            natural_height: imageHeight,
           };
+          // update metadata from input if one was loaded before the map
+          const metadata_input = document.querySelector('#mapMetadata');
+          if (metadata_input) {
+            metadata_input.dispatchEvent(new Event('change'));
+          }
         };
         map_image.src = e.target.result as string;
 
@@ -123,12 +123,12 @@ function handleMetadataUpload(event: Event) {
   if (input.files && input.files[0]) {
     const metadata_file = input.files[0];
     loadMapMetadata(metadata_file);
-  };
+  }
 }
 
 function loadMapMetadata(metadata_file: File) {
   if (!layout.backgroundImage?.image) {
-    return
+    return;
   }
   if (metadata_file) {
     const reader = new FileReader();
@@ -139,37 +139,50 @@ function loadMapMetadata(metadata_file: File) {
         const mapMetadata: MapMetadata = parsedData as MapMetadata;
 
         // Extract resolution and origin from the parsed data
-        if (layout?.backgroundImage && mapMetadata?.resolution && mapMetadata?.origin) {
-          layout.backgroundImage.x = mapMetadata.origin[0]
-          layout.backgroundImage.y = mapMetadata.origin[1]
-          layout.backgroundImage.width = mapMetadata.resolution * layout.backgroundImage.natural_width;
-          layout.backgroundImage.height = mapMetadata.resolution * layout.backgroundImage.natural_height;
+        if (
+          layout?.backgroundImage &&
+          mapMetadata?.resolution &&
+          mapMetadata?.origin
+        ) {
+          layout.backgroundImage.x = mapMetadata.origin[0];
+          layout.backgroundImage.y = mapMetadata.origin[1];
+          layout.backgroundImage.width =
+            mapMetadata.resolution * layout.backgroundImage.natural_width;
+          layout.backgroundImage.height =
+            mapMetadata.resolution * layout.backgroundImage.natural_height;
         } else {
-          console.error("Failed to extract resolution and origin from map metadata.");
+          console.error(
+            'Failed to extract resolution and origin from map metadata.',
+          );
         }
-        
       } catch (error) {
-        console.error("Error parsing YAML map metadata file:", error);
+        console.error('Error parsing YAML map metadata file:', error);
       }
       updateInputsFromLayout();
     };
     reader.readAsText(metadata_file);
-  };
+  }
 }
 
 function updateInputsFromLayout() {
   if (!layout?.backgroundImage) {
-    console.log("updateInputsFromLayout(): Layout has no backgroundImage field");
+    console.log(
+      'updateInputsFromLayout(): Layout has no backgroundImage field',
+    );
     return;
   }
   // update inputs
-  const x_input = document.querySelector("#backgroundX") as typeof Input | null;
-  const y_input = document.querySelector("#backgroundY") as typeof Input | null;
-  const width_input = document.querySelector("#backgroundWidth") as typeof Input | null;
-  const height_input = document.querySelector("#backgroundHeight") as typeof Input | null;
-  
+  const x_input = document.querySelector('#backgroundX') as typeof Input | null;
+  const y_input = document.querySelector('#backgroundY') as typeof Input | null;
+  const width_input = document.querySelector('#backgroundWidth') as
+    | typeof Input
+    | null;
+  const height_input = document.querySelector('#backgroundHeight') as
+    | typeof Input
+    | null;
+
   if (!x_input || !y_input || !width_input || !height_input) {
-    console.log("updateInputsFromLayout(): Not all input not found");
+    console.log('updateInputsFromLayout(): Not all input not found');
     return;
   }
   x_input.value = layout.backgroundImage.x;
@@ -300,8 +313,8 @@ function updateInputsFromLayout() {
             </HoverCardTrigger>
             <HoverCardContent>
               Select a YAML file to load map metadata. The file should contain
-              'origin' and 'resolution' fields. You must load a map first or
-              the loaded metadata will be ignored.
+              'origin' and 'resolution' fields. You must load a map first or the
+              loaded metadata will be ignored.
             </HoverCardContent>
           </HoverCard>
           <Input
