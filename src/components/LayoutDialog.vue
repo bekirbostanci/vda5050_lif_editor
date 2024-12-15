@@ -139,7 +139,7 @@ function load_map_metadata(metadata_file: File) {
         } else {
           console.error("Failed to extract resolution and origin from map metadata.");
         }
-
+        
       } catch (error) {
         console.error("Error parsing YAML map metadata file:", error);
       }
@@ -256,7 +256,7 @@ function load_map_metadata(metadata_file: File) {
             auto-focus
           />
         </div>
-        <div class="grid gap-2" v-if="layout.backgroundImage">
+        <div class="grid gap-2" v-if="layout.backgroundImage.natural_width">
           <HoverCard :open-delay="2000">
             <HoverCardTrigger>
               <Label for="mapMetadata">Map metadata</Label>
