@@ -60,8 +60,8 @@ function createEmptyLayout() {
     stations: [],
     backgroundImage: {
       image: '',
-      natural_width: 0,
-      natural_height: 0,
+      naturalWidth: 0,
+      naturalHeight: 0,
       x: 0,
       y: 0,
       width: 10,
@@ -99,8 +99,8 @@ function handleImageUpload(event: Event) {
             y: layout.backgroundImage?.y || 0,
             width: layout.backgroundImage?.width || imageWidth,
             height: layout.backgroundImage?.height || imageHeight,
-            natural_width: imageWidth,
-            natural_height: imageHeight,
+            naturalWidth: imageWidth,
+            naturalHeight: imageHeight,
           };
           // update metadata from input if one was loaded before the map
           const metadata_input = document.querySelector('#mapMetadata');
@@ -144,12 +144,14 @@ function loadMapMetadata(metadata_file: File) {
           mapMetadata?.resolution &&
           mapMetadata?.origin
         ) {
-          layout.backgroundImage.x = mapMetadata.origin[0];
-          layout.backgroundImage.y = mapMetadata.origin[1];
-          layout.backgroundImage.width =
-            mapMetadata.resolution * layout.backgroundImage.natural_width;
-          layout.backgroundImage.height =
-            mapMetadata.resolution * layout.backgroundImage.natural_height;
+          props.layout.backgroundImage.value.x = mapMetadata.origin[0];
+          props.layout.backgroundImage.value.y = mapMetadata.origin[1];
+          props.layout.backgroundImage.value.width =
+            mapMetadata.resolution *
+            props.layout.backgroundImage.value.naturalWidth;
+          props.layout.backgroundImage.value.height =
+            mapMetadata.resolution *
+            props.layout.backgroundImage.value.naturalHeight;
         } else {
           console.error(
             'Failed to extract resolution and origin from map metadata.',
@@ -185,17 +187,10 @@ function updateInputsFromLayout() {
     console.log('updateInputsFromLayout(): Not all input not found');
     return;
   }
-  x_input.value = layout.backgroundImage.x;
-  x_input.dispatchEvent(new Event('input'));
-
-  y_input.value = layout.backgroundImage.y;
-  y_input.dispatchEvent(new Event('input'));
-
-  width_input.value = layout.backgroundImage.width;
-  width_input.dispatchEvent(new Event('input'));
-
-  height_input.value = layout.backgroundImage.height;
-  height_input.dispatchEvent(new Event('input'));
+  x_input.value = props.layout.backgroundImage.value.x;
+  y_input.value = props.layout.backgroundImage.value.y;
+  width_input.value = props.layout.backgroundImage.value.width;
+  height_input.value = props.layout.backgroundImage.value.height;
 }
 </script>
 
