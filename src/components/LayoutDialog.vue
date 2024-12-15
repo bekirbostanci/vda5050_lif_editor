@@ -256,7 +256,7 @@ function load_map_metadata(metadata_file: File) {
             auto-focus
           />
         </div>
-        <div class="grid gap-2" v-if="layout.backgroundImage.natural_width">
+        <div class="grid gap-2" v-if="layout.backgroundImage">
           <HoverCard :open-delay="2000">
             <HoverCardTrigger>
               <Label for="mapMetadata">Map metadata</Label>
