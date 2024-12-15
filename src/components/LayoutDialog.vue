@@ -21,6 +21,7 @@ import {
 import {LayoutController} from '@/controllers/layout.controller';
 import {SideBarController} from '@/controllers/sideBar.controller';
 import {Layout} from '@/types/layout';
+import {MapMetadata} from '@/types/visualizationLayout';
 import {load} from 'js-yaml';
 
 const props = defineProps({
@@ -126,7 +127,7 @@ function handleMetadataUpload(event: Event) {
 }
 
 function loadMapMetadata(metadata_file: File) {
-  if (!layout.backgroundImage.image) {
+  if (!layout.backgroundImage?.image) {
     return
   }
   if (metadata_file) {
@@ -135,12 +136,14 @@ function loadMapMetadata(metadata_file: File) {
       try {
         const yamlText = reader.result as string;
         const parsedData = load(yamlText);
+        const mapMetadata: MapMetadata = parsedData as MapMetadata;
+
         // Extract resolution and origin from the parsed data
-        if (parsedData?.resolution && parsedData?.origin) {
-          layout.backgroundImage.x = parsedData.origin[0]
-          layout.backgroundImage.y = parsedData.origin[1]
-          layout.backgroundImage.width = parsedData.resolution * layout.backgroundImage.natural_width;
-          layout.backgroundImage.height = parsedData.resolution * layout.backgroundImage.natural_height;
+        if (layout?.backgroundImage && mapMetadata?.resolution && mapMetadata?.origin) {
+          layout.backgroundImage.x = mapMetadata.origin[0]
+          layout.backgroundImage.y = mapMetadata.origin[1]
+          layout.backgroundImage.width = mapMetadata.resolution * layout.backgroundImage.natural_width;
+          layout.backgroundImage.height = mapMetadata.resolution * layout.backgroundImage.natural_height;
         } else {
           console.error("Failed to extract resolution and origin from map metadata.");
         }
@@ -155,15 +158,15 @@ function loadMapMetadata(metadata_file: File) {
 }
 
 function updateInputsFromLayout() {
-  if (!layout.backgroundImage) {
+  if (!layout?.backgroundImage) {
     console.log("updateInputsFromLayout(): Layout has no backgroundImage field");
     return;
   }
   // update inputs
-  const x_input = document.querySelector("#backgroundX");
-  const y_input = document.querySelector("#backgroundY");
-  const width_input = document.querySelector("#backgroundWidth");
-  const height_input = document.querySelector("#backgroundHeight");
+  const x_input = document.querySelector("#backgroundX") as typeof Input | null;
+  const y_input = document.querySelector("#backgroundY") as typeof Input | null;
+  const width_input = document.querySelector("#backgroundWidth") as typeof Input | null;
+  const height_input = document.querySelector("#backgroundHeight") as typeof Input | null;
   
   if (!x_input || !y_input || !width_input || !height_input) {
     console.log("updateInputsFromLayout(): Not all input not found");

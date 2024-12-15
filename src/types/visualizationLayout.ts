@@ -7,6 +7,11 @@ export interface VisualizationLayout {
   backgroundImage?: BackgroundImage;
 }
 
+export interface MapMetadata {
+  resolution: number;
+  origin: [number, number];
+}
+
 export interface BackgroundImage {
   image: string;
   x: number;
