@@ -80,6 +80,11 @@ function deleteLayout() {
   props.tools.selectedLayoutId.value = '';
 }
 
+/**
+ * Upload map image (background image) file and visualize it
+ *
+ * @param event
+ */
 function handleImageUpload(event: Event) {
   const input = event.target as HTMLInputElement;
   if (input.files && input.files[0]) {
@@ -88,14 +93,14 @@ function handleImageUpload(event: Event) {
 
     reader.onload = e => {
       if (e.target?.result) {
-        const map_image = new Image();
-        map_image.onload = async () => {
+        const mapImage = new Image();
+        mapImage.onload = async () => {
           // get real width and height
-          const imageWidth = map_image.naturalWidth;
-          const imageHeight = map_image.naturalHeight;
+          const imageWidth = mapImage.naturalWidth;
+          const imageHeight = mapImage.naturalHeight;
           // populate layout background image
           layout.value.backgroundImage = {
-            image: map_image.src,
+            image: mapImage.src,
             x: layout.value.backgroundImage?.x || 0,
             y: layout.value.backgroundImage?.y || 0,
             width: layout.value.backgroundImage?.width || imageWidth,
@@ -103,13 +108,8 @@ function handleImageUpload(event: Event) {
             naturalWidth: imageWidth,
             naturalHeight: imageHeight,
           };
-          // update metadata from input if one was loaded before the map
-          const metadata_input = document.querySelector('#mapMetadata');
-          if (metadata_input) {
-            metadata_input.dispatchEvent(new Event('change'));
-          }
         };
-        map_image.src = e.target.result as string;
+        mapImage.src = e.target.result as string;
 
         // TODO: if there is a metadata file in the same folder, it should be loaded it here
         // loadMapMetadata(metadata_file);
@@ -119,14 +119,23 @@ function handleImageUpload(event: Event) {
   }
 }
 
+/**
+ * Upload map metadata file
+ * @param event
+ */
 function handleMetadataUpload(event: Event) {
   const input = event.target as HTMLInputElement;
   if (input.files && input.files[0]) {
-    const metadata_file = input.files[0];
-    loadMapMetadata(metadata_file);
+    const metadata = input.files[0];
+    loadMapMetadata(metadata);
   }
 }
 
+/**
+ * Use ros map meta file for background image size and position
+ * @param metadata_file file of type application/yaml containing map meta data
+ * see https://github.com/ros-perception/map_msgs/blob/master/map_msgs/msg/MapMetaData.msg
+ */
 function loadMapMetadata(metadata_file: File) {
   if (!layout.value.backgroundImage?.image) {
     return;
@@ -148,18 +157,13 @@ function loadMapMetadata(metadata_file: File) {
           props.layout.backgroundImage.value.x = mapMetadata.origin[0];
           props.layout.backgroundImage.value.y = mapMetadata.origin[1];
           props.layout.backgroundImage.value.width =
-            mapMetadata.resolution *
-            props.layout.backgroundImage.value.naturalWidth;
+            mapMetadata.resolution * layout.value.backgroundImage.naturalWidth;
           props.layout.backgroundImage.value.height =
             mapMetadata.resolution *
             props.layout.backgroundImage.value.naturalHeight;
 
-          layout.value.backgroundImage.x = mapMetadata.origin[0];
-          layout.value.backgroundImage.y = mapMetadata.origin[1];
-          layout.value.backgroundImage.width =
-            mapMetadata.resolution * layout.value.backgroundImage.naturalWidth;
-          layout.value.backgroundImage.height =
-            mapMetadata.resolution * layout.value.backgroundImage.naturalHeight;
+          // Update layout dialog data
+          layout.value.backgroundImage = props.layout.backgroundImage.value;
         } else {
           console.error(
             'Failed to extract resolution and origin from map metadata.',
@@ -263,52 +267,54 @@ function loadMapMetadata(metadata_file: File) {
             auto-focus
           />
         </div>
-        <div class="grid gap-2">
-          <HoverCard :open-delay="2000">
-            <HoverCardTrigger>
-              <Label for="backgroundImage">Background Image</Label>
-            </HoverCardTrigger>
-            <HoverCardContent>
-              Select an image file to use as the background for the network
-              graph.
-            </HoverCardContent>
-          </HoverCard>
-          <Input
-            id="backgroundImage"
-            type="file"
-            accept="image/*"
-            @change="handleImageUpload"
-            auto-focus
-          />
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <HoverCard :open-delay="2000">
+              <HoverCardTrigger>
+                <Label for="backgroundImage">Background Image</Label>
+              </HoverCardTrigger>
+              <HoverCardContent>
+                Select an image file to use as the background for the network
+                graph.
+              </HoverCardContent>
+            </HoverCard>
+            <Input
+              id="backgroundImage"
+              type="file"
+              accept="image/*"
+              @change="handleImageUpload"
+              auto-focus
+            />
+          </div>
+          <div>
+            <HoverCard :open-delay="2000">
+              <HoverCardTrigger>
+                <Label for="mapMetadata">Map metadata</Label>
+              </HoverCardTrigger>
+              <HoverCardContent>
+                Select a YAML file to load map metadata. The file should contain
+                'origin' and 'resolution' fields. You must load a map first or
+                the loaded metadata will be ignored.
+              </HoverCardContent>
+            </HoverCard>
+            <Input
+              id="mapMetadata"
+              type="file"
+              accept=".yaml,.yml"
+              @change="handleMetadataUpload"
+              auto-focus
+            />
+          </div>
         </div>
-        <div class="grid gap-2" v-if="layout.backgroundImage">
-          <HoverCard :open-delay="2000">
-            <HoverCardTrigger>
-              <Label for="mapMetadata">Map metadata</Label>
-            </HoverCardTrigger>
-            <HoverCardContent>
-              Select a YAML file to load map metadata. The file should contain
-              'origin' and 'resolution' fields. You must load a map first or the
-              loaded metadata will be ignored.
-            </HoverCardContent>
-          </HoverCard>
-          <Input
-            id="mapMetadata"
-            type="file"
-            accept=".yaml,.yml"
-            @change="handleMetadataUpload"
-            auto-focus
-          />
-        </div>
-        <div class="grid grid-cols-2 gap-4" v-if="layout.backgroundImage">
+        <div
+          class="grid grid-cols-2 gap-4"
+          v-if="layout.backgroundImage?.image"
+        >
           <div class="grid gap-2">
             <HoverCard :open-delay="2000">
               <HoverCardTrigger>
                 <Label for="backgroundX">Background X Position</Label>
               </HoverCardTrigger>
-              <HoverCardContent>
-                X coordinate of the background image position
-              </HoverCardContent>
             </HoverCard>
             <Input
               id="backgroundX"
@@ -322,9 +328,6 @@ function loadMapMetadata(metadata_file: File) {
               <HoverCardTrigger>
                 <Label for="backgroundY">Background Y Position</Label>
               </HoverCardTrigger>
-              <HoverCardContent>
-                Y coordinate of the background image position
-              </HoverCardContent>
             </HoverCard>
             <Input
               id="backgroundY"
@@ -339,9 +342,6 @@ function loadMapMetadata(metadata_file: File) {
               <HoverCardTrigger>
                 <Label for="backgroundWidth">Background Width</Label>
               </HoverCardTrigger>
-              <HoverCardContent>
-                Width of the background image in pixels
-              </HoverCardContent>
             </HoverCard>
             <Input
               id="backgroundWidth"
@@ -356,9 +356,6 @@ function loadMapMetadata(metadata_file: File) {
               <HoverCardTrigger>
                 <Label for="backgroundHeight">Background Height</Label>
               </HoverCardTrigger>
-              <HoverCardContent>
-                Height of the background image in pixels
-              </HoverCardContent>
             </HoverCard>
             <Input
               id="backgroundHeight"
