@@ -23,6 +23,7 @@ import {SideBarController} from '@/controllers/sideBar.controller';
 import {Layout} from '@/types/layout';
 import {MapMetadata} from '@/types/visualizationLayout';
 import {load} from 'js-yaml';
+import {ref, Ref} from 'vue';
 
 const props = defineProps({
   tools: {
@@ -34,7 +35,7 @@ const props = defineProps({
     required: true,
   },
 });
-let layout: Layout = new Object() as Layout;
+const layout: Ref<Layout> = ref({} as Layout);
 createEmptyLayout();
 
 function loadLayout() {
@@ -42,14 +43,14 @@ function loadLayout() {
     layout => layout.layoutId === props.tools.selectedLayoutId.value,
   );
   if (selectedLayout) {
-    layout = JSON.parse(JSON.stringify(selectedLayout));
+    layout.value = JSON.parse(JSON.stringify(selectedLayout));
   } else {
     createEmptyLayout();
   }
 }
 
 function createEmptyLayout() {
-  layout = {
+  layout.value = {
     layoutId: '',
     layoutName: '',
     layoutVersion: '',
@@ -70,12 +71,12 @@ function createEmptyLayout() {
   };
 }
 function saveLayout() {
-  props.layout.saveLayout(layout);
-  props.tools.selectedLayoutId.value = layout.layoutId;
+  props.layout.saveLayout(layout.value);
+  props.tools.selectedLayoutId.value = layout.value.layoutId;
 }
 
 function deleteLayout() {
-  props.layout.deleteLayout(layout.layoutId);
+  props.layout.deleteLayout(layout.value.layoutId);
   props.tools.selectedLayoutId.value = '';
 }
 
@@ -93,12 +94,12 @@ function handleImageUpload(event: Event) {
           const imageWidth = map_image.naturalWidth;
           const imageHeight = map_image.naturalHeight;
           // populate layout background image
-          layout.backgroundImage = {
+          layout.value.backgroundImage = {
             image: map_image.src,
-            x: layout.backgroundImage?.x || 0,
-            y: layout.backgroundImage?.y || 0,
-            width: layout.backgroundImage?.width || imageWidth,
-            height: layout.backgroundImage?.height || imageHeight,
+            x: layout.value.backgroundImage?.x || 0,
+            y: layout.value.backgroundImage?.y || 0,
+            width: layout.value.backgroundImage?.width || imageWidth,
+            height: layout.value.backgroundImage?.height || imageHeight,
             naturalWidth: imageWidth,
             naturalHeight: imageHeight,
           };
@@ -127,7 +128,7 @@ function handleMetadataUpload(event: Event) {
 }
 
 function loadMapMetadata(metadata_file: File) {
-  if (!layout.backgroundImage?.image) {
+  if (!layout.value.backgroundImage?.image) {
     return;
   }
   if (metadata_file) {
@@ -140,7 +141,7 @@ function loadMapMetadata(metadata_file: File) {
 
         // Extract resolution and origin from the parsed data
         if (
-          layout?.backgroundImage &&
+          layout?.value.backgroundImage &&
           mapMetadata?.resolution &&
           mapMetadata?.origin
         ) {
@@ -152,6 +153,13 @@ function loadMapMetadata(metadata_file: File) {
           props.layout.backgroundImage.value.height =
             mapMetadata.resolution *
             props.layout.backgroundImage.value.naturalHeight;
+
+          layout.value.backgroundImage.x = mapMetadata.origin[0];
+          layout.value.backgroundImage.y = mapMetadata.origin[1];
+          layout.value.backgroundImage.width =
+            mapMetadata.resolution * layout.value.backgroundImage.naturalWidth;
+          layout.value.backgroundImage.height =
+            mapMetadata.resolution * layout.value.backgroundImage.naturalHeight;
         } else {
           console.error(
             'Failed to extract resolution and origin from map metadata.',
@@ -160,37 +168,9 @@ function loadMapMetadata(metadata_file: File) {
       } catch (error) {
         console.error('Error parsing YAML map metadata file:', error);
       }
-      updateInputsFromLayout();
     };
     reader.readAsText(metadata_file);
   }
-}
-
-function updateInputsFromLayout() {
-  if (!layout?.backgroundImage) {
-    console.log(
-      'updateInputsFromLayout(): Layout has no backgroundImage field',
-    );
-    return;
-  }
-  // update inputs
-  const x_input = document.querySelector('#backgroundX') as typeof Input | null;
-  const y_input = document.querySelector('#backgroundY') as typeof Input | null;
-  const width_input = document.querySelector('#backgroundWidth') as
-    | typeof Input
-    | null;
-  const height_input = document.querySelector('#backgroundHeight') as
-    | typeof Input
-    | null;
-
-  if (!x_input || !y_input || !width_input || !height_input) {
-    console.log('updateInputsFromLayout(): Not all input not found');
-    return;
-  }
-  x_input.value = props.layout.backgroundImage.value.x;
-  y_input.value = props.layout.backgroundImage.value.y;
-  width_input.value = props.layout.backgroundImage.value.width;
-  height_input.value = props.layout.backgroundImage.value.height;
 }
 </script>
 
