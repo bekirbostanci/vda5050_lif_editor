@@ -7,11 +7,18 @@ export interface VisualizationLayout {
   backgroundImage?: BackgroundImage;
 }
 
+export interface MapMetadata {
+  resolution: number;
+  origin: [number, number];
+}
+
 export interface BackgroundImage {
   image: string;
   x: number;
   y: number;
   width: number;
   height: number;
+  naturalWidth: number;
+  naturalHeight: number;
 }
 export type VisualizationLayouts = Record<string, VisualizationLayout>;

@@ -21,6 +21,9 @@ import {
 import {LayoutController} from '@/controllers/layout.controller';
 import {SideBarController} from '@/controllers/sideBar.controller';
 import {Layout} from '@/types/layout';
+import {MapMetadata} from '@/types/visualizationLayout';
+import {load} from 'js-yaml';
+import {ref, Ref} from 'vue';
 
 const props = defineProps({
   tools: {
@@ -32,7 +35,7 @@ const props = defineProps({
     required: true,
   },
 });
-let layout: Layout = new Object() as Layout;
+const layout: Ref<Layout> = ref({} as Layout);
 createEmptyLayout();
 
 function loadLayout() {
@@ -40,14 +43,14 @@ function loadLayout() {
     layout => layout.layoutId === props.tools.selectedLayoutId.value,
   );
   if (selectedLayout) {
-    layout = JSON.parse(JSON.stringify(selectedLayout));
+    layout.value = JSON.parse(JSON.stringify(selectedLayout));
   } else {
     createEmptyLayout();
   }
 }
 
 function createEmptyLayout() {
-  layout = {
+  layout.value = {
     layoutId: '',
     layoutName: '',
     layoutVersion: '',
@@ -58,6 +61,8 @@ function createEmptyLayout() {
     stations: [],
     backgroundImage: {
       image: '',
+      naturalWidth: 0,
+      naturalHeight: 0,
       x: 0,
       y: 0,
       width: 10,
@@ -66,12 +71,12 @@ function createEmptyLayout() {
   };
 }
 function saveLayout() {
-  props.layout.saveLayout(layout);
-  props.tools.selectedLayoutId.value = layout.layoutId;
+  props.layout.saveLayout(layout.value);
+  props.tools.selectedLayoutId.value = layout.value.layoutId;
 }
 
 function deleteLayout() {
-  props.layout.deleteLayout(layout.layoutId);
+  props.layout.deleteLayout(layout.value.layoutId);
   props.tools.selectedLayoutId.value = '';
 }
 
@@ -83,17 +88,88 @@ function handleImageUpload(event: Event) {
 
     reader.onload = e => {
       if (e.target?.result) {
-        layout.backgroundImage = {
-          image: e.target.result as string,
-          x: layout.backgroundImage?.x || 0,
-          y: layout.backgroundImage?.y || 0,
-          width: layout.backgroundImage?.width || 10,
-          height: layout.backgroundImage?.height || 10,
+        const map_image = new Image();
+        map_image.onload = async () => {
+          // get real width and height
+          const imageWidth = map_image.naturalWidth;
+          const imageHeight = map_image.naturalHeight;
+          // populate layout background image
+          layout.value.backgroundImage = {
+            image: map_image.src,
+            x: layout.value.backgroundImage?.x || 0,
+            y: layout.value.backgroundImage?.y || 0,
+            width: layout.value.backgroundImage?.width || imageWidth,
+            height: layout.value.backgroundImage?.height || imageHeight,
+            naturalWidth: imageWidth,
+            naturalHeight: imageHeight,
+          };
+          // update metadata from input if one was loaded before the map
+          const metadata_input = document.querySelector('#mapMetadata');
+          if (metadata_input) {
+            metadata_input.dispatchEvent(new Event('change'));
+          }
         };
+        map_image.src = e.target.result as string;
+
+        // TODO: if there is a metadata file in the same folder, it should be loaded it here
+        // loadMapMetadata(metadata_file);
       }
     };
-
     reader.readAsDataURL(file);
+  }
+}
+
+function handleMetadataUpload(event: Event) {
+  const input = event.target as HTMLInputElement;
+  if (input.files && input.files[0]) {
+    const metadata_file = input.files[0];
+    loadMapMetadata(metadata_file);
+  }
+}
+
+function loadMapMetadata(metadata_file: File) {
+  if (!layout.value.backgroundImage?.image) {
+    return;
+  }
+  if (metadata_file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const yamlText = reader.result as string;
+        const parsedData = load(yamlText);
+        const mapMetadata: MapMetadata = parsedData as MapMetadata;
+
+        // Extract resolution and origin from the parsed data
+        if (
+          layout?.value.backgroundImage &&
+          mapMetadata?.resolution &&
+          mapMetadata?.origin
+        ) {
+          props.layout.backgroundImage.value.x = mapMetadata.origin[0];
+          props.layout.backgroundImage.value.y = mapMetadata.origin[1];
+          props.layout.backgroundImage.value.width =
+            mapMetadata.resolution *
+            props.layout.backgroundImage.value.naturalWidth;
+          props.layout.backgroundImage.value.height =
+            mapMetadata.resolution *
+            props.layout.backgroundImage.value.naturalHeight;
+
+          layout.value.backgroundImage.x = mapMetadata.origin[0];
+          layout.value.backgroundImage.y = mapMetadata.origin[1];
+          layout.value.backgroundImage.width =
+            mapMetadata.resolution * layout.value.backgroundImage.naturalWidth;
+          layout.value.backgroundImage.height =
+            mapMetadata.resolution * layout.value.backgroundImage.naturalHeight;
+        } else {
+          console.error(
+            'Failed to extract resolution and origin from map metadata.',
+          );
+        }
+      } catch (error) {
+        console.error('Error parsing YAML map metadata file:', error);
+      }
+    };
+    reader.readAsText(metadata_file);
   }
 }
 </script>
@@ -205,6 +281,25 @@ function handleImageUpload(event: Event) {
             auto-focus
           />
         </div>
+        <div class="grid gap-2" v-if="layout.backgroundImage">
+          <HoverCard :open-delay="2000">
+            <HoverCardTrigger>
+              <Label for="mapMetadata">Map metadata</Label>
+            </HoverCardTrigger>
+            <HoverCardContent>
+              Select a YAML file to load map metadata. The file should contain
+              'origin' and 'resolution' fields. You must load a map first or the
+              loaded metadata will be ignored.
+            </HoverCardContent>
+          </HoverCard>
+          <Input
+            id="mapMetadata"
+            type="file"
+            accept=".yaml,.yml"
+            @change="handleMetadataUpload"
+            auto-focus
+          />
+        </div>
         <div class="grid grid-cols-2 gap-4" v-if="layout.backgroundImage">
           <div class="grid gap-2">
             <HoverCard :open-delay="2000">
@@ -222,7 +317,6 @@ function handleImageUpload(event: Event) {
               auto-focus
             />
           </div>
-
           <div class="grid gap-2">
             <HoverCard :open-delay="2000">
               <HoverCardTrigger>

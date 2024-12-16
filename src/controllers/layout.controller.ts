@@ -34,6 +34,8 @@ export class LayoutController {
     y: 0,
     width: 10,
     height: 10,
+    naturalWidth: 10,
+    naturalHeight: 10,
   });
   private oldLayoutId = '';
   private graph: any;
@@ -54,6 +56,8 @@ export class LayoutController {
         y: 0,
         width: 10,
         height: 10,
+        naturalWidth: 10,
+        naturalHeight: 10,
       },
     };
     this.vdaLayouts.push(layout);
@@ -125,6 +129,8 @@ export class LayoutController {
       y: 0,
       width: 10,
       height: 10,
+      naturalWidth: 10,
+      naturalHeight: 10,
     };
 
     // Check if layout exists

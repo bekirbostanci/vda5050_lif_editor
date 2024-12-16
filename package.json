@@ -17,6 +17,8 @@
     "@vueuse/core": "^10.10.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "@types/js-yaml": "^4.0.9",
+    "js-yaml": "^4.1.0",
     "radix-vue": "^1.8.3",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
