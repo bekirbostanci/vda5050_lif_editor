@@ -43,6 +43,10 @@ const sideBarNodeController = new SideBarNodeController(
 const sideBarStationController = new SideBarStationController(layoutController);
 props.topBarController.layoutController = layoutController;
 
+defineExpose({
+  layoutController,
+});
+
 const eventHandlers: EventHandlers = {
   'view:click': (mouseEvent: ViewEvent<MouseEvent>) => {
     handleViewClick(mouseEvent);
@@ -283,7 +287,7 @@ const layers = {
 
 @media (min-width: 768px) {
   .page {
-    height: calc(100svh - 40px);
+    height: calc(100svh - 74px);
   }
 }
 </style>
