@@ -64,6 +64,23 @@ const filteredFrameworks = computed(() =>
       <div class="inline-flex ml-auto">
         <Label
           :class="
+            props.sideBarNode.createDoubleWay.value
+              ? 'px-3 text-sm'
+              : 'px-3 text-sm text-muted-foreground'
+          "
+          for="double-way"
+        >
+          Double Way</Label
+        >
+        <Switch
+          id="double-way"
+          :disabled="!props.sideBarNode.createFast.value"
+          v-model:checked="props.sideBarNode.createDoubleWay.value"
+        />
+      </div>
+      <div class="inline-flex ml-auto">
+        <Label
+          :class="
             props.sideBarNode.createFast.value
               ? 'px-3 text-sm'
               : 'px-3 text-sm text-muted-foreground'

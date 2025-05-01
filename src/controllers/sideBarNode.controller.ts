@@ -18,6 +18,7 @@ export class SideBarNodeController {
   });
   public nodeConnections = ref<string[]>([]);
   public createFast: Ref<boolean> = ref<boolean>(true);
+  public createDoubleWay: Ref<boolean> = ref<boolean>(true);
   private lastNodeId: string = '';
   constructor(
     public toolController: SideBarController,
@@ -79,6 +80,9 @@ export class SideBarNodeController {
           y: svgPoint.y,
         },
       });
+      if (this.createDoubleWay.value) {
+        this.layoutController.createEdge(newNodeId, this.lastNodeId);
+      }
       this.lastNodeId = newNodeId;
     }
   }
