@@ -1,6 +1,6 @@
 import {reactive, ref, toRaw} from 'vue';
 import * as vNG from 'v-network-graph';
-import {Action, Layout, Node, Station, Edge as vdaEdge} from '@/types/layout';
+import {Action, Edge, Layout, Node, Station, Edge as vdaEdge} from '@/types/layout';
 import {BackgroundImage} from '@/types/visualizationLayout';
 import {ExtendedNodes} from '@/types/extendedNode';
 import {
@@ -8,6 +8,7 @@ import {
   VisualizationLayouts,
 } from '@/types/visualizationLayout';
 import {Lif} from '@/types/lif';
+import {RosGeoJson} from '@/types/rosGeoJson';
 import {ExtendedEdges} from '@/types/extendedEdge';
 import {showToast} from '@/utils/general';
 import {COLORS} from '@/utils/colors';
@@ -21,6 +22,20 @@ export class LayoutController {
     },
     layouts: [],
   });
+
+  public ros = reactive<RosGeoJson>(
+    {
+      crs: {
+        type: 'name',
+        properties: {
+          name: 'urn:ogc:def:crs:EPSG::3857',
+        },
+      },
+      type: 'FeatureCollection',
+      name: 'graph',
+      features: [],
+    } as RosGeoJson,
+  );
 
   public vdaLayouts = reactive<Layout[]>([]);
   public visualizationLayouts = reactive<VisualizationLayouts>({});
@@ -345,6 +360,58 @@ export class LayoutController {
         delete layout.backgroundImage;
       });
     }
+  }
+
+  convertRosToJson(input: Lif): RosGeoJson {
+    const layout = input.layouts[0]; // Assuming only one layout
+    const nodeIdToIndex: Record<string, number> = {};
+
+    const nodeFeatures = layout.nodes.map((node: Node, index: number) => {
+      nodeIdToIndex[node.nodeId] = index;
+      return {
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: [node.nodePosition.x, node.nodePosition.y],
+        },
+        properties: {
+          frame: layout.layoutName,
+          id: index,
+        },
+      };
+    });
+
+    let edgeIdCounter = nodeFeatures.length;
+    const edgeFeatures = layout.edges.map((edge: Edge) => {
+      const startid = nodeIdToIndex[edge.startNodeId];
+      const endid = nodeIdToIndex[edge.endNodeId];
+
+      return {
+        type: 'Feature',
+        geometry: {
+          type: 'MultiLineString',
+        },
+        properties: {
+          id: edgeIdCounter++,
+          startid,
+          endid,
+          cost: 0.0,
+          overridable: true,
+        },
+      };
+    });
+
+    return {
+      crs: {
+        type: 'name',
+        properties: {
+          name: 'urn:ogc:def:crs:EPSG::3857',
+        },
+      },
+      type: 'FeatureCollection',
+      name: 'graph',
+      features: [...nodeFeatures, ...edgeFeatures],
+    };
   }
 
   convertJsonToLif(data: string) {

@@ -32,18 +32,46 @@ const openHelp = () => {
     <MenubarMenu>
       <MenubarTrigger>Save</MenubarTrigger>
       <MenubarContent>
-        <MenubarItem @click="props.topBarController.saveLifJsonFile(true)"
-          >Save with Background</MenubarItem
-        >
         <MenubarItem @click="props.topBarController.saveLifJsonFile(false)"
-          >Save without Background</MenubarItem
+          >Save LIF</MenubarItem
+        >
+        <MenubarItem @click="props.topBarController.saveLifJsonFile(true)"
+          >Save LIF (with Background)</MenubarItem
+        >
+        <MenubarItem @click="props.topBarController.saveRosJsonFile()"
+          >Save ROS Geograph</MenubarItem
         >
       </MenubarContent>
     </MenubarMenu>
-    <MenubarMenu>
-      <MenubarTrigger @click="props.topBarController.toggleJson()">{{
-        props.topBarController.showJson.value ? 'Map' : 'Code'
-      }}</MenubarTrigger>
+    <MenubarMenu
+      v-if="
+        !props.topBarController.showLifJson.value &&
+        !props.topBarController.showRosJson.value
+      "
+    >
+      <MenubarTrigger @click="props.topBarController.toggleLifJson()">
+        LIF
+      </MenubarTrigger>
+    </MenubarMenu>
+    <MenubarMenu
+      v-if="
+        !props.topBarController.showLifJson.value &&
+        !props.topBarController.showRosJson.value
+      "
+    >
+      <MenubarTrigger @click="props.topBarController.toggleRosJson()">
+        ROS
+      </MenubarTrigger>
+    </MenubarMenu>
+    <MenubarMenu
+      v-if="
+        props.topBarController.showRosJson.value ||
+        props.topBarController.showLifJson.value
+      "
+    >
+      <MenubarTrigger @click="props.topBarController.toggleMap()">
+        Map
+      </MenubarTrigger>
     </MenubarMenu>
     <MenubarMenu>
       <MenubarTrigger @click="openHelp">Help</MenubarTrigger>

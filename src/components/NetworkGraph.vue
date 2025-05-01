@@ -118,8 +118,11 @@ const layers = {
 </script>
 
 <template>
-  <div class="p-0" v-if="props.topBarController.showJson.value">
+  <div class="p-0" v-if="props.topBarController.showLifJson.value">
     <vue-json-pretty :data="layoutController.lif" />
+  </div>
+  <div class="p-0" v-else-if="props.topBarController.showRosJson.value">
+    <vue-json-pretty :data="layoutController.ros" />
   </div>
   <div class="page" v-else>
     <ResizablePanelGroup
