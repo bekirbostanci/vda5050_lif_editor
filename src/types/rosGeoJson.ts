@@ -1,9 +1,9 @@
 export interface RosGeoJson {
   crs: {
-    properties: { name: string };
+    properties: {name: string};
     type: string;
   };
-  type: "FeatureCollection";
+  type: 'FeatureCollection';
   name: string;
   features: Array<any>;
 }

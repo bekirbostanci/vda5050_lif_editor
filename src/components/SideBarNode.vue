@@ -201,15 +201,23 @@ const filteredFrameworks = computed(() =>
           :value="item"
         >
           <TagsInputItemText />
-          <TagsInputItemDelete />
+          <TagsInputItemDelete
+            @click="
+              props.sideBarNode.nodeConnections.value =
+                props.sideBarNode.nodeConnections.value.filter(
+                  connection => connection !== item,
+                );
+              props.layout.deleteEdge(item);
+            "
+          />
         </TagsInputItem>
       </div>
-
       <ComboboxRoot
-        v-model="props.sideBarNode.nodeConnections"
+        v-model="frameworks"
         v-model:open="open"
         v-model:searchTerm="searchTerm"
         class="w-full"
+        @keydown.esc="open = false"
       >
         <ComboboxAnchor as-child>
           <ComboboxInput placeholder="Nodes.." as-child>
@@ -231,14 +239,18 @@ const filteredFrameworks = computed(() =>
             <CommandEmpty />
             <CommandGroup>
               <CommandItem
-                v-for="framework in filteredFrameworks"
-                :key="framework.value"
-                :value="framework.label"
+                v-for="framework in Object.keys(layout.nodes)"
+                :key="framework"
+                :value="framework"
                 @select.prevent="
                   ev => {
                     if (typeof ev.detail.value === 'string') {
                       searchTerm = '';
                       props.sideBarNode.nodeConnections.value.push(
+                        ev.detail.value,
+                      );
+                      props.layout.createEdge(
+                        props.sideBarNode.newNode.value.nodeId,
                         ev.detail.value,
                       );
                       open = false;
@@ -250,7 +262,7 @@ const filteredFrameworks = computed(() =>
                   }
                 "
               >
-                {{ framework.label }}
+                {{ framework }}
               </CommandItem>
             </CommandGroup>
           </CommandList>

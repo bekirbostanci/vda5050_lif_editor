@@ -54,8 +54,9 @@ export class TopBarController {
   public saveRosJsonFile() {
     if (this.layoutController) {
       this.layoutController.convertLifToJson(false);
-      this.layoutController.ros =
-        this.layoutController.convertRosToJson(this.layoutController.lif);
+      this.layoutController.ros = this.layoutController.convertRosToJson(
+        this.layoutController.lif,
+      );
     }
     let jsonData = this.layoutController?.ros;
     const fileName =
