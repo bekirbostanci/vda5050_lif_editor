@@ -33,13 +33,13 @@ const openHelp = () => {
       <MenubarTrigger>Save</MenubarTrigger>
       <MenubarContent>
         <MenubarItem @click="props.topBarController.saveLifJsonFile(false)"
-          >Save LIF</MenubarItem
+          >Export LIF</MenubarItem
         >
         <MenubarItem @click="props.topBarController.saveLifJsonFile(true)"
-          >Save LIF (with Background)</MenubarItem
+          >Export LIF (with Background)</MenubarItem
         >
         <MenubarItem @click="props.topBarController.saveRosJsonFile()"
-          >Save ROS Geograph</MenubarItem
+          >Export ROS GeoJson</MenubarItem
         >
       </MenubarContent>
     </MenubarMenu>
