@@ -19,6 +19,9 @@ const networkGraphRef = ref();
       ></NetworkGraph>
     </div>
   </div>
-  <FooterBar :layout-controller="networkGraphRef?.layoutController">
+  <FooterBar
+    class="fixed bottom-0 left-0 w-full"
+    :layout-controller="networkGraphRef?.layoutController"
+  >
   </FooterBar>
 </template>
