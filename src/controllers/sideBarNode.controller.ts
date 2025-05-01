@@ -52,7 +52,7 @@ export class SideBarNodeController {
         y: mouseEvent.event.offsetY,
       };
       const svgPoint = this.graph.value.translateFromDomToSvgCoordinates(point);
-      const newNodeId = Date.now().toString().slice(-6);
+      const newNodeId = point.x + '_' + point.y;
 
       if (
         this.toolController.selectedNodes.value.length > 0 &&
