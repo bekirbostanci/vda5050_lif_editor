@@ -42,17 +42,17 @@ const props = defineProps<{
 const open = ref(false);
 const searchTerm = ref('');
 
-const frameworks: Search[] = [];
+const frameworks = ref<Search[]>([]);
 Object.values(toRaw(props.layout.nodes)).map(node => {
   if (node.vda5050Node) {
-    frameworks.push({
+    frameworks.value.push({
       value: node.vda5050Node.nodeId,
       label: node.vda5050Node.nodeId,
     });
   }
 });
 const filteredFrameworks = computed(() =>
-  frameworks.filter(
+  frameworks.value.filter(
     i => !props.sideBarNode.nodeConnections.value.includes(i.label),
   ),
 );
