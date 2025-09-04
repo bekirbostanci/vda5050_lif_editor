@@ -82,28 +82,5 @@ const props = defineProps<{
     </span>
     <LayoutDialog :layout="props.layout" :tools="props.sideBar"></LayoutDialog>
     <LayoutSelect :layout="props.layout" :tools="props.sideBar"></LayoutSelect>
-
-    <Separator orientation="horizontal" />
-    <span
-      class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-    >
-      Visibility
-    </span>
-    <div class="flex">
-      <ToggleGroup type="multiple" variant="outline">
-        <ToggleGroupItem
-          value="visible-node-label"
-          @click="configs.node.label.visible = !configs.node.label.visible"
-        >
-          Node
-        </ToggleGroupItem>
-        <ToggleGroupItem
-          value="visible-edge-label"
-          @click="configs.edge.label.visible = !configs.edge.label.visible"
-        >
-          Edge
-        </ToggleGroupItem>
-      </ToggleGroup>
-    </div>
   </div>
 </template>
