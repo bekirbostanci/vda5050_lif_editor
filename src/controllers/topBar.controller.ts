@@ -9,6 +9,7 @@ export class TopBarController {
   public showNodeLabels = ref<boolean>(true);
   public showEdgeLabels = ref<boolean>(false);
   public edgeAnimationEnabled = ref<boolean>(true);
+  public showGrid = ref<boolean>(true);
   public layoutController: LayoutController | undefined;
   constructor() {}
   public toggleLifJson() {
@@ -49,6 +50,10 @@ export class TopBarController {
 
   public toggleEdgeAnimation() {
     this.edgeAnimationEnabled.value = !this.edgeAnimationEnabled.value;
+  }
+
+  public toggleGrid() {
+    this.showGrid.value = !this.showGrid.value;
   }
 
   public saveLifJsonFile(includeBackground: boolean) {

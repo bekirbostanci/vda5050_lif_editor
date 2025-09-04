@@ -99,6 +99,10 @@ const openHelp = () => {
           {{ props.topBarController.showEdgeLabels.value ? 'Hide' : 'Show' }}
           Edge Labels
         </MenubarItem>
+        <MenubarSeparator />
+        <MenubarItem @click="props.topBarController.toggleGrid()">
+          {{ props.topBarController.showGrid.value ? 'Hide' : 'Show' }} Grid
+        </MenubarItem>
       </MenubarContent>
     </MenubarMenu>
     <MenubarMenu>

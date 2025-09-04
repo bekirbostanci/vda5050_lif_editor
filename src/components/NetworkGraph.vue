@@ -157,6 +157,13 @@ const dynamicConfigs = computed(() => {
         animate: props.topBarController.edgeAnimationEnabled.value,
       },
     },
+    view: {
+      ...configs.view,
+      grid: {
+        ...configs.view.grid,
+        visible: props.topBarController.showGrid.value,
+      },
+    },
   };
 });
 </script>
