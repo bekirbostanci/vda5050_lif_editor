@@ -92,15 +92,11 @@ const openHelp = () => {
         </MenubarItem>
         <MenubarSeparator />
         <MenubarItem @click="props.topBarController.toggleNodeLabels()">
-          {{
-            props.topBarController.showNodeLabels.value ? 'Hide' : 'Show'
-          }}
+          {{ props.topBarController.showNodeLabels.value ? 'Hide' : 'Show' }}
           Node Labels
         </MenubarItem>
         <MenubarItem @click="props.topBarController.toggleEdgeLabels()">
-          {{
-            props.topBarController.showEdgeLabels.value ? 'Hide' : 'Show'
-          }}
+          {{ props.topBarController.showEdgeLabels.value ? 'Hide' : 'Show' }}
           Edge Labels
         </MenubarItem>
       </MenubarContent>
