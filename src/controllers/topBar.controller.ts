@@ -4,6 +4,11 @@ import {LayoutController} from './layout.controller';
 export class TopBarController {
   public showLifJson = ref<boolean>(false);
   public showRosJson = ref<boolean>(false);
+  public showNodes = ref<boolean>(true);
+  public showEdges = ref<boolean>(true);
+  public showNodeLabels = ref<boolean>(true);
+  public showEdgeLabels = ref<boolean>(false);
+  public edgeAnimationEnabled = ref<boolean>(true);
   public layoutController: LayoutController | undefined;
   constructor() {}
   public toggleLifJson() {
@@ -24,6 +29,26 @@ export class TopBarController {
   public toggleMap() {
     this.showLifJson.value = false;
     this.showRosJson.value = false;
+  }
+
+  public toggleNodes() {
+    this.showNodes.value = !this.showNodes.value;
+  }
+
+  public toggleEdges() {
+    this.showEdges.value = !this.showEdges.value;
+  }
+
+  public toggleNodeLabels() {
+    this.showNodeLabels.value = !this.showNodeLabels.value;
+  }
+
+  public toggleEdgeLabels() {
+    this.showEdgeLabels.value = !this.showEdgeLabels.value;
+  }
+
+  public toggleEdgeAnimation() {
+    this.edgeAnimationEnabled.value = !this.edgeAnimationEnabled.value;
   }
 
   public saveLifJsonFile(includeBackground: boolean) {

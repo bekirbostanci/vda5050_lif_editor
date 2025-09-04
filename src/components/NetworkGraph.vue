@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, watch} from 'vue';
+import {ref, watch, computed} from 'vue';
 import {EventHandlers, ViewEvent, Instance} from 'v-network-graph';
 import VueJsonPretty from 'vue-json-pretty';
 import 'vue-json-pretty/lib/styles.css';
@@ -119,6 +119,46 @@ watch(layoutController.layouts.nodes, () => {
 const layers = {
   map: 'base',
 };
+
+// Computed properties for filtered nodes and edges based on visibility
+const visibleNodes = computed(() => {
+  if (props.topBarController.showNodes.value) {
+    return layoutController.nodes;
+  }
+  return {};
+});
+
+const visibleEdges = computed(() => {
+  if (props.topBarController.showEdges.value) {
+    return layoutController.edges;
+  }
+  return {};
+});
+
+// Computed property for graph configuration with dynamic label visibility and animation
+const dynamicConfigs = computed(() => {
+  return {
+    ...configs,
+    node: {
+      ...configs.node,
+      label: {
+        ...configs.node.label,
+        visible: props.topBarController.showNodeLabels.value,
+      },
+    },
+    edge: {
+      ...configs.edge,
+      label: {
+        ...configs.edge.label,
+        visible: props.topBarController.showEdgeLabels.value,
+      },
+      normal: {
+        ...configs.edge.normal,
+        animate: props.topBarController.edgeAnimationEnabled.value,
+      },
+    },
+  };
+});
 </script>
 
 <template>
@@ -153,10 +193,10 @@ const layers = {
             ref="graph"
             class="graph"
             zoom-level="200"
-            :nodes="layoutController.nodes"
-            :edges="layoutController.edges"
+            :nodes="visibleNodes"
+            :edges="visibleEdges"
             :layouts="layoutController.layouts"
-            :configs="configs"
+            :configs="dynamicConfigs"
             v-model:selected-nodes="sideBarController.selectedNodes.value"
             :layers="layers"
             v-model:selected-edges="sideBarController.selectedEdges.value"
@@ -173,7 +213,7 @@ const layers = {
             </template>
             <template #edge-label="{edge, ...slotProps}">
               <v-edge-label
-                v-if="configs.edge.label.visible"
+                v-if="dynamicConfigs.edge.label.visible"
                 :text="edge.vda5050Edge.edgeName"
                 align="center"
                 vertical-align="above"

@@ -5,6 +5,7 @@ import {
   MenubarItem,
   MenubarMenu,
   MenubarTrigger,
+  MenubarSeparator,
 } from '@/components/ui/menubar';
 
 import {TopBarController} from '@/controllers/topBar.controller';
@@ -72,6 +73,37 @@ const openHelp = () => {
       <MenubarTrigger @click="props.topBarController.toggleMap()">
         Map
       </MenubarTrigger>
+    </MenubarMenu>
+    <MenubarMenu>
+      <MenubarTrigger>Visualization</MenubarTrigger>
+      <MenubarContent>
+        <MenubarItem @click="props.topBarController.toggleEdgeAnimation()">
+          {{
+            props.topBarController.edgeAnimationEnabled.value ? 'Stop' : 'Start'
+          }}
+          Animation
+        </MenubarItem>
+        <MenubarSeparator />
+        <MenubarItem @click="props.topBarController.toggleNodes()">
+          {{ props.topBarController.showNodes.value ? 'Hide' : 'Show' }} Nodes
+        </MenubarItem>
+        <MenubarItem @click="props.topBarController.toggleEdges()">
+          {{ props.topBarController.showEdges.value ? 'Hide' : 'Show' }} Edges
+        </MenubarItem>
+        <MenubarSeparator />
+        <MenubarItem @click="props.topBarController.toggleNodeLabels()">
+          {{
+            props.topBarController.showNodeLabels.value ? 'Hide' : 'Show'
+          }}
+          Node Labels
+        </MenubarItem>
+        <MenubarItem @click="props.topBarController.toggleEdgeLabels()">
+          {{
+            props.topBarController.showEdgeLabels.value ? 'Hide' : 'Show'
+          }}
+          Edge Labels
+        </MenubarItem>
+      </MenubarContent>
     </MenubarMenu>
     <MenubarMenu>
       <MenubarTrigger @click="openHelp">Help</MenubarTrigger>
