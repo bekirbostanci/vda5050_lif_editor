@@ -3,13 +3,11 @@
 import LayoutDialog from './LayoutDialog.vue';
 import LayoutSelect from './LayoutSelect.vue';
 import MetaInformationDialog from './MetaInformationDialog.vue';
-import configs from '@/utils/graphConfig';
 import {Separator} from './ui/separator';
 import {HoverCard, HoverCardTrigger} from './ui/hover-card';
 import {LayoutController} from '@/controllers/layout.controller';
 import {SideBarController} from '@/controllers/sideBar.controller';
 import {SideBarNodeController} from '@/controllers/sideBarNode.controller';
-import {ToggleGroup, ToggleGroupItem} from '@/components/ui/toggle-group';
 import {SideBarStationController} from '@/controllers/sideBarStation.controller';
 import {Tabs, TabsList, TabsTrigger} from '@/components/ui/tabs';
 
