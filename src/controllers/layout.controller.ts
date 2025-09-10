@@ -441,7 +441,8 @@ export class LayoutController {
   }
 
   convertRosToJson(input: Lif): RosGeoJson {
-    const layout = input.layouts[0]; // Assuming only one layout
+    // Use the current active layout instead of assuming the first one
+    const layout = input.layouts.find(l => l.layoutId === this.oldLayoutId) || input.layouts[0];
     const nodeIdToIndex: Record<string, number> = {};
 
     const nodeFeatures = layout.nodes.map((node: Node, index: number) => {
