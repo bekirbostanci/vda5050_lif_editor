@@ -1,4 +1,4 @@
-import {reactive, ref, toRaw} from 'vue';
+import {reactive, ref, toRaw, nextTick} from 'vue';
 import * as vNG from 'v-network-graph';
 import {
   Action,
@@ -122,9 +122,35 @@ export class LayoutController {
     });
   }
 
+  syncNodePositionsToVda5050() {
+    // Sync current graph positions back to VDA5050 objects
+    Object.keys(this.nodes).forEach(nodeId => {
+      const graphLayout = this.layouts.nodes[nodeId];
+      if (graphLayout && this.nodes[nodeId].vda5050Node) {
+        this.nodes[nodeId].vda5050Node!.nodePosition = {
+          x: graphLayout.x,
+          y: -graphLayout.y, // Invert Y coordinate for VDA5050 format
+        };
+        // Mark node as fixed to prevent any layout algorithm from moving it
+        graphLayout.fixed = true;
+      }
+      if (graphLayout && this.nodes[nodeId].vda5050Station) {
+        this.nodes[nodeId].vda5050Station!.stationPosition = {
+          x: graphLayout.x,
+          y: -graphLayout.y, // Invert Y coordinate for VDA5050 format
+          theta: this.nodes[nodeId].vda5050Station!.stationPosition.theta,
+        };
+        // Mark station as fixed to prevent any layout algorithm from moving it
+        graphLayout.fixed = true;
+      }
+    });
+  }
+
   changeLayout(layoutId: string) {
     // Save old layout information to visualization layout
     if (this.oldLayoutId != '') {
+      // Sync current positions to VDA5050 objects before saving
+      this.syncNodePositionsToVda5050();
       this.visualizationLayouts[this.oldLayoutId] = {
         nodes: JSON.parse(JSON.stringify(this.nodes)),
         edges: JSON.parse(JSON.stringify(this.edges)),
@@ -175,12 +201,26 @@ export class LayoutController {
           );
         },
       );
-      this.backgroundImage.value = JSON.parse(
-        JSON.stringify(this.visualizationLayouts[layoutId].backgroundImage),
-      );
+      if (this.visualizationLayouts[layoutId].backgroundImage) {
+        this.backgroundImage.value = JSON.parse(
+          JSON.stringify(this.visualizationLayouts[layoutId].backgroundImage),
+        );
+      }
     }
     this.oldLayoutId = layoutId;
-    this.graph.value?.fitToContents();
+    // Only call fitToContents if graph is properly initialized and has content
+    if (this.graph?.value && typeof this.graph.value.fitToContents === 'function') {
+      nextTick(() => {
+        try {
+          // Only call fitToContents if there are nodes to fit
+          if (Object.keys(this.nodes).length > 0) {
+            this.graph.value?.fitToContents();
+          }
+        } catch (error) {
+          console.warn('Failed to call fitToContents:', error);
+        }
+      });
+    }
   }
 
   createAction(action: Action) {
@@ -334,25 +374,58 @@ export class LayoutController {
   }
 
   convertLifToJson(includeBackground: boolean) {
-    this.changeLayout(this.oldLayoutId);
+    // Sync current positions before export
+    this.syncNodePositionsToVda5050();
+    
+    // Update the current layout with current graph state
+    const currentLayout = this.vdaLayouts.find(layout => layout.layoutId === this.oldLayoutId);
+    if (currentLayout) {
+      // Clear existing nodes and stations
+      currentLayout.nodes = [];
+      currentLayout.stations = [];
+      
+      // Add current nodes and stations with their current positions
+      Object.values(this.nodes).forEach(node => {
+        if (node.vda5050Node) {
+          currentLayout.nodes.push(node.vda5050Node);
+        }
+        if (node.vda5050Station) {
+          currentLayout.stations.push(node.vda5050Station);
+        }
+      });
+      
+      // Add current edges
+      currentLayout.edges = Object.keys(this.edges).map(edgeId => {
+        return this.edges[edgeId].vda5050Edge;
+      });
+      
+      // Update background image if needed
+      if (includeBackground) {
+        currentLayout.backgroundImage = this.backgroundImage.value;
+      }
+    }
+    
+    // Update all other layouts with their saved state
     this.vdaLayouts.forEach(layout => {
-      const visualizationLayout = this.visualizationLayouts[layout.layoutId];
-      if (visualizationLayout && visualizationLayout.nodes) {
-        layout.nodes = [];
-        layout.stations = [];
-        Object.values(visualizationLayout.nodes).map(node => {
-          if (node.vda5050Node) {
-            layout.nodes.push(node.vda5050Node);
-          }
-          if (node.vda5050Station) {
-            layout.stations.push(node.vda5050Station);
-          }
-        });
-
-        if (visualizationLayout.edges) {
-          layout.edges = Object.keys(visualizationLayout.edges).map(edgeId => {
-            return visualizationLayout.edges[edgeId].vda5050Edge;
+      if (layout.layoutId !== this.oldLayoutId) {
+        const visualizationLayout = this.visualizationLayouts[layout.layoutId];
+        if (visualizationLayout && visualizationLayout.nodes) {
+          layout.nodes = [];
+          layout.stations = [];
+          Object.values(visualizationLayout.nodes).map(node => {
+            if (node.vda5050Node) {
+              layout.nodes.push(node.vda5050Node);
+            }
+            if (node.vda5050Station) {
+              layout.stations.push(node.vda5050Station);
+            }
           });
+
+          if (visualizationLayout.edges) {
+            layout.edges = Object.keys(visualizationLayout.edges).map(edgeId => {
+              return visualizationLayout.edges[edgeId].vda5050Edge;
+            });
+          }
         }
       }
     });
@@ -508,6 +581,8 @@ export class LayoutController {
     });
 
     // After open the layout, show the first layout
-    this.changeLayout(this.vdaLayouts[0].layoutId);
+    if (this.vdaLayouts.length > 0) {
+      this.changeLayout(this.vdaLayouts[0].layoutId);
+    }
   }
 }
