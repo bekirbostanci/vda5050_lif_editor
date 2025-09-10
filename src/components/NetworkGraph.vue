@@ -57,6 +57,9 @@ const eventHandlers: EventHandlers = {
   'edge:select': edges => {
     handleEdgeSelect(edges);
   },
+  'node:dragend': (_event: { [name: string]: any }) => {
+    layoutController.syncNodePositionsToVda5050();
+  },
 };
 
 function handleViewClick(mouseEvent: ViewEvent<MouseEvent>) {
@@ -113,7 +116,7 @@ watch(layoutController.layouts.nodes, () => {
       ].y,
     );
   }
-});
+}, { deep: true });
 
 // additional layers definition
 const layers = {
@@ -202,7 +205,7 @@ const dynamicConfigs = computed(() => {
             zoom-level="200"
             :nodes="visibleNodes"
             :edges="visibleEdges"
-            :layouts="layoutController.layouts"
+            v-model:layouts="layoutController.layouts"
             :configs="dynamicConfigs"
             v-model:selected-nodes="sideBarController.selectedNodes.value"
             :layers="layers"
