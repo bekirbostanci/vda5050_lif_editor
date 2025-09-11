@@ -57,7 +57,7 @@ const eventHandlers: EventHandlers = {
   'edge:select': edges => {
     handleEdgeSelect(edges);
   },
-  'node:dragend': (_event: { [name: string]: any }) => {
+  'node:dragend': (_event: {[name: string]: any}) => {
     layoutController.syncNodePositionsToVda5050();
   },
 };
@@ -96,27 +96,32 @@ function getWindowWidth() {
   return window.innerWidth;
 }
 
-watch(layoutController.layouts.nodes, () => {
-  if (
-    layoutController.layouts.nodes[sideBarNodeController.newNode.value.nodeId]
-  ) {
-    sideBarNodeController.updateNodeY(
+watch(
+  layoutController.layouts.nodes,
+  () => {
+    if (
       layoutController.layouts.nodes[sideBarNodeController.newNode.value.nodeId]
-        .y,
-    );
-  }
-  if (
-    layoutController.layouts.nodes[
-      sideBarStationController.newStation.value.stationId
-    ]
-  ) {
-    sideBarStationController.updateStationY(
+    ) {
+      sideBarNodeController.updateNodeY(
+        layoutController.layouts.nodes[
+          sideBarNodeController.newNode.value.nodeId
+        ].y,
+      );
+    }
+    if (
       layoutController.layouts.nodes[
         sideBarStationController.newStation.value.stationId
-      ].y,
-    );
-  }
-}, { deep: true });
+      ]
+    ) {
+      sideBarStationController.updateStationY(
+        layoutController.layouts.nodes[
+          sideBarStationController.newStation.value.stationId
+        ].y,
+      );
+    }
+  },
+  {deep: true},
+);
 
 // additional layers definition
 const layers = {

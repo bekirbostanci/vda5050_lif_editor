@@ -209,7 +209,10 @@ export class LayoutController {
     }
     this.oldLayoutId = layoutId;
     // Only call fitToContents if graph is properly initialized and has content
-    if (this.graph?.value && typeof this.graph.value.fitToContents === 'function') {
+    if (
+      this.graph?.value &&
+      typeof this.graph.value.fitToContents === 'function'
+    ) {
       nextTick(() => {
         try {
           // Only call fitToContents if there are nodes to fit
@@ -376,14 +379,16 @@ export class LayoutController {
   convertLifToJson(includeBackground: boolean) {
     // Sync current positions before export
     this.syncNodePositionsToVda5050();
-    
+
     // Update the current layout with current graph state
-    const currentLayout = this.vdaLayouts.find(layout => layout.layoutId === this.oldLayoutId);
+    const currentLayout = this.vdaLayouts.find(
+      layout => layout.layoutId === this.oldLayoutId,
+    );
     if (currentLayout) {
       // Clear existing nodes and stations
       currentLayout.nodes = [];
       currentLayout.stations = [];
-      
+
       // Add current nodes and stations with their current positions
       Object.values(this.nodes).forEach(node => {
         if (node.vda5050Node) {
@@ -393,18 +398,18 @@ export class LayoutController {
           currentLayout.stations.push(node.vda5050Station);
         }
       });
-      
+
       // Add current edges
       currentLayout.edges = Object.keys(this.edges).map(edgeId => {
         return this.edges[edgeId].vda5050Edge;
       });
-      
+
       // Update background image if needed
       if (includeBackground) {
         currentLayout.backgroundImage = this.backgroundImage.value;
       }
     }
-    
+
     // Update all other layouts with their saved state
     this.vdaLayouts.forEach(layout => {
       if (layout.layoutId !== this.oldLayoutId) {
@@ -422,9 +427,11 @@ export class LayoutController {
           });
 
           if (visualizationLayout.edges) {
-            layout.edges = Object.keys(visualizationLayout.edges).map(edgeId => {
-              return visualizationLayout.edges[edgeId].vda5050Edge;
-            });
+            layout.edges = Object.keys(visualizationLayout.edges).map(
+              edgeId => {
+                return visualizationLayout.edges[edgeId].vda5050Edge;
+              },
+            );
           }
         }
       }
@@ -442,7 +449,9 @@ export class LayoutController {
 
   convertRosToJson(input: Lif): RosGeoJson {
     // Use the current active layout instead of assuming the first one
-    const layout = input.layouts.find(l => l.layoutId === this.oldLayoutId) || input.layouts[0];
+    const layout =
+      input.layouts.find(l => l.layoutId === this.oldLayoutId) ||
+      input.layouts[0];
     const nodeIdToIndex: Record<string, number> = {};
 
     const nodeFeatures = layout.nodes.map((node: Node, index: number) => {
