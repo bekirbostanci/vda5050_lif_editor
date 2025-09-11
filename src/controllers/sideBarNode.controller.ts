@@ -63,6 +63,7 @@ export class SideBarNodeController {
         this.lastNodeId = this.toolController.selectedNodes.value[0];
         this.layoutController.createEdge(this.lastNodeId, newNodeId);
       } else if (
+        this.lastNodeId !== '' &&
         this.layoutController.nodes[this.lastNodeId] &&
         this.layoutController.nodes[this.lastNodeId].vda5050Node
       ) {
@@ -80,7 +81,7 @@ export class SideBarNodeController {
           y: svgPoint.y,
         },
       });
-      if (this.createDoubleWay.value) {
+      if (this.createDoubleWay.value && this.lastNodeId !== '') {
         this.layoutController.createEdge(newNodeId, this.lastNodeId);
       }
       this.lastNodeId = newNodeId;
