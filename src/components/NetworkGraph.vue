@@ -241,6 +241,7 @@ const dynamicConfigs = computed(() => {
           :sideBar="sideBarController"
           :side-bar-node="sideBarNodeController"
           :side-bar-station="sideBarStationController"
+          :topBarController="props.topBarController"
         />
       </div>
       <ResizablePanelGroup

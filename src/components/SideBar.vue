@@ -13,12 +13,15 @@ import {
   CommandList,
 } from '@/components/ui/command';
 import {Button} from '@/components/ui/button';
+import {Icon} from '@iconify/vue';
+import {TopBarController} from '@/controllers/topBar.controller';
 
 const props = defineProps<{
   layout: LayoutController;
   sideBar: SideBarController;
   sideBarNode: SideBarNodeController;
   sideBarStation: SideBarStationController;
+  topBarController?: TopBarController;
 }>();
 
 const searchQuery = ref('');
@@ -230,6 +233,18 @@ const hasSelection = computed(() => {
   return false;
 });
 
+// Check if there are truly no items on the map (when not searching)
+const hasNoItemsOnMap = computed(() => {
+  if (searchQuery.value && searchQuery.value.trim().length > 0) {
+    return false; // Don't show open file message when searching
+  }
+  return (
+    allStations.value.length === 0 &&
+    allNodes.value.length === 0 &&
+    allPaths.value.length === 0
+  );
+});
+
 onMounted(() => {
   if (listContainerRef.value) {
     listContainerRef.value.addEventListener('scroll', handleScroll);
@@ -333,7 +348,44 @@ function handleSelect(item: {
         @scroll="handleScroll"
       >
         <CommandList>
-          <CommandEmpty v-if="allItems.length === 0" class="opacity-50"
+          <!-- Show open file message when there are no items on map -->
+          <div
+            v-if="hasNoItemsOnMap"
+            class="flex flex-col items-center justify-center text-center"
+            style="min-height: 400px; padding: 2rem;"
+          >
+            <div
+              class="flex flex-col items-center justify-center p-8 rounded-lg border-2 border-dashed border-muted-foreground/20 bg-muted/30 hover:bg-muted/50 hover:border-muted-foreground/30 transition-all duration-200 cursor-pointer group"
+              @click="props.topBarController?.selectFile()"
+            >
+              <div class="mb-4 p-4 rounded-full bg-primary/5 group-hover:bg-primary/10 transition-colors duration-200">
+                <Icon
+                  icon="ph:folder-open"
+                  :height="56"
+                  class="text-primary/60 group-hover:text-primary/80 transition-colors duration-200"
+                />
+              </div>
+              <h3 class="text-base font-semibold text-foreground mb-1">
+                Get started
+              </h3>
+              <p class="text-sm text-muted-foreground mb-4 max-w-xs">
+                Open a LIF file or click on the map to start creating nodes and edges
+              </p>
+              <Button
+                variant="outline"
+                size="sm"
+                class="mt-2"
+                @click.stop="props.topBarController?.selectFile()"
+              >
+                <Icon icon="ph:file-plus" :height="16" class="mr-2" />
+                Open File
+              </Button>
+            </div>
+          </div>
+          <!-- Show no results found only when searching and no results -->
+          <CommandEmpty
+            v-else-if="allItems.length === 0 && !hasNoItemsOnMap"
+            class="opacity-50"
             >No results found.</CommandEmpty
           >
 
