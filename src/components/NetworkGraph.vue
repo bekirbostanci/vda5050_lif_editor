@@ -64,7 +64,7 @@ const eventHandlers: EventHandlers = {
     handleEdgeSelect(edges);
   },
   'node:dragend': (_event: {[name: string]: any}) => {
-    layoutController.syncNodePositionsToVda5050();
+    layoutController.syncNodePositionsToVda5050(true); // Save to history after drag
   },
 };
 

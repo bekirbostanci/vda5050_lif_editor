@@ -352,13 +352,15 @@ function handleSelect(item: {
           <div
             v-if="hasNoItemsOnMap"
             class="flex flex-col items-center justify-center text-center"
-            style="min-height: 400px; padding: 2rem;"
+            style="min-height: 400px; padding: 2rem"
           >
             <div
               class="flex flex-col items-center justify-center p-8 rounded-lg border-2 border-dashed border-muted-foreground/20 bg-muted/30 hover:bg-muted/50 hover:border-muted-foreground/30 transition-all duration-200 cursor-pointer group"
               @click="props.topBarController?.selectFile()"
             >
-              <div class="mb-4 p-4 rounded-full bg-primary/5 group-hover:bg-primary/10 transition-colors duration-200">
+              <div
+                class="mb-4 p-4 rounded-full bg-primary/5 group-hover:bg-primary/10 transition-colors duration-200"
+              >
                 <Icon
                   icon="ph:folder-open"
                   :height="56"
@@ -369,7 +371,8 @@ function handleSelect(item: {
                 Get started
               </h3>
               <p class="text-sm text-muted-foreground mb-4 max-w-xs">
-                Open a LIF file or click on the map to start creating nodes and edges
+                Open a LIF file or click on the map to start creating nodes and
+                edges
               </p>
               <Button
                 variant="outline"

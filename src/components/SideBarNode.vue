@@ -206,11 +206,14 @@ const filteredFrameworks = computed(() =>
           <TagsInputItemText />
           <TagsInputItemDelete
             @click="
+              props.layout.deleteEdgeByNodes(
+                props.sideBarNode.newNode.value.nodeId,
+                item,
+              );
               props.sideBarNode.nodeConnections.value =
                 props.sideBarNode.nodeConnections.value.filter(
                   connection => connection !== item,
                 );
-              props.layout.deleteEdge(item);
             "
           />
         </TagsInputItem>

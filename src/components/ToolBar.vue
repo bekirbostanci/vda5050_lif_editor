@@ -4,7 +4,7 @@ import {Button} from '@/components/ui/button';
 import LayoutDialog from './LayoutDialog.vue';
 import LayoutSelect from './LayoutSelect.vue';
 import MetaInformationDialog from './MetaInformationDialog.vue';
-import {ref} from 'vue';
+import {ref, computed} from 'vue';
 import {LayoutController} from '@/controllers/layout.controller';
 import {SideBarController} from '@/controllers/sideBar.controller';
 import {SideBarNodeController} from '@/controllers/sideBarNode.controller';
@@ -48,6 +48,59 @@ const openEditLayout = () => {
   layoutDialogMode.value = 'edit';
   layoutDialogOpen.value = true;
 };
+
+const canUndo = computed(() => {
+  return props.layout?.historyController.canUndo.value ?? false;
+});
+
+const canRedo = computed(() => {
+  return props.layout?.historyController.canRedo.value ?? false;
+});
+
+const handleUndo = () => {
+  props.layout?.undo();
+};
+
+const handleRedo = () => {
+  props.layout?.redo();
+};
+
+const hasSelection = computed(() => {
+  if (!props.sideBar || !props.layout) return false;
+  return (
+    props.sideBar.selectedNodes.value.length > 0 ||
+    props.sideBar.selectedEdges.value.length > 0 ||
+    props.sideBar.selectedStations.value.length > 0
+  );
+});
+
+const handleDelete = () => {
+  if (!props.layout || !props.sideBar) return;
+
+  // Delete selected edges first
+  if (props.sideBar.selectedEdges.value.length > 0) {
+    props.sideBar.selectedEdges.value.forEach(edgeId => {
+      props.layout?.deleteEdge(edgeId);
+    });
+    props.sideBar.selectedEdges.value = [];
+  }
+
+  // Delete selected nodes (this will also delete connected edges)
+  if (props.sideBar.selectedNodes.value.length > 0) {
+    props.sideBar.selectedNodes.value.forEach(nodeId => {
+      props.layout?.deleteNode(nodeId);
+    });
+    props.sideBar.selectedNodes.value = [];
+  }
+
+  // Delete selected stations
+  if (props.sideBar.selectedStations.value.length > 0) {
+    props.sideBar.selectedStations.value.forEach(stationId => {
+      props.layout?.deleteNode(stationId);
+    });
+    props.sideBar.selectedStations.value = [];
+  }
+};
 </script>
 
 <template>
@@ -79,6 +132,42 @@ const openEditLayout = () => {
       @click="handleCreateAction"
     >
       <Icon icon="ph:lightning" :height="20" />
+    </Button>
+
+    <div class="w-px h-6 bg-border mx-1"></div>
+
+    <!-- Undo/Redo buttons -->
+    <Button
+      variant="outline"
+      size="icon"
+      title="Undo (Ctrl+Z)"
+      :disabled="!props.layout || !canUndo"
+      @click="handleUndo"
+    >
+      <Icon icon="ph:arrow-counter-clockwise" :height="20" />
+    </Button>
+    <Button
+      variant="outline"
+      size="icon"
+      title="Redo (Ctrl+Y)"
+      :disabled="!props.layout || !canRedo"
+      @click="handleRedo"
+    >
+      <Icon icon="ph:arrow-clockwise" :height="20" />
+    </Button>
+    <Button
+      variant="outline"
+      size="icon"
+      title="Delete Selected (Del)"
+      :disabled="
+        !props.layout ||
+        !props.sideBar ||
+        !hasSelection ||
+        !props.sideBar.selectedLayoutId.value
+      "
+      @click="handleDelete"
+    >
+      <Icon icon="ph:trash" :height="20" />
     </Button>
 
     <div class="w-px h-6 bg-border mx-1"></div>
