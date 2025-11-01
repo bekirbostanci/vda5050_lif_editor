@@ -5,7 +5,6 @@ import {Label} from '@/components/ui/label';
 import {Button} from '@/components/ui/button';
 import {SideBarController} from '@/controllers/sideBar.controller';
 import {LayoutController} from '@/controllers/layout.controller';
-import {HoverCard, HoverCardContent, HoverCardTrigger} from './ui/hover-card';
 import {SideBarNodeController} from '@/controllers/sideBarNode.controller';
 
 const props = defineProps<{
@@ -17,15 +16,13 @@ const props = defineProps<{
 <template>
   <div v-if="props.sidebar.selectedEdges.value[0]">
     <div class="grid gap-2 mt-2">
-      <HoverCard :open-delay="2000">
-        <HoverCardTrigger>
-          <Label for="edge-id">Edge Id</Label>
-        </HoverCardTrigger>
-        <HoverCardContent
-          >Unique identifier of the node across all layouts contained in this
-          LIF file.
-        </HoverCardContent>
-      </HoverCard>
+      <Label
+        for="edge-id"
+        :class="
+          props.sideBarNode.createFast.value ? 'text-muted-foreground' : ''
+        "
+        >Edge Id</Label
+      >
       <Input
         id="edge-id"
         :disabled="props.sideBarNode.createFast.value"
@@ -33,15 +30,7 @@ const props = defineProps<{
       />
     </div>
     <div class="grid gap-2 mt-2">
-      <HoverCard :open-delay="2000">
-        <HoverCardTrigger>
-          <Label for="edge-name">Edge Name</Label>
-        </HoverCardTrigger>
-        <HoverCardContent
-          >Unique identifier of the node across all layouts contained in this
-          LIF file.
-        </HoverCardContent>
-      </HoverCard>
+      <Label for="edge-name">Edge Name</Label>
       <Input
         id="edge-name"
         v-model="
@@ -51,15 +40,7 @@ const props = defineProps<{
       />
     </div>
     <div class="grid gap-2 mt-2">
-      <HoverCard :open-delay="2000">
-        <HoverCardTrigger>
-          <Label for="edge-description">Edge Description</Label>
-        </HoverCardTrigger>
-        <HoverCardContent
-          >Unique identifier of the node across all layouts contained in this
-          LIF file.
-        </HoverCardContent>
-      </HoverCard>
+      <Label for="edge-description">Edge Description</Label>
       <Input
         id="edge-description"
         v-model="
@@ -70,7 +51,9 @@ const props = defineProps<{
     </div>
     <div class="ml-auto flex w-full space-x-2 py-2">
       <div class="grid gap-2 mt-2">
-        <Label for="startNode">Start Node Id</Label>
+        <Label for="startNode" class="text-muted-foreground"
+          >Start Node Id</Label
+        >
         <Input
           id="startNode"
           disabled
@@ -80,7 +63,7 @@ const props = defineProps<{
         />
       </div>
       <div class="grid gap-2 mt-2">
-        <Label for="endNode">End Node Id</Label>
+        <Label for="endNode" class="text-muted-foreground">End Node Id</Label>
         <Input
           id="endNode"
           disabled

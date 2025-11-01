@@ -110,16 +110,18 @@ function clearAction() {
     </PopoverContent>
   </Popover>
 
-  <div class="grid gap-2 mt-4">
+  <div class="grid gap-2 mt-2">
     <Label for="action-type">Action Type</Label>
     <Input id="action-type" v-model="newAction.actionType" />
   </div>
-  <div class="grid gap-2 mt-4">
+  <div class="grid gap-2 mt-2">
     <Label for="action-description">Action Description</Label>
     <Input id="action-description" v-model="newAction.actionDescription" />
   </div>
-  <div class="grid gap-2 mt-4">
-    <Label for="action-type">Action Parameters</Label>
+  <div class="grid gap-2 mt-2">
+    <Label for="action-type" class="text-muted-foreground"
+      >Action Parameters</Label
+    >
     <TagsInput v-model="newAction.actionParameters" disabled>
       <TagsInputItem
         v-for="item in Object.values(newAction.actionParameters)"
@@ -162,7 +164,7 @@ function clearAction() {
       >
     </div>
   </div>
-  <div class="grid gap-2 mt-6">
+  <div class="grid gap-2 mt-4">
     <Label class="mb-2">Action Requirement</Label>
     <RadioGroup v-model="newAction.requirementType">
       <div
@@ -179,7 +181,7 @@ function clearAction() {
       </div>
     </RadioGroup>
   </div>
-  <div class="grid gap-2 mt-6">
+  <div class="grid gap-2 mt-4">
     <Label class="mb-2">Blocking Type</Label>
     <RadioGroup v-model="newAction.blockingType">
       <div

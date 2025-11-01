@@ -19,6 +19,7 @@ import {RosGeoJson} from '@/types/rosGeoJson';
 import {ExtendedEdges} from '@/types/extendedEdge';
 import {showToast} from '@/utils/general';
 import {COLORS} from '@/utils/colors';
+import {HistoryController} from './history.controller';
 export class LayoutController {
   public lif = reactive<Lif>({
     metaInformation: {
@@ -57,8 +58,10 @@ export class LayoutController {
     naturalWidth: 10,
     naturalHeight: 10,
   });
+  public historyController = new HistoryController();
   private oldLayoutId = '';
   private graph: any;
+  private isRestoringState = false;
   constructor(graph: any) {
     this.graph = graph;
     const layout: Layout = {
@@ -91,15 +94,135 @@ export class LayoutController {
     return !!this.nodes[nodeId].vda5050Station;
   }
 
+  /**
+   * Save current state to history
+   */
+  private saveState(): void {
+    if (this.isRestoringState) {
+      return; // Don't save state while restoring (undo/redo)
+    }
+    this.historyController.takeSnapshot(
+      this.nodes,
+      this.edges,
+      this.layouts,
+      this.backgroundImage.value,
+    );
+  }
+
+  /**
+   * Restore state from history snapshot
+   */
+  private restoreState(
+    snapshot: {
+      nodes: ExtendedNodes;
+      edges: ExtendedEdges;
+      layouts: vNG.Layouts;
+      backgroundImage: BackgroundImage;
+    } | null,
+  ): void {
+    if (!snapshot) {
+      return;
+    }
+
+    this.isRestoringState = true;
+
+    // Clear current state
+    Object.keys(this.nodes).forEach(key => {
+      delete this.nodes[key];
+    });
+    Object.keys(this.edges).forEach(key => {
+      delete this.edges[key];
+    });
+    Object.keys(this.layouts.nodes).forEach(key => {
+      delete this.layouts.nodes[key];
+    });
+
+    // Restore nodes
+    Object.keys(snapshot.nodes).forEach(key => {
+      this.nodes[key] = JSON.parse(
+        JSON.stringify(snapshot.nodes[key]),
+      ) as (typeof this.nodes)[string];
+    });
+
+    // Restore edges
+    Object.keys(snapshot.edges).forEach(key => {
+      this.edges[key] = JSON.parse(
+        JSON.stringify(snapshot.edges[key]),
+      ) as (typeof this.edges)[string];
+    });
+
+    // Restore layouts
+    Object.keys(snapshot.layouts.nodes).forEach(key => {
+      this.layouts.nodes[key] = JSON.parse(
+        JSON.stringify(snapshot.layouts.nodes[key]),
+      );
+    });
+
+    // Restore background image
+    this.backgroundImage.value = JSON.parse(
+      JSON.stringify(snapshot.backgroundImage),
+    );
+
+    // Sync positions to VDA5050
+    this.syncNodePositionsToVda5050();
+
+    this.isRestoringState = false;
+  }
+
+  /**
+   * Undo last operation
+   */
+  undo(): void {
+    const snapshot = this.historyController.undo();
+    this.restoreState(snapshot);
+  }
+
+  /**
+   * Redo last undone operation
+   */
+  redo(): void {
+    const snapshot = this.historyController.redo();
+    this.restoreState(snapshot);
+  }
+
   deleteEdge(edgeId: string) {
+    this.saveState();
     if (edgeId && this.edges[edgeId]) {
       delete this.edges[edgeId];
     } else {
-      // TODO : add toaster error
+      // Try reverse direction if direct edgeId not found
+      // Edge IDs are in format "source_target", but we might have "target_source"
+      const edgeKeys = Object.keys(this.edges);
+      const reverseEdge = edgeKeys.find(
+        key =>
+          (this.edges[key].source === edgeId ||
+            this.edges[key].target === edgeId) &&
+          (key.includes(edgeId) || edgeId.includes(key)),
+      );
+      if (reverseEdge) {
+        delete this.edges[reverseEdge];
+      }
+      // TODO : add toaster error if edge not found
     }
   }
 
+  /**
+   * Delete edge by source and target node IDs
+   */
+  deleteEdgeByNodes(source: string, target: string) {
+    this.saveState();
+    const edgeId1 = source + '_' + target;
+    const edgeId2 = target + '_' + source;
+    if (this.edges[edgeId1]) {
+      delete this.edges[edgeId1];
+    } else if (this.edges[edgeId2]) {
+      delete this.edges[edgeId2];
+    }
+    // TODO : add toaster error if edge not found
+  }
+
   deleteNode(nodeId: string) {
+    this.saveState();
     if (nodeId && this.layouts.nodes[nodeId] && this.nodes[nodeId]) {
       delete this.nodes[nodeId];
       delete this.layouts.nodes[nodeId];
@@ -122,7 +245,7 @@ export class LayoutController {
     });
   }
 
-  syncNodePositionsToVda5050() {
+  syncNodePositionsToVda5050(saveToHistory: boolean = false) {
     // Sync current graph positions back to VDA5050 objects
     Object.keys(this.nodes).forEach(nodeId => {
       const graphLayout = this.layouts.nodes[nodeId];
@@ -144,6 +267,10 @@ export class LayoutController {
         graphLayout.fixed = true;
       }
     });
+    // Save state after dragging (but only if explicitly requested, to avoid too many history entries)
+    if (saveToHistory) {
+      this.saveState();
+    }
   }
 
   changeLayout(layoutId: string) {
@@ -158,6 +285,9 @@ export class LayoutController {
         backgroundImage: JSON.parse(JSON.stringify(this.backgroundImage.value)),
       };
     }
+
+    // Clear history when switching layouts (each layout has its own history)
+    this.historyController.clear();
 
     // Remove all nodes and edges for new layout
     Object.keys(this.nodes).map(node => {
@@ -244,6 +374,7 @@ export class LayoutController {
   }
 
   createNode(node: Node) {
+    this.saveState();
     if (node.nodeId == '') {
       showToast('Error', 'Node ID cannot be empty');
       return;
@@ -279,6 +410,7 @@ export class LayoutController {
   }
 
   createStation(station: Station) {
+    this.saveState();
     if (station.stationId == '') {
       showToast('Error', 'Station Id cannot be empty');
       return;
@@ -317,6 +449,7 @@ export class LayoutController {
   }
 
   updateEdges(source: string, targets: string[]) {
+    this.saveState();
     Object.keys(this.edges).forEach(key => {
       if (this.edges[key].source == source) {
         delete this.edges[key];
@@ -324,11 +457,14 @@ export class LayoutController {
     });
 
     targets.forEach(target => {
-      this.createEdge(source, target);
+      this.createEdge(source, target, false); // Don't save state for each edge, already saved above
     });
   }
 
-  createEdge(source: string, target: string) {
+  createEdge(source: string, target: string, saveState: boolean = true) {
+    if (saveState) {
+      this.saveState();
+    }
     const vdaEdge: vdaEdge = {
       edgeId: source + '_' + target,
       edgeName: source + '_' + target,

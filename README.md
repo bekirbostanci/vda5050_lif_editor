@@ -38,21 +38,3 @@ npm install
 ```
 npm run dev
 ```
-
-## TODO
-
-- [x] Node
-  - [x] Nodes create
-  - [x] Nodes edit
-  - [x] Node connection another layout
-- [ ] Edge
-  - [x] Edges create
-  - [ ] Edges edit
-  - [ ] vehicleTypeEdgeProperties
-- [x] Station
-  - [x] Station create
-  - [x] Station edit
-- [x] Action
-  - [x] Action create
-  - [x] Action edit
-  - [x] Define actionParameters
