@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import {Icon} from '@iconify/vue';
 import {Button} from '@/components/ui/button';
 import {Input} from '@/components/ui/input';
 import {Label} from '@/components/ui/label';
@@ -13,34 +12,67 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from '@/components/ui/hover-card';
 import {LayoutController} from '@/controllers/layout.controller';
 import {SideBarController} from '@/controllers/sideBar.controller';
 import {Layout} from '@/types/layout';
 import {MapMetadata} from '@/types/visualizationLayout';
 import {load} from 'js-yaml';
-import {ref, Ref} from 'vue';
+import {ref, Ref, watch} from 'vue';
 
 const props = defineProps({
   tools: {
-    required: true,
+    required: false,
     type: SideBarController,
   },
   layout: {
     type: LayoutController,
     required: true,
   },
+  open: {
+    type: Boolean,
+    default: false,
+  },
+  mode: {
+    type: String as () => 'create' | 'edit',
+    default: 'create',
+  },
 });
+
+const emit = defineEmits<{
+  'update:open': [value: boolean];
+}>();
+
+const isOpen = ref(props.open);
+watch(
+  [() => props.open, () => props.mode],
+  ([newOpen, newMode]) => {
+    isOpen.value = newOpen;
+    if (newOpen) {
+      if (newMode === 'create') {
+        createEmptyLayout();
+      } else {
+        loadLayout();
+      }
+    }
+  },
+  {immediate: true},
+);
+
 const layout: Ref<Layout> = ref({} as Layout);
 createEmptyLayout();
 
 function loadLayout() {
+  if (!props.tools) {
+    createEmptyLayout();
+    return;
+  }
+  const selectedLayoutId = props.tools.selectedLayoutId.value;
+  if (!selectedLayoutId) {
+    createEmptyLayout();
+    return;
+  }
   const selectedLayout = props.layout.vdaLayouts.find(
-    layout => layout.layoutId === props.tools.selectedLayoutId.value,
+    layout => layout.layoutId === selectedLayoutId,
   );
   if (selectedLayout) {
     layout.value = JSON.parse(JSON.stringify(selectedLayout));
@@ -72,12 +104,18 @@ function createEmptyLayout() {
 }
 function saveLayout() {
   props.layout.saveLayout(layout.value);
-  props.tools.selectedLayoutId.value = layout.value.layoutId;
+  if (props.tools) {
+    props.tools.selectedLayoutId.value = layout.value.layoutId;
+  }
+  emit('update:open', false);
 }
 
 function deleteLayout() {
   props.layout.deleteLayout(layout.value.layoutId);
-  props.tools.selectedLayoutId.value = '';
+  if (props.tools) {
+    props.tools.selectedLayoutId.value = '';
+  }
+  emit('update:open', false);
 }
 
 /**
@@ -179,18 +217,9 @@ function loadMapMetadata(metadata_file: File) {
 </script>
 
 <template>
-  <Dialog>
-    <DialogTrigger as-child>
-      <div class="grid grid-cols-2 gap-2 w-full">
-        <Button variant="secondary" @click="createEmptyLayout()" class="w-full">
-          <Icon class="mr-2" icon="ph:plus-circle-thin" :height="24" />
-          Create
-        </Button>
-        <Button variant="secondary" @click="loadLayout()" class="w-full">
-          <Icon class="mr-2" icon="ph:layout-thin" :height="24" />
-          Edit
-        </Button>
-      </div>
+  <Dialog :open="isOpen" @update:open="emit('update:open', $event)">
+    <DialogTrigger as-child v-if="$slots.default && !props.open">
+      <slot></slot>
     </DialogTrigger>
     <DialogContent class="sm:max-w-[475px]">
       <DialogHeader>
@@ -203,48 +232,19 @@ function loadMapMetadata(metadata_file: File) {
       </DialogHeader>
       <div class="grid gap-4 py-4">
         <div class="grid gap-2">
-          <HoverCard :open-delay="2000">
-            <HoverCardTrigger>
-              <Label for="layoutId">Layout Id</Label>
-            </HoverCardTrigger>
-            <HoverCardContent>
-              Unique identifier for this layout.
-            </HoverCardContent>
-          </HoverCard>
+          <Label for="layoutId">Layout Id</Label>
           <Input id="layoutId" v-model="layout.layoutId" auto-focus />
         </div>
         <div class="grid gap-2">
-          <HoverCard :open-delay="2000">
-            <HoverCardTrigger>
-              <Label for="layoutName">Layout Name</Label>
-            </HoverCardTrigger>
-            <HoverCardContent>
-              Human-readable name of the layout (e.g., for displaying).
-            </HoverCardContent>
-          </HoverCard>
+          <Label for="layoutName">Layout Name</Label>
           <Input id="layoutName" v-model="layout.layoutName" auto-focus />
         </div>
         <div class="grid gap-2">
-          <HoverCard :open-delay="2000">
-            <HoverCardTrigger>
-              <Label for="layoutVersion">Layout Version</Label>
-            </HoverCardTrigger>
-            <HoverCardContent> Version of the layout. </HoverCardContent>
-          </HoverCard>
+          <Label for="layoutVersion">Layout Version</Label>
           <Input id="layoutVersion" v-model="layout.layoutVersion" auto-focus />
         </div>
         <div class="grid gap-2">
-          <HoverCard :open-delay="2000">
-            <HoverCardTrigger>
-              <Label for="layoutLevelId">Layout Level Id</Label>
-            </HoverCardTrigger>
-            <HoverCardContent>
-              This attribute can be used to explicitly indicate which level or
-              floor within a building or buildings a layout represents in a
-              situation where there are multiple, such as multiple levels in the
-              same facility, or two disconnected areas in the same facility.
-            </HoverCardContent>
-          </HoverCard>
+          <Label for="layoutLevelId">Layout Level Id</Label>
           <Input
             id="layoutLevelId"
             v-model="layout.layoutLevelId"
@@ -253,14 +253,7 @@ function loadMapMetadata(metadata_file: File) {
           />
         </div>
         <div class="grid gap-2">
-          <HoverCard :open-delay="2000">
-            <HoverCardTrigger>
-              <Label for="layoutDescription">Layout Description</Label>
-            </HoverCardTrigger>
-            <HoverCardContent>
-              Brief description of the layout.
-            </HoverCardContent>
-          </HoverCard>
+          <Label for="layoutDescription">Layout Description</Label>
           <Input
             id="layoutDescription"
             v-model="layout.layoutDescription"
@@ -269,15 +262,7 @@ function loadMapMetadata(metadata_file: File) {
         </div>
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <HoverCard :open-delay="2000">
-              <HoverCardTrigger>
-                <Label for="backgroundImage">Background Image</Label>
-              </HoverCardTrigger>
-              <HoverCardContent>
-                Select an image file to use as the background for the network
-                graph.
-              </HoverCardContent>
-            </HoverCard>
+            <Label for="backgroundImage">Background Image</Label>
             <Input
               id="backgroundImage"
               type="file"
@@ -287,16 +272,7 @@ function loadMapMetadata(metadata_file: File) {
             />
           </div>
           <div>
-            <HoverCard :open-delay="2000">
-              <HoverCardTrigger>
-                <Label for="mapMetadata">Map metadata</Label>
-              </HoverCardTrigger>
-              <HoverCardContent>
-                Select a YAML file to load map metadata. The file should contain
-                'origin' and 'resolution' fields. You must load a map first or
-                the loaded metadata will be ignored.
-              </HoverCardContent>
-            </HoverCard>
+            <Label for="mapMetadata">Map metadata</Label>
             <Input
               id="mapMetadata"
               type="file"
@@ -311,11 +287,7 @@ function loadMapMetadata(metadata_file: File) {
           v-if="layout.backgroundImage?.image"
         >
           <div class="grid gap-2">
-            <HoverCard :open-delay="2000">
-              <HoverCardTrigger>
-                <Label for="backgroundX">Background X Position</Label>
-              </HoverCardTrigger>
-            </HoverCard>
+            <Label for="backgroundX">Background X Position</Label>
             <Input
               id="backgroundX"
               type="number"
@@ -324,11 +296,7 @@ function loadMapMetadata(metadata_file: File) {
             />
           </div>
           <div class="grid gap-2">
-            <HoverCard :open-delay="2000">
-              <HoverCardTrigger>
-                <Label for="backgroundY">Background Y Position</Label>
-              </HoverCardTrigger>
-            </HoverCard>
+            <Label for="backgroundY">Background Y Position</Label>
             <Input
               id="backgroundY"
               type="number"
@@ -338,11 +306,7 @@ function loadMapMetadata(metadata_file: File) {
           </div>
 
           <div class="grid gap-2">
-            <HoverCard :open-delay="2000">
-              <HoverCardTrigger>
-                <Label for="backgroundWidth">Background Width</Label>
-              </HoverCardTrigger>
-            </HoverCard>
+            <Label for="backgroundWidth">Background Width</Label>
             <Input
               id="backgroundWidth"
               type="number"
@@ -352,11 +316,7 @@ function loadMapMetadata(metadata_file: File) {
           </div>
 
           <div class="grid gap-2">
-            <HoverCard :open-delay="2000">
-              <HoverCardTrigger>
-                <Label for="backgroundHeight">Background Height</Label>
-              </HoverCardTrigger>
-            </HoverCard>
+            <Label for="backgroundHeight">Background Height</Label>
             <Input
               id="backgroundHeight"
               type="number"

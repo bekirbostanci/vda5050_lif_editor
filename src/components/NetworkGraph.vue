@@ -43,8 +43,14 @@ const sideBarNodeController = new SideBarNodeController(
 const sideBarStationController = new SideBarStationController(layoutController);
 props.topBarController.layoutController = layoutController;
 
+// Track zoom level for dynamic grid
+const zoomLevel = ref<number>(200);
+
 defineExpose({
   layoutController,
+  sideBarController,
+  sideBarNodeController,
+  sideBarStationController,
 });
 
 const eventHandlers: EventHandlers = {
@@ -143,8 +149,39 @@ const visibleEdges = computed(() => {
   return {};
 });
 
+// Calculate grid interval based on zoom level
+// When zoomed in (higher zoom level), use smaller intervals for finer grid
+// When zoomed out (lower zoom level), use larger intervals for coarser grid
+function calculateGridInterval(zoom: number): number {
+  // Base calculation: interval decreases as zoom increases
+  // Use powers of 2 for nice round numbers
+  const baseInterval = 100 / zoom;
+
+  // Round to nearest power of 2 interval for cleaner appearance
+  // Common intervals: 0.1, 0.25, 0.5, 1, 2, 4, 8, 16, 32, etc.
+  const intervals = [0.1, 0.25, 0.5, 1, 2, 4, 8, 16, 32, 64];
+
+  // Find the closest interval
+  let closestInterval = intervals[0];
+  for (const interval of intervals) {
+    if (
+      Math.abs(interval - baseInterval) <
+      Math.abs(closestInterval - baseInterval)
+    ) {
+      closestInterval = interval;
+    }
+  }
+
+  return closestInterval;
+}
+
 // Computed property for graph configuration with dynamic label visibility and animation
 const dynamicConfigs = computed(() => {
+  // Use dynamic grid interval if enabled, otherwise use static interval from config
+  const gridInterval = props.topBarController.dynamicGrid.value
+    ? calculateGridInterval(zoomLevel.value)
+    : configs.view.grid.interval;
+
   return {
     ...configs,
     node: {
@@ -170,6 +207,7 @@ const dynamicConfigs = computed(() => {
       grid: {
         ...configs.view.grid,
         visible: props.topBarController.showGrid.value,
+        interval: gridInterval,
       },
     },
   };
@@ -184,147 +222,159 @@ const dynamicConfigs = computed(() => {
     <vue-json-pretty :data="layoutController.ros" />
   </div>
   <div class="page" v-else>
-    <ResizablePanelGroup
-      id="sidebar"
-      :direction="getWindowWidth() < 768 ? 'vertical' : 'horizontal'"
-    >
-      <ResizablePanel
-        style="min-width: 280px"
-        id=" demo-panel-1"
-        :default-size="15"
+    <div class="flex h-full" style="flex-direction: row">
+      <div
+        class="sidebar-left hidden md:flex"
+        style="
+          width: 280px;
+          flex-shrink: 0;
+          height: 100%;
+          overflow: hidden;
+          flex-direction: column;
+          border-right: 1px solid hsl(var(--border));
+        "
       >
         <SideBar
           class="p-6"
+          style="height: 100%; width: 100%; overflow: hidden"
           :layout="layoutController"
           :sideBar="sideBarController"
           :side-bar-node="sideBarNodeController"
           :side-bar-station="sideBarStationController"
         />
-      </ResizablePanel>
-      <ResizableHandle id="handle-1" with-handle />
-      <ResizablePanel id="network-graph" :default-size="60">
-        <div class="graph flex items-center justify-center">
-          <v-network-graph
-            ref="graph"
-            class="graph"
-            zoom-level="200"
-            :nodes="visibleNodes"
-            :edges="visibleEdges"
-            v-model:layouts="layoutController.layouts"
-            :configs="dynamicConfigs"
-            v-model:selected-nodes="sideBarController.selectedNodes.value"
-            :layers="layers"
-            v-model:selected-edges="sideBarController.selectedEdges.value"
-            :event-handlers="eventHandlers"
-          >
-            <template #map v-if="layoutController.backgroundImage.value.image">
-              <image
-                :href="layoutController.backgroundImage.value.image"
-                :x="layoutController.backgroundImage.value.x"
-                :y="layoutController.backgroundImage.value.y"
-                :width="layoutController.backgroundImage.value.width + 'px'"
-                :height="layoutController.backgroundImage.value.height + 'px'"
-              />
-            </template>
-            <template #edge-label="{edge, ...slotProps}">
-              <v-edge-label
-                v-if="dynamicConfigs.edge.label.visible"
-                :text="edge.vda5050Edge.edgeName"
-                align="center"
-                vertical-align="above"
-                v-bind="slotProps"
-              />
-            </template>
-          </v-network-graph>
-        </div>
-      </ResizablePanel>
-      <ResizableHandle id="handle-2" with-handle />
-      <ResizablePanel
-        style="min-width: 280px"
-        v-if="sideBarController.toolState.value != ToolState.empty"
-        id="sidebar-extra"
-        :default-size="20"
+      </div>
+      <ResizablePanelGroup
+        id="sidebar"
+        :direction="getWindowWidth() < 768 ? 'vertical' : 'horizontal'"
+        class="flex-1"
       >
-        <div
-          class="p-6"
-          v-if="sideBarController.toolState.value == ToolState.createNode"
+        <ResizablePanel id="network-graph" :default-size="60">
+          <div class="graph flex items-center justify-center">
+            <v-network-graph
+              ref="graph"
+              class="graph"
+              v-model:zoom-level="zoomLevel"
+              :nodes="visibleNodes"
+              :edges="visibleEdges"
+              v-model:layouts="layoutController.layouts"
+              :configs="dynamicConfigs"
+              v-model:selected-nodes="sideBarController.selectedNodes.value"
+              :layers="layers"
+              v-model:selected-edges="sideBarController.selectedEdges.value"
+              :event-handlers="eventHandlers"
+            >
+              <template
+                #map
+                v-if="layoutController.backgroundImage.value.image"
+              >
+                <image
+                  :href="layoutController.backgroundImage.value.image"
+                  :x="layoutController.backgroundImage.value.x"
+                  :y="layoutController.backgroundImage.value.y"
+                  :width="layoutController.backgroundImage.value.width + 'px'"
+                  :height="layoutController.backgroundImage.value.height + 'px'"
+                />
+              </template>
+              <template #edge-label="{edge, ...slotProps}">
+                <v-edge-label
+                  v-if="dynamicConfigs.edge.label.visible"
+                  :text="edge.vda5050Edge.edgeName"
+                  align="center"
+                  vertical-align="above"
+                  v-bind="slotProps"
+                />
+              </template>
+            </v-network-graph>
+          </div>
+        </ResizablePanel>
+        <ResizableHandle id="handle-2" with-handle />
+        <ResizablePanel
+          style="min-width: 280px"
+          v-if="sideBarController.toolState.value != ToolState.empty"
+          id="sidebar-extra"
+          :default-size="20"
         >
-          <span
-            @click=""
-            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          <div
+            class="p-6"
+            v-if="sideBarController.toolState.value == ToolState.createNode"
           >
-            Create Node
-          </span>
-          <Separator class="mt-3 mb-3" orientation="horizontal" />
-          <SideBarNode
-            :layout="layoutController"
-            :sidebar="sideBarController"
-            :side-bar-node="sideBarNodeController"
-          />
-        </div>
-        <div
-          class="p-6"
-          v-if="sideBarController.toolState.value == ToolState.selectNode"
-        >
-          <span
-            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            <span
+              @click=""
+              class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Create Node
+            </span>
+            <Separator class="mt-3 mb-3" orientation="horizontal" />
+            <SideBarNode
+              :layout="layoutController"
+              :sidebar="sideBarController"
+              :side-bar-node="sideBarNodeController"
+            />
+          </div>
+          <div
+            class="p-6"
+            v-if="sideBarController.toolState.value == ToolState.selectNode"
           >
-            Edit Node
-          </span>
-          <Separator class="mt-3 mb-3" orientation="horizontal" />
-          <SideBarNode
-            :layout="layoutController"
-            :sidebar="sideBarController"
-            :side-bar-node="sideBarNodeController"
-          />
-        </div>
-        <div
-          class="p-6"
-          v-if="sideBarController.toolState.value == ToolState.selectEdge"
-        >
-          <span
-            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            <span
+              class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Edit Node
+            </span>
+            <Separator class="mt-3 mb-3" orientation="horizontal" />
+            <SideBarNode
+              :layout="layoutController"
+              :sidebar="sideBarController"
+              :side-bar-node="sideBarNodeController"
+            />
+          </div>
+          <div
+            class="p-6"
+            v-if="sideBarController.toolState.value == ToolState.selectEdge"
           >
-            Edit Edge
-          </span>
-          <Separator class="mt-3 mb-3" orientation="horizontal" />
-          <SideBarEdge
-            :layout="layoutController"
-            :sidebar="sideBarController"
-            :side-bar-node="sideBarNodeController"
-          />
-        </div>
-        <div
-          class="p-6"
-          v-if="sideBarController.toolState.value == ToolState.createStation"
-        >
-          <span
-            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            <span
+              class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Edit Edge
+            </span>
+            <Separator class="mt-3 mb-3" orientation="horizontal" />
+            <SideBarEdge
+              :layout="layoutController"
+              :sidebar="sideBarController"
+              :side-bar-node="sideBarNodeController"
+            />
+          </div>
+          <div
+            class="p-6"
+            v-if="sideBarController.toolState.value == ToolState.createStation"
           >
-            Create Station
-          </span>
-          <Separator class="mt-3 mb-3" orientation="horizontal" />
-          <SideBarStation
-            :sidebar-station="sideBarStationController"
-            :layout="layoutController"
-            :sidebar="sideBarController"
-            :side-bar-node="sideBarNodeController"
-          />
-        </div>
-        <div
-          class="p-6"
-          v-if="sideBarController.toolState.value == ToolState.crudAction"
-        >
-          <span
-            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            <span
+              class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Create Station
+            </span>
+            <Separator class="mt-3 mb-3" orientation="horizontal" />
+            <SideBarStation
+              :sidebar-station="sideBarStationController"
+              :layout="layoutController"
+              :sidebar="sideBarController"
+              :side-bar-node="sideBarNodeController"
+            />
+          </div>
+          <div
+            class="p-6"
+            v-if="sideBarController.toolState.value == ToolState.crudAction"
           >
-            Action
-          </span>
-          <Separator class="mt-3 mb-3" orientation="horizontal" />
-          <SideBarAction :layout="layoutController"></SideBarAction>
-        </div>
-      </ResizablePanel>
-    </ResizablePanelGroup>
+            <span
+              class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Action
+            </span>
+            <Separator class="mt-3 mb-3" orientation="horizontal" />
+            <SideBarAction :layout="layoutController"></SideBarAction>
+          </div>
+        </ResizablePanel>
+      </ResizablePanelGroup>
+    </div>
   </div>
 </template>
 
@@ -342,7 +392,7 @@ const dynamicConfigs = computed(() => {
 
 @media (min-width: 768px) {
   .page {
-    height: calc(100svh - 74px);
+    height: calc(100svh - 104px);
   }
 }
 </style>

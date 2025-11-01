@@ -10,7 +10,6 @@ import {Switch} from '@/components/ui/switch';
 import {SideBarController} from '@/controllers/sideBar.controller';
 import {LayoutController} from '@/controllers/layout.controller';
 
-import {HoverCard, HoverCardContent, HoverCardTrigger} from './ui/hover-card';
 import {
   ComboboxAnchor,
   ComboboxInput,
@@ -60,7 +59,13 @@ const filteredFrameworks = computed(() =>
 <template>
   <div class="grid gap-2 mt-2">
     <div class="flex items-center">
-      <Label for="nodeId">Node Id</Label>
+      <Label
+        for="nodeId"
+        :class="
+          props.sideBarNode.createFast.value ? 'text-muted-foreground' : ''
+        "
+        >Node Id</Label
+      >
       <div class="inline-flex ml-auto">
         <Label
           :class="
@@ -95,13 +100,6 @@ const filteredFrameworks = computed(() =>
         />
       </div>
     </div>
-    <HoverCard :open-delay="2000">
-      <HoverCardTrigger> </HoverCardTrigger>
-      <HoverCardContent>
-        Unique identifier of the node across all layouts contained in this LIF
-        file.
-      </HoverCardContent>
-    </HoverCard>
     <Input
       id="nodeId"
       :disabled="props.sideBarNode.createFast.value"
@@ -109,15 +107,11 @@ const filteredFrameworks = computed(() =>
     />
   </div>
   <div class="grid gap-2 mt-2">
-    <HoverCard :open-delay="2000">
-      <HoverCardTrigger>
-        <Label for="nodeName">Node Name</Label>
-      </HoverCardTrigger>
-      <HoverCardContent
-        >Unique identifier of the node across all layouts contained in this LIF
-        file.
-      </HoverCardContent>
-    </HoverCard>
+    <Label
+      for="nodeName"
+      :class="props.sideBarNode.createFast.value ? 'text-muted-foreground' : ''"
+      >Node Name</Label
+    >
     <Input
       id="nodeName"
       :disabled="props.sideBarNode.createFast.value"
@@ -125,11 +119,11 @@ const filteredFrameworks = computed(() =>
     />
   </div>
   <div class="grid gap-2 mt-2">
-    <HoverCard :close-delay="0" :open-delay="2000">
-      <HoverCardTrigger>
-        <Label for="nodeDescription">Node Description</Label>
-      </HoverCardTrigger>
-    </HoverCard>
+    <Label
+      for="nodeDescription"
+      :class="props.sideBarNode.createFast.value ? 'text-muted-foreground' : ''"
+      >Node Description</Label
+    >
     <Input
       id="nodeDescription"
       :disabled="props.sideBarNode.createFast.value"
@@ -179,19 +173,11 @@ const filteredFrameworks = computed(() =>
     </div>
   </div>
   <div class="grid gap-2 mt-2">
-    <HoverCard :open-delay="2000">
-      <HoverCardTrigger>
-        <Label for="mapId">Map Id</Label>
-      </HoverCardTrigger>
-      <HoverCardContent>
-        Unique identification of the map in which the node oder node‘s position
-        is referenced. Each map has the same project specific global origin of
-        coordinates. When a vehicle uses an elevator, e.g., leading from a
-        departure floor to a target floor, it will disappear off the map of the
-        departure floor and spawn in the related lift node on the map of the
-        target floor.</HoverCardContent
-      >
-    </HoverCard>
+    <Label
+      for="mapId"
+      :class="props.sideBarNode.createFast.value ? 'text-muted-foreground' : ''"
+      >Map Id</Label
+    >
     <Input
       id="mapId"
       :disabled="props.sideBarNode.createFast.value"
@@ -288,7 +274,9 @@ const filteredFrameworks = computed(() =>
     </TagsInput>
   </div>
   <div class="grid gap-2 mt-4">
-    <Label for="mapId">Vehicle Node Properties</Label>
+    <Label for="mapId" class="text-muted-foreground"
+      >Vehicle Node Properties</Label
+    >
     <TagsInput
       disabled
       v-model="props.sideBarNode.newNode.value.vehicleTypeNodeProperties"

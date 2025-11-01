@@ -9,7 +9,6 @@ import {Button} from '@/components/ui/button';
 import {SideBarController} from '@/controllers/sideBar.controller';
 import {LayoutController} from '@/controllers/layout.controller';
 
-import {HoverCard, HoverCardContent, HoverCardTrigger} from './ui/hover-card';
 import {
   ComboboxAnchor,
   ComboboxInput,
@@ -60,46 +59,21 @@ const filteredFrameworks = computed(() =>
 <template>
   <div>
     <div class="grid gap-2 mt-2">
-      <div class="flex items-center">
-        <Label for="stationId">Station Id</Label>
-      </div>
-      <HoverCard :open-delay="2000">
-        <HoverCardTrigger> </HoverCardTrigger>
-        <HoverCardContent>
-          Unique identifier of the node across all layouts contained in this LIF
-          file.
-        </HoverCardContent>
-      </HoverCard>
+      <Label for="stationId">Station Id</Label>
       <Input
         id="stationId"
         v-model="props.sidebarStation.newStation.value.stationId"
       />
     </div>
     <div class="grid gap-2 mt-2">
-      <HoverCard :open-delay="2000">
-        <HoverCardTrigger>
-          <Label for="stationName">Station Name</Label>
-        </HoverCardTrigger>
-        <HoverCardContent
-          >Unique identifier of the node across all layouts contained in this
-          LIF file.
-        </HoverCardContent>
-      </HoverCard>
+      <Label for="stationName">Station Name</Label>
       <Input
         id="stationName"
         v-model="props.sidebarStation.newStation.value.stationName"
       />
     </div>
     <div class="grid gap-2 mt-2">
-      <HoverCard :close-delay="0" :open-delay="2000">
-        <HoverCardTrigger>
-          <Label for="stationDescription">Station Description</Label>
-        </HoverCardTrigger>
-        <HoverCardContent
-          >Brief description of the node. This should only ever be for
-          visualization or diagnostic purposes.
-        </HoverCardContent>
-      </HoverCard>
+      <Label for="stationDescription">Station Description</Label>
       <Input
         id="stationDescription"
         v-model="props.sidebarStation.newStation.value.stationDescription"
@@ -170,19 +144,7 @@ const filteredFrameworks = computed(() =>
       </div>
     </div>
     <div class="grid gap-2 mt-2">
-      <HoverCard :open-delay="2000">
-        <HoverCardTrigger>
-          <Label for="station-height">Station Height</Label>
-        </HoverCardTrigger>
-        <HoverCardContent>
-          Unique identification of the map in which the node oder node‘s
-          position is referenced. Each map has the same project specific global
-          origin of coordinates. When a vehicle uses an elevator, e.g., leading
-          from a departure floor to a target floor, it will disappear off the
-          map of the departure floor and spawn in the related lift node on the
-          map of the target floor.</HoverCardContent
-        >
-      </HoverCard>
+      <Label for="station-height">Station Height</Label>
       <Input
         id="station-height"
         v-model="props.sidebarStation.newStation.value.stationHeight"

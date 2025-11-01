@@ -103,6 +103,10 @@ const openHelp = () => {
         <MenubarItem @click="props.topBarController.toggleGrid()">
           {{ props.topBarController.showGrid.value ? 'Hide' : 'Show' }} Grid
         </MenubarItem>
+        <MenubarItem @click="props.topBarController.toggleDynamicGrid()">
+          {{ props.topBarController.dynamicGrid.value ? 'Disable' : 'Enable' }}
+          Dynamic Grid
+        </MenubarItem>
       </MenubarContent>
     </MenubarMenu>
     <MenubarMenu>

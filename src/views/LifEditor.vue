@@ -2,6 +2,7 @@
 import {TopBarController} from '@/controllers/topBar.controller';
 import NetworkGraph from '../components/NetworkGraph.vue';
 import TopBar from '@/components/TopBar.vue';
+import ToolBar from '@/components/ToolBar.vue';
 import FooterBar from '@/components/FooterBar.vue';
 import {ref} from 'vue';
 
@@ -12,6 +13,12 @@ const networkGraphRef = ref();
 <template>
   <div class="h-full flex-col md:flex">
     <TopBar :top-bar-controller="topBarController"></TopBar>
+    <ToolBar
+      :layout="networkGraphRef?.layoutController"
+      :sideBar="networkGraphRef?.sideBarController"
+      :sideBarNode="networkGraphRef?.sideBarNodeController"
+      :sideBarStation="networkGraphRef?.sideBarStationController"
+    ></ToolBar>
     <div class="h-full flex-1">
       <NetworkGraph
         ref="networkGraphRef"
