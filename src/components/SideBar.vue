@@ -66,16 +66,6 @@ const allPaths = computed(() => {
   }));
 });
 
-// Get all layouts
-const allLayouts = computed(() => {
-  return props.layout.vdaLayouts.map(layout => ({
-    id: layout.layoutId,
-    name: layout.layoutName,
-    description: layout.layoutDescription,
-    type: 'layout' as const,
-  }));
-});
-
 // Filter function
 const filterItems = <
   T extends {id: string; name: string; description: string; type: string},
@@ -94,7 +84,6 @@ const filterItems = <
   );
 };
 
-const filteredLayouts = computed(() => filterItems(allLayouts.value));
 const filteredNodes = computed(() => filterItems(allNodes.value));
 const filteredPaths = computed(() => filterItems(allPaths.value));
 const filteredStations = computed(() => filterItems(allStations.value));
@@ -195,43 +184,6 @@ function handleClearSearch() {
   searchQuery.value = '';
   visibleItemsLimit.value = Number.MAX_SAFE_INTEGER; // Show all items
 }
-
-// Handle back button - clear search and reset selection
-function handleBack() {
-  searchQuery.value = '';
-  props.sideBar.selectedNodes.value = [];
-  props.sideBar.selectedEdges.value = [];
-  props.sideBar.selectedStations.value = [];
-  props.sideBar.setResetStates();
-  visibleItemsLimit.value = Number.MAX_SAFE_INTEGER; // Show all items
-}
-
-const hasSelection = computed(() => {
-  // Check search query
-  if (searchQuery.value && searchQuery.value.trim().length > 0) {
-    return true;
-  }
-  // Check selections
-  if (
-    props.sideBar.selectedNodes.value &&
-    props.sideBar.selectedNodes.value.length > 0
-  ) {
-    return true;
-  }
-  if (
-    props.sideBar.selectedEdges.value &&
-    props.sideBar.selectedEdges.value.length > 0
-  ) {
-    return true;
-  }
-  if (
-    props.sideBar.selectedStations.value &&
-    props.sideBar.selectedStations.value.length > 0
-  ) {
-    return true;
-  }
-  return false;
-});
 
 // Check if there are truly no items on the map (when not searching)
 const hasNoItemsOnMap = computed(() => {

@@ -1,4 +1,4 @@
-import {reactive, ref} from 'vue';
+import {ref} from 'vue';
 import {ExtendedNodes} from '@/types/extendedNode';
 import {ExtendedEdges} from '@/types/extendedEdge';
 import * as vNG from 'v-network-graph';

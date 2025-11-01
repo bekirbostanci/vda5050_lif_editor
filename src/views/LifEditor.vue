@@ -52,7 +52,7 @@ const handleKeyDown = (event: KeyboardEvent) => {
 
       // Delete selected edges first
       if (sideBarController.selectedEdges.value.length > 0) {
-        sideBarController.selectedEdges.value.forEach(edgeId => {
+        sideBarController.selectedEdges.value.forEach((edgeId: string) => {
           layoutController.deleteEdge(edgeId);
         });
         sideBarController.selectedEdges.value = [];
@@ -60,7 +60,7 @@ const handleKeyDown = (event: KeyboardEvent) => {
 
       // Delete selected nodes (this will also delete connected edges)
       if (sideBarController.selectedNodes.value.length > 0) {
-        sideBarController.selectedNodes.value.forEach(nodeId => {
+        sideBarController.selectedNodes.value.forEach((nodeId: string) => {
           layoutController.deleteNode(nodeId);
         });
         sideBarController.selectedNodes.value = [];
@@ -68,7 +68,7 @@ const handleKeyDown = (event: KeyboardEvent) => {
 
       // Delete selected stations
       if (sideBarController.selectedStations.value.length > 0) {
-        sideBarController.selectedStations.value.forEach(stationId => {
+        sideBarController.selectedStations.value.forEach((stationId: string) => {
           layoutController.deleteNode(stationId);
         });
         sideBarController.selectedStations.value = [];
