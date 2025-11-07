@@ -228,7 +228,6 @@ const dynamicConfigs = computed(() => {
         style="
           width: 280px;
           flex-shrink: 0;
-          height: 100%;
           overflow: hidden;
           flex-direction: column;
           border-right: 1px solid hsl(var(--border));
@@ -393,7 +392,7 @@ const dynamicConfigs = computed(() => {
 
 @media (min-width: 768px) {
   .page {
-    height: calc(100svh - 104px);
+    height: calc(100svh - 130px);
   }
 }
 </style>

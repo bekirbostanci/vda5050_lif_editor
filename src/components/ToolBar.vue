@@ -109,7 +109,9 @@ const handleDelete = () => {
 </script>
 
 <template>
-  <div class="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 border-b bg-white z-10 overflow-x-auto">
+  <div
+    class="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 border-b bg-white z-10 overflow-x-auto"
+  >
     <!-- Pointer button -->
     <div class="flex items-center gap-1 shrink-0">
       <Button
@@ -233,10 +235,22 @@ const handleDelete = () => {
         />
       </template>
       <template v-else>
-        <Button variant="outline" size="icon" class="h-8 w-8 sm:h-10 sm:w-10" title="Create Layout" disabled>
+        <Button
+          variant="outline"
+          size="icon"
+          class="h-8 w-8 sm:h-10 sm:w-10"
+          title="Create Layout"
+          disabled
+        >
           <Icon icon="ph:plus-circle" :height="18" class="sm:h-5" />
         </Button>
-        <Button variant="outline" size="icon" class="h-8 w-8 sm:h-10 sm:w-10" title="Edit Layout" disabled>
+        <Button
+          variant="outline"
+          size="icon"
+          class="h-8 w-8 sm:h-10 sm:w-10"
+          title="Edit Layout"
+          disabled
+        >
           <Icon icon="ph:pencil" :height="18" class="sm:h-5" />
         </Button>
       </template>
@@ -255,13 +269,27 @@ const handleDelete = () => {
             title="Meta Information"
             :disabled="!props.sideBar || !props.sideBar.selectedLayoutId.value"
           >
-            <Icon icon="material-symbols-light:info-outline" :height="18" class="sm:h-5" />
+            <Icon
+              icon="material-symbols-light:info-outline"
+              :height="18"
+              class="sm:h-5"
+            />
           </Button>
         </MetaInformationDialog>
       </template>
       <template v-else>
-        <Button variant="outline" size="icon" class="h-8 w-8 sm:h-10 sm:w-10" title="Meta Information" disabled>
-          <Icon icon="material-symbols-light:info-outline" :height="18" class="sm:h-5" />
+        <Button
+          variant="outline"
+          size="icon"
+          class="h-8 w-8 sm:h-10 sm:w-10"
+          title="Meta Information"
+          disabled
+        >
+          <Icon
+            icon="material-symbols-light:info-outline"
+            :height="18"
+            class="sm:h-5"
+          />
         </Button>
       </template>
     </div>

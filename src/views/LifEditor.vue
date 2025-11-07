@@ -68,9 +68,11 @@ const handleKeyDown = (event: KeyboardEvent) => {
 
       // Delete selected stations
       if (sideBarController.selectedStations.value.length > 0) {
-        sideBarController.selectedStations.value.forEach((stationId: string) => {
-          layoutController.deleteNode(stationId);
-        });
+        sideBarController.selectedStations.value.forEach(
+          (stationId: string) => {
+            layoutController.deleteNode(stationId);
+          },
+        );
         sideBarController.selectedStations.value = [];
       }
     }

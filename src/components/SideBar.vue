@@ -66,6 +66,16 @@ const allPaths = computed(() => {
   }));
 });
 
+// Get all actions
+const allActions = computed(() => {
+  return props.layout.actions.map(action => ({
+    id: action.actionType,
+    name: action.actionType,
+    description: action.actionDescription,
+    type: 'action' as const,
+  }));
+});
+
 // Filter function
 const filterItems = <
   T extends {id: string; name: string; description: string; type: string},
@@ -87,6 +97,7 @@ const filterItems = <
 const filteredNodes = computed(() => filterItems(allNodes.value));
 const filteredPaths = computed(() => filterItems(allPaths.value));
 const filteredStations = computed(() => filterItems(allStations.value));
+const filteredActions = computed(() => filterItems(allActions.value));
 
 // Combine all items for virtual scrolling
 const allItems = computed(() => {
@@ -94,7 +105,7 @@ const allItems = computed(() => {
     id: string;
     name: string;
     description: string;
-    type: 'layout' | 'node' | 'path' | 'station';
+    type: 'layout' | 'node' | 'path' | 'station' | 'action';
   }> = [];
 
   // Layouts removed from search list
@@ -111,6 +122,10 @@ const allItems = computed(() => {
     items.push({...station, type: 'station' as const});
   });
 
+  filteredActions.value.forEach(action => {
+    items.push({...action, type: 'action' as const});
+  });
+
   return items;
 });
 
@@ -125,10 +140,12 @@ const groupedVisibleItems = computed(() => {
     nodes: typeof filteredNodes.value;
     paths: typeof filteredPaths.value;
     stations: typeof filteredStations.value;
+    actions: typeof filteredActions.value;
   } = {
     nodes: [],
     paths: [],
     stations: [],
+    actions: [],
   };
 
   visibleItems.value.forEach(item => {
@@ -138,6 +155,8 @@ const groupedVisibleItems = computed(() => {
       groups.paths.push(item as any);
     } else if (item.type === 'station') {
       groups.stations.push(item as any);
+    } else if (item.type === 'action') {
+      groups.actions.push(item as any);
     }
   });
 
@@ -193,7 +212,8 @@ const hasNoItemsOnMap = computed(() => {
   return (
     allStations.value.length === 0 &&
     allNodes.value.length === 0 &&
-    allPaths.value.length === 0
+    allPaths.value.length === 0 &&
+    allActions.value.length === 0
   );
 });
 
@@ -213,7 +233,7 @@ onUnmounted(() => {
 function handleSelect(item: {
   id: string;
   name: string;
-  type: 'layout' | 'node' | 'path' | 'station';
+  type: 'layout' | 'node' | 'path' | 'station' | 'action';
 }) {
   if (item.type === 'layout') {
     props.layout.changeLayout(item.id);
@@ -234,6 +254,10 @@ function handleSelect(item: {
       props.sideBar.setSelectStationTool();
       props.sideBarStation.updateStation(item.id);
     }
+  } else if (item.type === 'action') {
+    // For actions, we might want to open the action editor or just show it
+    // For now, just set the search query
+    props.sideBar.setCrudAction();
   }
   // Set search query to item name so it displays nicely instead of the long path string
   searchQuery.value = item.name;
@@ -355,9 +379,14 @@ function handleSelect(item: {
               @select="handleSelect(node)"
               class="w-full"
             >
-              <div class="flex flex-col w-full">
-                <span class="font-medium">{{ node.name }}</span>
-                <span class="text-xs text-muted-foreground">{{ node.id }}</span>
+              <div class="flex items-center gap-2 w-full">
+                <Icon icon="ph:circle" :height="16" class="flex-shrink-0" />
+                <div class="flex flex-col flex-1 min-w-0">
+                  <span class="font-medium">{{ node.name }}</span>
+                  <span class="text-xs text-muted-foreground">{{
+                    node.id
+                  }}</span>
+                </div>
               </div>
             </CommandItem>
           </CommandGroup>
@@ -373,9 +402,18 @@ function handleSelect(item: {
               @select="handleSelect(path)"
               class="w-full"
             >
-              <div class="flex flex-col w-full">
-                <span class="font-medium">{{ path.name }}</span>
-                <span class="text-xs text-muted-foreground">{{ path.id }}</span>
+              <div class="flex items-center gap-2 w-full">
+                <Icon
+                  icon="ph:arrow-right"
+                  :height="16"
+                  class="flex-shrink-0"
+                />
+                <div class="flex flex-col flex-1 min-w-0">
+                  <span class="font-medium">{{ path.name }}</span>
+                  <span class="text-xs text-muted-foreground">{{
+                    path.id
+                  }}</span>
+                </div>
               </div>
             </CommandItem>
           </CommandGroup>
@@ -391,11 +429,37 @@ function handleSelect(item: {
               @select="handleSelect(station)"
               class="w-full"
             >
-              <div class="flex flex-col w-full">
-                <span class="font-medium">{{ station.name }}</span>
-                <span class="text-xs text-muted-foreground">{{
-                  station.id
-                }}</span>
+              <div class="flex items-center gap-2 w-full">
+                <Icon icon="ph:square" :height="16" class="flex-shrink-0" />
+                <div class="flex flex-col flex-1 min-w-0">
+                  <span class="font-medium">{{ station.name }}</span>
+                  <span class="text-xs text-muted-foreground">{{
+                    station.id
+                  }}</span>
+                </div>
+              </div>
+            </CommandItem>
+          </CommandGroup>
+
+          <CommandGroup
+            heading="Actions"
+            v-if="groupedVisibleItems.actions.length > 0"
+          >
+            <CommandItem
+              v-for="action in groupedVisibleItems.actions"
+              :key="action.id"
+              :value="action.name"
+              @select="handleSelect(action)"
+              class="w-full"
+            >
+              <div class="flex items-center gap-2 w-full">
+                <Icon icon="ph:lightning" :height="16" class="flex-shrink-0" />
+                <div class="flex flex-col flex-1 min-w-0">
+                  <span class="font-medium">{{ action.name }}</span>
+                  <span class="text-xs text-muted-foreground">{{
+                    action.description || action.id
+                  }}</span>
+                </div>
               </div>
             </CommandItem>
           </CommandGroup>
