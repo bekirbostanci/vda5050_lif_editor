@@ -39,6 +39,11 @@ const handleCreateAction = () => {
   props.sideBar.setCrudAction();
 };
 
+const handlePointer = () => {
+  if (!props.sideBar) return;
+  props.sideBar.setPointerState();
+};
+
 const openCreateLayout = () => {
   layoutDialogMode.value = 'create';
   layoutDialogOpen.value = true;
@@ -105,6 +110,22 @@ const handleDelete = () => {
 
 <template>
   <div class="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 border-b bg-white z-10 overflow-x-auto">
+    <!-- Pointer button -->
+    <div class="flex items-center gap-1 shrink-0">
+      <Button
+        variant="outline"
+        size="icon"
+        class="h-8 w-8 sm:h-10 sm:w-10"
+        title="Pointer"
+        :disabled="!props.sideBar || !props.sideBar.selectedLayoutId.value"
+        @click="handlePointer"
+      >
+        <Icon icon="ph:cursor" :height="18" class="sm:h-5" />
+      </Button>
+    </div>
+
+    <div class="w-px h-5 sm:h-6 bg-border mx-0.5 sm:mx-1 shrink-0"></div>
+
     <!-- Node, Station, Action buttons -->
     <div class="flex items-center gap-1 shrink-0">
       <Button
