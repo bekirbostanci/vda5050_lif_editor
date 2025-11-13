@@ -9,6 +9,7 @@ import {LayoutController} from '@/controllers/layout.controller';
 import {SideBarController} from '@/controllers/sideBar.controller';
 import {SideBarNodeController} from '@/controllers/sideBarNode.controller';
 import {SideBarStationController} from '@/controllers/sideBarStation.controller';
+import {ToolState} from '@/types/toolState';
 
 const props = defineProps<{
   layout?: LayoutController;
@@ -79,6 +80,22 @@ const hasSelection = computed(() => {
   );
 });
 
+const isPointerActive = computed(() => {
+  return props.sideBar?.toolState.value === ToolState.empty;
+});
+
+const isNodeActive = computed(() => {
+  return props.sideBar?.toolState.value === ToolState.createNode;
+});
+
+const isStationActive = computed(() => {
+  return props.sideBar?.toolState.value === ToolState.createStation;
+});
+
+const isActionActive = computed(() => {
+  return props.sideBar?.toolState.value === ToolState.crudAction;
+});
+
 const handleDelete = () => {
   if (!props.layout || !props.sideBar) return;
 
@@ -115,9 +132,9 @@ const handleDelete = () => {
     <!-- Pointer button -->
     <div class="flex items-center gap-1 shrink-0">
       <Button
-        variant="outline"
+        variant="ghost"
         size="icon"
-        class="h-8 w-8 sm:h-10 sm:w-10"
+        :class="['h-8 w-8 sm:h-10 sm:w-10', isPointerActive ? 'bg-accent' : '']"
         title="Pointer"
         :disabled="!props.sideBar || !props.sideBar.selectedLayoutId.value"
         @click="handlePointer"
@@ -131,9 +148,9 @@ const handleDelete = () => {
     <!-- Node, Station, Action buttons -->
     <div class="flex items-center gap-1 shrink-0">
       <Button
-        variant="outline"
+        variant="ghost"
         size="icon"
-        class="h-8 w-8 sm:h-10 sm:w-10"
+        :class="['h-8 w-8 sm:h-10 sm:w-10', isNodeActive ? 'bg-accent' : '']"
         title="Node"
         :disabled="!props.sideBar || !props.sideBar.selectedLayoutId.value"
         @click="handleCreateNode"
@@ -141,9 +158,9 @@ const handleDelete = () => {
         <Icon icon="ph:circle" :height="18" class="sm:h-5" />
       </Button>
       <Button
-        variant="outline"
+        variant="ghost"
         size="icon"
-        class="h-8 w-8 sm:h-10 sm:w-10"
+        :class="['h-8 w-8 sm:h-10 sm:w-10', isStationActive ? 'bg-accent' : '']"
         title="Station"
         :disabled="!props.sideBar || !props.sideBar.selectedLayoutId.value"
         @click="handleCreateStation"
@@ -151,9 +168,9 @@ const handleDelete = () => {
         <Icon icon="ph:square" :height="18" class="sm:h-5" />
       </Button>
       <Button
-        variant="outline"
+        variant="ghost"
         size="icon"
-        class="h-8 w-8 sm:h-10 sm:w-10"
+        :class="['h-8 w-8 sm:h-10 sm:w-10', isActionActive ? 'bg-accent' : '']"
         title="Action"
         :disabled="!props.sideBar || !props.sideBar.selectedLayoutId.value"
         @click="handleCreateAction"
@@ -167,7 +184,7 @@ const handleDelete = () => {
     <!-- Undo/Redo/Delete buttons -->
     <div class="flex items-center gap-1 shrink-0">
       <Button
-        variant="outline"
+        variant="ghost"
         size="icon"
         class="h-8 w-8 sm:h-10 sm:w-10"
         title="Undo (Ctrl+Z)"
@@ -177,7 +194,7 @@ const handleDelete = () => {
         <Icon icon="ph:arrow-counter-clockwise" :height="18" class="sm:h-5" />
       </Button>
       <Button
-        variant="outline"
+        variant="ghost"
         size="icon"
         class="h-8 w-8 sm:h-10 sm:w-10"
         title="Redo (Ctrl+Y)"
@@ -187,7 +204,7 @@ const handleDelete = () => {
         <Icon icon="ph:arrow-clockwise" :height="18" class="sm:h-5" />
       </Button>
       <Button
-        variant="outline"
+        variant="ghost"
         size="icon"
         class="h-8 w-8 sm:h-10 sm:w-10"
         title="Delete Selected (Del)"
@@ -209,7 +226,7 @@ const handleDelete = () => {
     <div class="flex items-center gap-1 shrink-0">
       <template v-if="props.layout && props.sideBar">
         <Button
-          variant="outline"
+          variant="ghost"
           size="icon"
           class="h-8 w-8 sm:h-10 sm:w-10"
           title="Create Layout"
@@ -218,7 +235,7 @@ const handleDelete = () => {
           <Icon icon="ph:plus-circle" :height="18" class="sm:h-5" />
         </Button>
         <Button
-          variant="outline"
+          variant="ghost"
           size="icon"
           class="h-8 w-8 sm:h-10 sm:w-10"
           title="Edit Layout"
@@ -236,7 +253,7 @@ const handleDelete = () => {
       </template>
       <template v-else>
         <Button
-          variant="outline"
+          variant="ghost"
           size="icon"
           class="h-8 w-8 sm:h-10 sm:w-10"
           title="Create Layout"
@@ -245,7 +262,7 @@ const handleDelete = () => {
           <Icon icon="ph:plus-circle" :height="18" class="sm:h-5" />
         </Button>
         <Button
-          variant="outline"
+          variant="ghost"
           size="icon"
           class="h-8 w-8 sm:h-10 sm:w-10"
           title="Edit Layout"
@@ -263,7 +280,7 @@ const handleDelete = () => {
       <template v-if="props.layout">
         <MetaInformationDialog :layout="props.layout">
           <Button
-            variant="outline"
+            variant="ghost"
             size="icon"
             class="h-8 w-8 sm:h-10 sm:w-10"
             title="Meta Information"
@@ -279,7 +296,7 @@ const handleDelete = () => {
       </template>
       <template v-else>
         <Button
-          variant="outline"
+          variant="ghost"
           size="icon"
           class="h-8 w-8 sm:h-10 sm:w-10"
           title="Meta Information"
