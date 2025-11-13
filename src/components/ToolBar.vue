@@ -85,7 +85,10 @@ const isPointerActive = computed(() => {
 });
 
 const isNodeActive = computed(() => {
-  return props.sideBar?.toolState.value === ToolState.createNode;
+  return (
+    props.sideBar?.toolState.value === ToolState.createNode ||
+    props.sideBar?.toolState.value === ToolState.selectNode
+  );
 });
 
 const isStationActive = computed(() => {
