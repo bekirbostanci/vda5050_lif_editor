@@ -53,7 +53,11 @@ export class SideBarNodeController {
         y: mouseEvent.event.offsetY,
       };
       const svgPoint = this.graph.value.translateFromDomToSvgCoordinates(point);
-      const newNodeId = point.x + '_' + point.y;
+      // Use naming convention: int(x*100)_int(y*100) (always positive)
+      const newNodeId =
+        Math.floor(Math.abs(svgPoint.x * 100)) +
+        '_' +
+        Math.floor(Math.abs(svgPoint.y * 100));
 
       if (
         this.toolController.selectedNodes.value.length > 0 &&

@@ -731,4 +731,205 @@ export class LayoutController {
       this.changeLayout(this.vdaLayouts[0].layoutId);
     }
   }
+
+  convertRosGeoJsonToLif(data: string) {
+    let rosGeoJson: RosGeoJson;
+    try {
+      rosGeoJson = JSON.parse(data);
+    } catch {
+      return;
+    }
+
+    // Validate ROS GeoJSON format
+    if (
+      rosGeoJson.type !== 'FeatureCollection' ||
+      !Array.isArray(rosGeoJson.features)
+    ) {
+      showToast('Error', 'Invalid ROS GeoJSON format');
+      return;
+    }
+
+    // Separate nodes (Point features) and edges (MultiLineString features)
+    const nodeFeatures = rosGeoJson.features.filter(
+      (feature: any) =>
+        feature.geometry?.type === 'Point' &&
+        feature.properties?.id !== undefined,
+    );
+    const edgeFeatures = rosGeoJson.features.filter(
+      (feature: any) =>
+        feature.geometry?.type === 'MultiLineString' &&
+        feature.properties?.startid !== undefined &&
+        feature.properties?.endid !== undefined,
+    );
+
+    // Create index to nodeId mapping
+    // Sort nodes by id to ensure consistent ordering
+    nodeFeatures.sort((a: any, b: any) => a.properties.id - b.properties.id);
+    const indexToNodeId: Record<number, string> = {};
+    const nodes: Node[] = [];
+
+    nodeFeatures.forEach((feature: any) => {
+      const coordinates = feature.geometry.coordinates;
+      // Use same naming convention as fast node create: int(x*100)_int(y*100) (always positive)
+      const nodeId =
+        Math.floor(Math.abs(coordinates[0] * 100)) +
+        '_' +
+        Math.floor(Math.abs(coordinates[1] * 100));
+      indexToNodeId[feature.properties.id] = nodeId;
+
+      const node: Node = {
+        nodeId: nodeId,
+        nodeName: nodeId,
+        nodeDescription: '',
+        mapId: rosGeoJson.name || 'graph',
+        nodePosition: {
+          x: coordinates[0],
+          y: coordinates[1],
+        },
+        vehicleTypeNodeProperties: [],
+      };
+      nodes.push(node);
+    });
+
+    // Create edges from edge features
+    const edges: Edge[] = [];
+    edgeFeatures.forEach((feature: any) => {
+      const startIndex = feature.properties.startid;
+      const endIndex = feature.properties.endid;
+      const startNodeId = indexToNodeId[startIndex];
+      const endNodeId = indexToNodeId[endIndex];
+
+      if (startNodeId && endNodeId) {
+        const edgeId = `${startNodeId}_${endNodeId}`;
+        const edge: Edge = {
+          edgeId: edgeId,
+          edgeName: edgeId,
+          edgeDescription: '',
+          startNodeId: startNodeId,
+          endNodeId: endNodeId,
+          vehicleTypeEdgeProperties: [],
+        };
+        edges.push(edge);
+      }
+    });
+
+    // Create a default layout
+    const layoutName = rosGeoJson.name || 'Imported Layout';
+    const layout: Layout = {
+      layoutId: 'imported',
+      layoutName: layoutName,
+      layoutVersion: '1.0.0',
+      layoutLevelId: '1',
+      layoutDescription: `Imported from ROS GeoJSON: ${layoutName}`,
+      nodes: nodes,
+      edges: edges,
+      stations: [],
+      backgroundImage: {
+        image: '',
+        x: 0,
+        y: 0,
+        width: 10,
+        height: 10,
+        naturalWidth: 10,
+        naturalHeight: 10,
+      },
+    };
+
+    // Create LIF structure
+    const lif: Lif = {
+      metaInformation: {
+        projectIdentification: layoutName,
+        creator: 'ROS GeoJSON Import',
+        exportTimestamp: new Date().toISOString(),
+        lifVersion: '1.0.0',
+      },
+      layouts: [layout],
+    };
+
+    // Set lif meta information
+    this.lif.metaInformation = lif.metaInformation;
+
+    // Reset old layout
+    this.vdaLayouts = lif.layouts;
+    this.oldLayoutId = '';
+
+    // Convert Json to VisualizationLayout
+    this.vdaLayouts.forEach(layout => {
+      const visualizationLayout: VisualizationLayout = {
+        nodes: {},
+        edges: {},
+        layouts: {nodes: {}},
+      };
+      if (layout.nodes) {
+        layout.nodes.forEach(node => {
+          visualizationLayout.nodes[node.nodeId] = {
+            vda5050Node: node,
+            vda5050Station: undefined,
+            draggable: false,
+            name: node.nodeName,
+            color:
+              node.vehicleTypeNodeProperties.length > 0
+                ? COLORS.completeNode
+                : COLORS.incompleteNode,
+
+            type: 'vda5050Node',
+          };
+          visualizationLayout.layouts.nodes[node.nodeId] = {
+            x: node.nodePosition.x,
+            y: -node.nodePosition.y,
+          };
+        });
+      } else {
+        layout.nodes = [];
+      }
+
+      if (layout.stations) {
+        layout.stations.forEach(station => {
+          visualizationLayout.nodes[station.stationId] = {
+            vda5050Node: undefined,
+            vda5050Station: station,
+            draggable: false,
+            name: station.stationName,
+            color:
+              station.interactionNodeIds.length > 0
+                ? COLORS.completeStation
+                : COLORS.incompleteStation,
+            type: 'vda5050Station',
+          };
+          visualizationLayout.layouts.nodes[station.stationId] = {
+            x: station.stationPosition.x,
+            y: -station.stationPosition.y,
+          };
+        });
+      } else {
+        layout.stations = [];
+      }
+
+      if (layout.edges) {
+        layout.edges.forEach(edge => {
+          visualizationLayout.edges[edge.edgeId] = {
+            source: edge.startNodeId,
+            target: edge.endNodeId,
+            color:
+              edge.vehicleTypeEdgeProperties.length > 0
+                ? COLORS.completeEdge
+                : COLORS.incompleteEdge,
+            vda5050Edge: edge,
+          };
+        });
+      } else {
+        layout.edges = [];
+      }
+
+      if (layout.backgroundImage) {
+        visualizationLayout.backgroundImage = layout.backgroundImage;
+      }
+      this.visualizationLayouts[layout.layoutId] = visualizationLayout;
+    });
+
+    // After open the layout, show the first layout
+    if (this.vdaLayouts.length > 0) {
+      this.changeLayout(this.vdaLayouts[0].layoutId);
+    }
+  }
 }

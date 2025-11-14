@@ -1,5 +1,6 @@
 import {ref} from 'vue';
 import {LayoutController} from './layout.controller';
+import {showToast} from '@/utils/general';
 
 export class TopBarController {
   public showLifJson = ref<boolean>(false);
@@ -135,7 +136,35 @@ export class TopBarController {
     reader.onload = event => {
       if (event.target) {
         const result = event.target.result as string;
-        this.layoutController?.convertJsonToLif(result);
+        // Detect file format by parsing JSON and checking structure
+        try {
+          const parsed = JSON.parse(result);
+
+          // Check if it's ROS GeoJSON format
+          if (
+            parsed.type === 'FeatureCollection' &&
+            Array.isArray(parsed.features) &&
+            parsed.crs
+          ) {
+            // ROS GeoJSON format
+            this.layoutController?.convertRosGeoJsonToLif(result);
+          } else if (parsed.metaInformation && Array.isArray(parsed.layouts)) {
+            // LIF format
+            this.layoutController?.convertJsonToLif(result);
+          } else {
+            console.error('Unknown file format');
+            showToast(
+              'Error',
+              'Unknown file format. Expected LIF or ROS GeoJSON format.',
+            );
+          }
+        } catch (error) {
+          console.error('Error parsing file', error);
+          showToast(
+            'Error',
+            'Failed to parse file. Please check the file format.',
+          );
+        }
       }
     };
 

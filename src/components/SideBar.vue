@@ -347,8 +347,8 @@ function handleSelect(item: {
                 Get started
               </h3>
               <p class="text-sm text-muted-foreground mb-4 max-w-xs">
-                Open a LIF file or click on the map to start creating nodes and
-                edges
+                Open a LIF or ROS GeoJSON file or click on the map to start
+                creating nodes and edges
               </p>
               <Button
                 variant="outline"
